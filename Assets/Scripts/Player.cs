@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
 
         hits = Physics.SphereCastAll(rayCastOrigin.transform.position, scanRadius , transform.up);
 
-        Debug.Log(hits.Length);
+        //Debug.Log(hits.Length);
 
         //if (Physics.SphereCast(rayCastOrigin.transform.position, scanRadius+10, transform.up, out hit))
         //{

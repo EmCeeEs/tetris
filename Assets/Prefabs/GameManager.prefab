@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocks:
-  - {fileID: 5546028509247603395, guid: ca444f6941e85a94bb86bc87ff11e34d, type: 3}
+  - {fileID: 3584912104386442284, guid: f159133d48dc6314397a363f3b8e9ef0, type: 3}
   centerOfUnivers: {fileID: 0}
   spawnPoint: {fileID: 0}
   fallingSpeed: 7
