@@ -6,28 +6,18 @@ public class Player : MonoBehaviour
 {
     public float vertical;
     PlayerControls inputActions;
-    Vector2 movementInput;
 
     public Transform playerBase;
 
     public bool moveLeft;
     public bool moveRight;
 
-    float delta;
-
     private int cooldownTimer = 0;
     private int MAX_COOLDOWN = 3;
 
-    int BaseLayerMask = 10;
     public Transform rayCastOrigin;
     public float scanRadius = 30f;
 
-
-
-    private void Start()
-    {
-        //player = GetComponent<Transform>();
-    }
     public void OnEnable()
     {
         if (inputActions == null)

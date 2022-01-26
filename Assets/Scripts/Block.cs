@@ -4,73 +4,94 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
+    private GameManager gameManager;
     public Transform blockTransform;
     public Transform parentGameObject;
-    public Transform[] additionalBlocks;
-    private Transform currentSlot;
-    private GameManager gameManager;
-    public Collider blockCollider;
-    float timeAlive = 0.1f;
-    float fallingSpeed;
-    float scalingFactor;
-    public float distanceToCenter;
-    public Vector3 blockLocalScale;
+    public List<Transform> additionalBlocks;
+    public List<Transform> currentSlot = new List<Transform>();
+    public Collider[] blockColliders;
 
+    float timeAlive = 0.1f;
+    float scalingFactor;
+    public int blockCounter = 1;
     public bool isDocked = false;
 
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
-        blockCollider = GetComponentInChildren<Collider>();
+        //blockCollider = GetComponentInChildren<Collider>();
         blockTransform = GetComponent<Transform>();
-        //additionalBlocks = parentGameObject.GetComponentsInChildren<Transform>();
-        //additionalBlocks[0] = null;
-        fallingSpeed = gameManager.fallingSpeed;
+    }
+
+    private void Awake()
+    {
+        blockColliders = parentGameObject.GetComponentsInChildren<Collider>();
     }
 
     void FixedUpdate()
     {
-        #region Scaling
-            timeAlive += Time.deltaTime; 
-            scalingFactor = 6 / timeAlive ;
-
-            if(timeAlive < 1){
-            //Debug.Break();
-                blockCollider.enabled = false;
-                blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
-                foreach (Transform block in additionalBlocks) {
-                    block.localScale =  new Vector3(scalingFactor, scalingFactor, 1);
-                }
-        }
-        else if (timeAlive <= 6 ) {
-                blockCollider.enabled = true;
-                blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
-            foreach (Transform block in additionalBlocks)
-            {
-                block.localScale =  new Vector3(scalingFactor, scalingFactor, 1);
-            }
-        }
-        #endregion
+        timeAlive += Time.deltaTime;
+        BlockScaling(timeAlive);
     }
 
+    public void BlockScaling(float timeAlive)
+    {
+        scalingFactor = 6 / timeAlive;
+
+        if (timeAlive < 1)
+        {
+            foreach (Collider collider in blockColliders)
+            {
+                collider.enabled = false;
+            }
+            blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
+            foreach (Transform block in additionalBlocks)
+            {
+                block.GetComponent<Collider>().enabled = false;
+                block.localScale = new Vector3(scalingFactor, scalingFactor, 1);
+            }
+        }
+        else if (timeAlive <= 6)
+        {
+            foreach (Collider collider in blockColliders)
+            {
+                collider.enabled = true;
+            }
+            blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
+            foreach (Transform block in additionalBlocks)
+            {
+                block.GetComponent<Collider>().enabled = true;
+                block.localScale = new Vector3(scalingFactor, scalingFactor, 1);
+            }
+        }
+    }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.tag);
+        // Check if PlayerBlock moves through Slots around the Base and Adds to List
         if(other.transform.tag == "slot")
         {
-            currentSlot = other.transform;
+            Debug.Log(other.transform.name);
+            currentSlot.Add(other.transform);
+            Debug.Log(currentSlot);
+
         }
-
-
+        // Check if PlayerBlock touches base 
         if (other.transform.tag == "base")
         {
             isDocked = true;
             parentGameObject.transform.localScale = Vector3.one;
-            //blockTransform.transform.SetParent(other.gameObject.transform);
-            blockTransform.gameObject.SetActive(false);
-            gameManager.BlockOnBaseSpawner(currentSlot);
+            for (int i = currentSlot.Count - blockCounter; i < currentSlot.Count; i++)
+            {
+                Debug.Log(currentSlot[i]);
+                gameManager.BlockOnBaseSpawner(currentSlot[i]);
+            }
         }
     }
 
-
+    // Function to add additionalBlocks to archtype
+    public void AddBlockToBlock(GameObject newBlock)
+    {
+        Transform newBlockTransform = newBlock.GetComponent<Transform>();
+        additionalBlocks.Add( newBlockTransform);
+    }
 }
