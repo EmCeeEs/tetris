@@ -1,4 +1,5 @@
 using System.Linq;
+using System; // Array
 
 namespace Game {
     public class State {
@@ -56,7 +57,26 @@ namespace Game {
                 .All(x => x);
         }
 
-        public void blowUpRow(int rowNumber) {
+        public void blowUpRow(int rowNumber)
+        {
+            _blocks = clearRowAndShiftArray(rowNumber);
+        }
+
+        private bool[,] clearRowAndShiftArray(int rowNumber)
+        {
+            bool[,] updatedBlocks = new bool[nRows(), nBlocksPerRow()];
+
+            int nBlocksBeforeRow = nBlocksPerRow() * rowNumber;
+            int nBlocksAfterRow = nBlocksPerRow() *(nRows()-rowNumber-1);
+
+            int iCurrentRow = nBlocksPerRow() * rowNumber; // = nBlocksBeforeRow
+            int iNextRow = nBlocksPerRow() * (rowNumber+1);
+
+            // https://docs.microsoft.com/en-us/dotnet/api/system.array.copy
+            Array.Copy(_blocks, 0, updatedBlocks, 0, nBlocksBeforeRow);
+            Array.Copy(_blocks, iNextRow, updatedBlocks, iCurrentRow, nBlocksAfterRow);
+
+            return updatedBlocks;
         }
 
         // helper function to implement modulo operation

@@ -11,17 +11,14 @@ using Game;
 
 public class GameStateTest
 {
-    const int N_BLOCKS_PER_ROW = 12;
-    const int N_ROWS = 5;
-
     [Test]
     public void RotationLeftTest()
     {
-        Game.State state = new Game.State(N_ROWS, N_BLOCKS_PER_ROW);
+        Game.State state = new Game.State(5, 12);
 
         Assert.AreEqual(state.getRotationState(), 0);
 
-        RepeatAction(N_BLOCKS_PER_ROW, state.rotateLeft);
+        RepeatAction(12, state.rotateLeft);
         Assert.AreEqual(state.getRotationState(), 0,
             "Rotating left 12 times returns to starting postion.");
         
@@ -35,26 +32,26 @@ public class GameStateTest
     [Test]
     public void RotationRightTest()
     {
-        Game.State state = new Game.State(N_ROWS, N_BLOCKS_PER_ROW);
+        Game.State state = new Game.State(5, 12);
 
         Assert.AreEqual(state.getRotationState(), 0);
 
-        RepeatAction(N_BLOCKS_PER_ROW, state.rotateRight);
+        RepeatAction(12, state.rotateRight);
         Assert.AreEqual(state.getRotationState(), 0,
             "Rotating right 12 times returns to starting postion.");
 
         state.rotateRight();
-        Assert.AreEqual(state.getRotationState(), N_BLOCKS_PER_ROW-1);
+        Assert.AreEqual(state.getRotationState(), 12-1);
 
         state.rotateRight();
-        Assert.AreEqual(state.getRotationState(), N_BLOCKS_PER_ROW-2);
+        Assert.AreEqual(state.getRotationState(), 12-2);
 
     }
 
     [Test]
     public void ActivateBlockTest()
     {
-        Game.State state = new Game.State(N_ROWS, N_BLOCKS_PER_ROW);
+        Game.State state = new Game.State(5, 12);
 
         state.activateBlock(0, 0);
         Assert.IsTrue(state.isBlockActive(0, 0));
@@ -86,9 +83,29 @@ public class GameStateTest
     [Test]
     public void BlowUpRowTest()
     {
-        Game.State state = new Game.State(10, 2);
+        Game.State state = new Game.State(7, 3);
 
-        Assert.IsFalse(true);
+        state.activateBlock(0, 0);
+        state.activateBlock(0, 1);
+        state.activateBlock(0, 2);
+        state.activateBlock(1, 0);
+        state.activateBlock(2, 0);
+
+        state.activateBlock(6, 2);
+
+        Assert.IsTrue(state.isRowComplete(0));
+        state.blowUpRow(0);
+
+        Assert.IsFalse(state.isRowComplete(0));
+        Assert.IsTrue(state.isBlockActive(0, 0));
+        Assert.IsFalse(state.isBlockActive(0, 1));
+        Assert.IsFalse(state.isBlockActive(0, 2));
+        Assert.IsTrue(state.isBlockActive(1, 0));
+        Assert.IsFalse(state.isBlockActive(2, 0));
+
+        Assert.IsFalse(state.isBlockActive(6, 2));
+        Assert.IsTrue(state.isBlockActive(5, 2));
+
     }
 
     private static void RepeatAction(int repeatCount, Action action)
