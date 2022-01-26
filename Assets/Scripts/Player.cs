@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
         {
             cooldownTimer -= 1;
         }
-        SlotStatusHandler();
+        //SlotStatusHandler();
     }
 
     void HandleRotation()
@@ -74,19 +74,19 @@ public class Player : MonoBehaviour
 
     }
 
-    void SlotStatusHandler()
-    {
-        RaycastHit[] hits;
+    //void SlotStatusHandler()
+    //{
+    //    RaycastHit[] hits;
 
-        hits = Physics.SphereCastAll(rayCastOrigin.transform.position, scanRadius , transform.up);
+    //    hits = Physics.SphereCastAll(rayCastOrigin.transform.position, scanRadius , transform.up);
 
-        //Debug.Log(hits.Length);
+    //    //Debug.Log(hits.Length);
 
-        //if (Physics.SphereCast(rayCastOrigin.transform.position, scanRadius+10, transform.up, out hit))
-        //{
-        //    //distanceToObstacle = hit.distance;
-        //    Debug.Log("Hit Sphere in level 2");
-        //}
-    }
+    //    //if (Physics.SphereCast(rayCastOrigin.transform.position, scanRadius+10, transform.up, out hit))
+    //    //{
+    //    //    //distanceToObstacle = hit.distance;
+    //    //    Debug.Log("Hit Sphere in level 2");
+    //    //}
+    //}
 
 }

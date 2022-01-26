@@ -5,15 +5,34 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    public GameObject[] blocks;
-    GameObject currentBlock;
+    public GameObject playerBlock;
+    public GameObject playerBlockLevel1;
+    public GameObject playerBlockLevel2;
+    GameObject newBlock;
     public Transform centerOfUnivers;
     public Transform spawnPoint;
-    [SerializeField]
+    public Transform brickHolder;
+
     public float fallingSpeed = 5.0f;
     public float scalingFactor = 1.0f;
-    float timer;
-    public float spawnIntervall = 2.0f;
+    private float timer;
+    public float spawnIntervall = 3f;
+    public float rotationAmount = 30;
+
+    public GameObject[] blockLevels;
+
+    public GameObject[] column1;
+    public GameObject[] column2;
+    public GameObject[] column3;
+    public GameObject[] column4;
+    public GameObject[] column5;
+    public GameObject[] column6;
+    public GameObject[] column7;
+    public GameObject[] column8;
+    public GameObject[] column9;
+    public GameObject[] column10;
+    public GameObject[] column11;
+    public GameObject[] column12;
 
 
     // Start is called before the first frame update
@@ -31,16 +50,27 @@ public class GameManager : MonoBehaviour
             BlockSpawner();
             timer = 0;
         }
-        // TODO:
-        // Set start position
-        // select random block
-        // Block falls down to center & scales
-
     }
 
     public void BlockSpawner()
     {
-            currentBlock = blocks[Random.Range(0, blocks.Length)];
-            Instantiate(currentBlock, spawnPoint);     
+        GameObject block = Instantiate(playerBlock, spawnPoint);
+
+        float rotationAmount = 30;
+        for (int i = 1; i < 3; i++)
+        {
+            GameObject addBlock = Instantiate(playerBlockLevel1, spawnPoint);
+            addBlock.transform.localScale = Vector3.one;
+            addBlock.transform.Rotate(Vector3.forward, rotationAmount);
+            addBlock.transform.parent = block.transform;
+            rotationAmount = rotationAmount + 30;
+        }
+        block.transform.localScale = Vector3.one * 100;
+    }
+    public void BlockOnBaseSpawner(Transform currentBlock)
+    {
+        Debug.Log(currentBlock.transform.name);
+        newBlock = Instantiate(blockLevels[int.Parse(currentBlock.transform.name)-1]);
+        newBlock.transform.parent = brickHolder;
     }
 }

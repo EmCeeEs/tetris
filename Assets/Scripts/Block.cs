@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    private Transform blockTransform;
-    private Transform centerOfUnivers;
+    public Transform blockTransform;
+    public Transform parentGameObject;
+    public Transform[] additionalBlocks;
+    private Transform currentSlot;
     private GameManager gameManager;
-    private Collider meshCollider;
-    float timeAlive;
+    public Collider blockCollider;
+    float timeAlive = 0.1f;
     float fallingSpeed;
     float scalingFactor;
     public float distanceToCenter;
@@ -18,9 +20,11 @@ public class Block : MonoBehaviour
 
     void Start()
     {
-        centerOfUnivers = FindObjectOfType<Player>().transform;
         gameManager = FindObjectOfType<GameManager>();
+        blockCollider = GetComponentInChildren<Collider>();
         blockTransform = GetComponent<Transform>();
+        //additionalBlocks = parentGameObject.GetComponentsInChildren<Transform>();
+        //additionalBlocks[0] = null;
         fallingSpeed = gameManager.fallingSpeed;
     }
 
@@ -28,28 +32,44 @@ public class Block : MonoBehaviour
     {
         #region Scaling
             timeAlive += Time.deltaTime; 
-            scalingFactor = 100 * 6 / timeAlive;
+            scalingFactor = 6 / timeAlive ;
 
             if(timeAlive < 1){
-                blockTransform.position = Vector3.one * 100;
+            //Debug.Break();
+                blockCollider.enabled = false;
+                blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
+                foreach (Transform block in additionalBlocks) {
+                    block.localScale =  new Vector3(scalingFactor, scalingFactor, 1);
+                }
+        }
+        else if (timeAlive <= 6 ) {
+                blockCollider.enabled = true;
+                blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
+            foreach (Transform block in additionalBlocks)
+            {
+                block.localScale =  new Vector3(scalingFactor, scalingFactor, 1);
             }
-            else if (timeAlive <= 6) {
-                blockTransform.position = Vector3.zero;
-                blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 100);
-            }
+        }
         #endregion
     }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        //Debug.Log(collision);
-        isDocked = true;
-        Debug.Log("collsion");
-        blockTransform.transform.SetParent(collision.gameObject.transform);
-    }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger");
+        Debug.Log(other.transform.tag);
+        if(other.transform.tag == "slot")
+        {
+            currentSlot = other.transform;
+        }
+
+
+        if (other.transform.tag == "base")
+        {
+            isDocked = true;
+            parentGameObject.transform.localScale = Vector3.one;
+            //blockTransform.transform.SetParent(other.gameObject.transform);
+            blockTransform.gameObject.SetActive(false);
+            gameManager.BlockOnBaseSpawner(currentSlot);
+        }
     }
 
 
