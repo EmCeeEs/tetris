@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     private float timer;
     public float spawnIntervall = 3f;
     public float rotationAmount = 30;
+    public List<Transform> toSpawnLocations;
     public GameObject[] blockLevels;
 
     public GameObject[] column1;
@@ -48,6 +49,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        foreach (Transform slot in toSpawnLocations)
+        {
+            BlockOnBaseSpawner(slot);
+        }
+        toSpawnLocations.Clear();
+    }
+
     public void BlockSpawner()
     {
         initalBlock = Instantiate(playerBlock, spawnPoint);
@@ -62,6 +72,7 @@ public class GameManager : MonoBehaviour
             // Instantiate other "arctype" and disable Collider to to spawnPointColiision
             GameObject addBlock = Instantiate(playerBlockLevel1, spawnPoint);
             addBlock.GetComponent<Collider>().enabled = false;
+            addBlock.AddComponent<Block>();
 
             // Rotate new Block and parent to Outside Container PlayerBlock
             addBlock.transform.Rotate(Vector3.forward, rotationAmount);
@@ -73,9 +84,9 @@ public class GameManager : MonoBehaviour
         }
         initalBlock.transform.localScale = Vector3.one * 100;
     }
+    // Spawn Block on PlayerBase
     public void BlockOnBaseSpawner(Transform currentBlock)
     {
-        Debug.Log(currentBlock.transform.name);
         newBlock = Instantiate(blockLevels[int.Parse(currentBlock.transform.name)]);
         newBlock.transform.parent = brickHolder;
     }
