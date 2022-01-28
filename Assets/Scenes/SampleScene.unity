@@ -431,6 +431,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6641793672991523006, guid: 91bbbc0a81212ee4f8724980562a136f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91bbbc0a81212ee4f8724980562a136f, type: 3}
 --- !u!1001 &3969600623506293072
@@ -492,6 +496,10 @@ PrefabInstance:
       propertyPath: spawnPoint
       value: 
       objectReference: {fileID: 503202747}
+    - target: {fileID: 2147181592443949034, guid: 7f51e3bbfcb1a474cb195e30943aae7e, type: 3}
+      propertyPath: BlockParent
+      value: 
+      objectReference: {fileID: 1829309449394160622, guid: 5b59d876ae6c40e46b4716882a8e8352, type: 3}
     - target: {fileID: 2147181592443949034, guid: 7f51e3bbfcb1a474cb195e30943aae7e, type: 3}
       propertyPath: brickHolder
       value: 

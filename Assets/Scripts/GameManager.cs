@@ -5,11 +5,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 
-    public GameObject playerBlock;
-    public GameObject playerBlockLevel1;
-    public GameObject playerBlockLevel2;
+    public List<GameObject> BlockParents;
+    public GameObject BlockParent; // prefab
+
     GameObject newBlock;
-    Block newBlockBock;
     public Transform centerOfUnivers;
     public Transform spawnPoint;
     public Transform brickHolder;
@@ -19,7 +18,7 @@ public class GameManager : MonoBehaviour
     public float fallingSpeed = 5.0f;
     public float scalingFactor = 1.0f;
     private float timer;
-    public float spawnIntervall = 100f;
+    private float spawnIntervall = 3f;
     public float rotationAmount = 30;
     public List<Transform> toSpawnLocations;
     public GameObject[] blockLevels;
@@ -46,6 +45,7 @@ public class GameManager : MonoBehaviour
     void FixedUpdate()
     {
         timer += Time.deltaTime;
+        Debug.Log(timer);
         if (timer > spawnIntervall)
         {
             BlockSpawner();
@@ -62,44 +62,21 @@ public class GameManager : MonoBehaviour
         toSpawnLocations.Clear();
     }
 
-    // Spawns new PlayerBlock
     public void BlockSpawner()
     {
-        initalBlock = Instantiate(playerBlock, spawnPoint);
-        initalBlock.GetComponentInChildren<Collider>().enabled = false;
-
-        // Get Script Component of new PlayerBlock
-        Block addBlockBlock = initalBlock.GetComponentInChildren<Block>();
-        BlockParent blockParent = initalBlock.GetComponent<BlockParent>();
-        blockParent.PlayerBlocks.Add(initalBlock);
-
-        float rotationAmount = 30;
-
-        for (int i = 1; i < 2; i++)
-        {
-            // Instantiate other "arctype" and disable Collider to to spawnPointColiision
-            GameObject addBlock = Instantiate(playerBlockLevel1, spawnPoint);
-
-            // Add to BlockParentList
-            blockParent.PlayerBlocks.Add(addBlock);
-
-            addBlock.GetComponent<Collider>().enabled = false;
-            addBlock.AddComponent<Block>();
-
-            // Rotate new Block and parent to Outside Container PlayerBlock
-            addBlock.transform.Rotate(Vector3.forward, rotationAmount);
-            addBlock.transform.parent = initalBlock.transform;
-
-        }
-        initalBlock.transform.localScale = Vector3.one * 100;
+        Vector3 spawnPoint = new Vector3(0, 0, 0);
+        GameObject blockParent = Instantiate(BlockParent, spawnPoint, Quaternion.identity);
+        BlockParents.Add(blockParent);
     }
 
     // Spawn Block on PlayerBase
     public void BlockOnBaseSpawner(Transform currentSlot)
     {
         newBlock = Instantiate(blockLevels[int.Parse(currentSlot.transform.name)-1]);
+        newBlock.transform.localScale = Vector3.one * 100;
         newBlock.transform.rotation = currentSlot.parent.transform.rotation;
 
-        newBlock.transform.parent = brickHolder;
+        //newBlock.transform.parent = brickHolder;
+        newBlock.transform.parent = currentSlot;
     }
 }

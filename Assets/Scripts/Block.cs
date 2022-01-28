@@ -31,6 +31,7 @@ public class Block : MonoBehaviour
     private void Awake()
     {
         blockColliders = GetComponent<Collider>();
+        blockColliders.enabled = false;
     }
 
 
@@ -81,7 +82,7 @@ public class Block : MonoBehaviour
 
     public void DeleteAndDockBlock()
     {
-        if (blockParent.isDocked)
+        if (blockParent.isDocked && currentSlot)
         {
             blockColliders.enabled = false;
             gameManager.toSpawnLocations.Add(currentSlot);
