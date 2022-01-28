@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
     public float fallingSpeed = 5.0f;
     public float scalingFactor = 1.0f;
     private float timer;
-    public float spawnIntervall = 3f;
+    public float spawnIntervall = 100f;
     public float rotationAmount = 30;
     public List<Transform> toSpawnLocations;
     public GameObject[] blockLevels;
@@ -37,6 +37,10 @@ public class GameManager : MonoBehaviour
     public GameObject[] column11;
     public GameObject[] column12;
 
+    private void Awake()
+    {
+        BlockSpawner();
+    }
 
     // Update is called once per frame
     void FixedUpdate()
@@ -58,6 +62,7 @@ public class GameManager : MonoBehaviour
         toSpawnLocations.Clear();
     }
 
+    // Spawns new PlayerBlock
     public void BlockSpawner()
     {
         initalBlock = Instantiate(playerBlock, spawnPoint);
@@ -65,12 +70,19 @@ public class GameManager : MonoBehaviour
 
         // Get Script Component of new PlayerBlock
         Block addBlockBlock = initalBlock.GetComponentInChildren<Block>();
+        BlockParent blockParent = initalBlock.GetComponent<BlockParent>();
+        blockParent.PlayerBlocks.Add(initalBlock);
+
         float rotationAmount = 30;
 
         for (int i = 1; i < 2; i++)
         {
             // Instantiate other "arctype" and disable Collider to to spawnPointColiision
             GameObject addBlock = Instantiate(playerBlockLevel1, spawnPoint);
+
+            // Add to BlockParentList
+            blockParent.PlayerBlocks.Add(addBlock);
+
             addBlock.GetComponent<Collider>().enabled = false;
             addBlock.AddComponent<Block>();
 
@@ -78,16 +90,16 @@ public class GameManager : MonoBehaviour
             addBlock.transform.Rotate(Vector3.forward, rotationAmount);
             addBlock.transform.parent = initalBlock.transform;
 
-            // Function to Add the new arctype to the script of PlayerBlock
-            addBlockBlock.AddBlockToBlock(addBlock);
-            addBlockBlock.blockCounter++;
         }
         initalBlock.transform.localScale = Vector3.one * 100;
     }
+
     // Spawn Block on PlayerBase
-    public void BlockOnBaseSpawner(Transform currentBlock)
+    public void BlockOnBaseSpawner(Transform currentSlot)
     {
-        newBlock = Instantiate(blockLevels[int.Parse(currentBlock.transform.name)]);
+        newBlock = Instantiate(blockLevels[int.Parse(currentSlot.transform.name)-1]);
+        newBlock.transform.rotation = currentSlot.parent.transform.rotation;
+
         newBlock.transform.parent = brickHolder;
     }
 }
