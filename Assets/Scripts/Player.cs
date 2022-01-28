@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     PlayerControls inputActions;
 
     public Transform playerBase;
+    GameManager gameManager;
 
     public bool moveLeft;
     public bool moveRight;
@@ -18,6 +19,10 @@ public class Player : MonoBehaviour
     public Transform rayCastOrigin;
     public float scanRadius = 30f;
 
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
     public void OnEnable()
     {
         if (inputActions == null)
@@ -53,30 +58,16 @@ public class Player : MonoBehaviour
         if (moveRight && !moveLeft)
         {
             playerBase.Rotate(new Vector3(0, 0, 1), 30);
+            gameManager.state.rotateRight();
             cooldownTimer = MAX_COOLDOWN;
         }
         if (!moveRight && moveLeft)
         {
             playerBase.Rotate(new Vector3(0, 0, 1), -30);
+            gameManager.state.rotateLeft();
             cooldownTimer = MAX_COOLDOWN;
         }
 
 
     }
-
-    //void SlotStatusHandler()
-    //{
-    //    RaycastHit[] hits;
-
-    //    hits = Physics.SphereCastAll(rayCastOrigin.transform.position, scanRadius , transform.up);
-
-    //    //Debug.Log(hits.Length);
-
-    //    //if (Physics.SphereCast(rayCastOrigin.transform.position, scanRadius+10, transform.up, out hit))
-    //    //{
-    //    //    //distanceToObstacle = hit.distance;
-    //    //    Debug.Log("Hit Sphere in level 2");
-    //    //}
-    //}
-
 }
