@@ -1,7 +1,9 @@
 using System.Linq;
 using System; // Array
 
-namespace Game {
+using UnityEngine; // Debug
+
+namespace GameLogic {
     public class State {
 
         private int _rotationState = 0;
@@ -11,24 +13,24 @@ namespace Game {
             _blocks = new bool[nRows, nBlocksPerRow];
         }
 
-        private int nRows()
+        public int nRows()
         {
             return _blocks.GetLength(0);
         }
 
-        private int nBlocksPerRow()
+        public int nBlocksPerRow()
         {
             return _blocks.GetLength(1);
         }
 
         public void rotateLeft()
         {
-            _rotationState = mod(_rotationState+1, nBlocksPerRow());
+            _rotationState = Utils.mod(_rotationState+1, nBlocksPerRow());
         }
         
         public void rotateRight()
         {
-            _rotationState = mod(_rotationState-1, nBlocksPerRow());
+            _rotationState = Utils.mod(_rotationState-1, nBlocksPerRow());
         }
 
         public int getRotationState() {
@@ -78,29 +80,30 @@ namespace Game {
 
             return updatedBlocks;
         }
+    }
 
-        // helper function to implement modulo operation
+    public class Utils {
+        // helper function implementing modulo operation
         // https://stackoverflow.com/questions/1082917
-        private static int mod(int k, int n)
+        public static int mod(int k, int n)
         {
             return ((k %= n) < 0) ? k+n : k;
         }
-    }
-}
-
-// https://stackoverflow.com/questions/27427527
-public class CustomArray<T> {
-    public T[] GetColumn(T[,] matrix, int columnNumber)
-    {
-        return Enumerable.Range(0, matrix.GetLength(0))
-                .Select(x => matrix[x, columnNumber])
-                .ToArray();
-    }
-
-    public T[] GetRow(T[,] matrix, int rowNumber)
-    {
-        return Enumerable.Range(0, matrix.GetLength(1))
-                .Select(x => matrix[rowNumber, x])
-                .ToArray();
+        
+        // visually pleasing log function for block state
+        public void logBlockState(State state)
+        {
+            string strMatrix = "";
+            for (var i = 0; i<state.nRows(); i++)
+            {
+                for (var j = 0; j < state.nBlocksPerRow(); j++)
+                {
+                    strMatrix += state.isBlockActive(i, j);
+                    strMatrix += " ";
+                }
+                strMatrix += "\n";
+            }
+            Debug.Log(strMatrix);
+        }
     }
 }
