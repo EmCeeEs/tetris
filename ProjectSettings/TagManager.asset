@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - block
-  - slot
-  - base
+  - Board
+  - Block
+  - Base
   layers:
   - Default
   - TransparentFX
