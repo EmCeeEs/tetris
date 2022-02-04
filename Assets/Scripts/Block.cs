@@ -4,89 +4,52 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    private GameManager gameManager;
-    public Transform blockTransform;
-    public Transform parentGameObject;
-    public List<Transform> additionalBlocks;
-    //public List<Transform> currentSlot = new List<Transform>();
-    public Transform currentSlot;
-    public Collider blockColliders;
+    public bool isMoving = false;
 
-    public BlockParent blockParent;
+    private Board board;
 
-    float timeAlive = 0.1f;
-    float scalingFactor;
-    public int blockCounter = 1;
-    public bool isDocked = false;
-
-    void Start()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-        //blockCollider = GetComponentInChildren<Collider>();
-        blockTransform = GetComponent<Transform>();
-        parentGameObject = GetComponentInParent<Transform>();
-        blockParent = GetComponentInParent<BlockParent>();
-    }
+    public float scaleChange = 0.02f;
+    private float currentScale;
 
     private void Awake()
     {
-        blockColliders = GetComponent<Collider>();
-        blockColliders.enabled = false;
+        board = GameObject.FindWithTag("Board").GetComponent<Board>();
+        SetScale(0);
+    }
+
+    private void Start()
+    {
+        isMoving = true;
     }
 
 
-
-    void FixedUpdate()
+    private void Update()
     {
-        timeAlive += Time.deltaTime;
-        BlockScaling(timeAlive);
-        DeleteAndDockBlock();
-    }
+        if (isMoving) {
+            float nextScale = currentScale - scaleChange;
+            int nextSlot = Utils.Scale2Slot(nextScale);
 
-    public void BlockScaling(float timeAlive)
-    {
-        scalingFactor = 6 / timeAlive;
-
-        if (timeAlive < 1)
-        {
-            blockColliders.enabled = false;
-            blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
-        }
-        else if (timeAlive <= 6)
-        {
-            blockColliders.enabled = true;
-            blockTransform.localScale = new Vector3(scalingFactor, scalingFactor, 1);
-        }
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        // Check if PlayerBlock moves through Slots around the Base and Adds to List
-        if(other.transform.tag == "slot")
-        {
-            currentSlot = other.transform;
-        }
-        // Check if PlayerBlock touches base 
-        if (other.transform.tag == "base")
-        {
-            blockColliders.enabled = false;      
-            blockParent.isDocked = true;
+            if (board.IsEmpty(nextSlot))
+            {
+                SetScale(nextScale);
+            }
+            else
+            {
+                int currentSlot = Utils.Scale2Slot(currentScale);
+                board.SetSlot(currentSlot, this.gameObject);
+                isMoving = false;
+            }
         }
     }
 
-    // Function to add additionalBlocks to archtype
-    public void AddBlockToBlock(GameObject newBlock)
+    public float GetScale()
     {
-        Transform newBlockTransform = newBlock.GetComponent<Transform>();
-        additionalBlocks.Add(newBlockTransform);
+        return currentScale;
     }
 
-    public void DeleteAndDockBlock()
+    public void SetScale(float scale)
     {
-        if (blockParent.isDocked && currentSlot)
-        {
-            blockColliders.enabled = false;
-            gameManager.toSpawnLocations.Add(currentSlot);
-            Destroy(blockTransform.gameObject);
-        }
+        currentScale = scale;
+        transform.localScale = new Vector3(currentScale + 1, 1, currentScale + 1);
     }
 }

@@ -4,26 +4,20 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float vertical;
-    PlayerControls inputActions;
+    private PlayerControls inputActions;
 
-    public Transform playerBase;
-    GameManager gameManager;
-
-    public bool moveLeft;
-    public bool moveRight;
+    private Board board;
 
     private int cooldownTimer = 0;
-    private int MAX_COOLDOWN = 3;
+    [SerializeField]
+    private const int MAX_COOLDOWN = 3;
 
-    public Transform rayCastOrigin;
-    public float scanRadius = 30f;
-
-    private void Start()
+    private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        board = GameObject.FindWithTag("Board").GetComponent<Board>();
     }
-    public void OnEnable()
+
+    private void OnEnable()
     {
         if (inputActions == null)
         {
@@ -47,27 +41,23 @@ public class Player : MonoBehaviour
         {
             cooldownTimer -= 1;
         }
-        //SlotStatusHandler();
     }
 
-    void HandleRotation()
+    private void HandleRotation()
     {
-        moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
-        moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+        bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+        bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
 
-        if (moveRight && !moveLeft)
+        if (moveRight)
         {
-            playerBase.Rotate(new Vector3(0, 0, 1), 30);
-            gameManager.state.rotateRight();
+            board.RotateRight();
+
             cooldownTimer = MAX_COOLDOWN;
         }
-        if (!moveRight && moveLeft)
+        if (moveLeft)
         {
-            playerBase.Rotate(new Vector3(0, 0, 1), -30);
-            gameManager.state.rotateLeft();
+            board.RotateLeft();
             cooldownTimer = MAX_COOLDOWN;
         }
-
-
     }
 }
