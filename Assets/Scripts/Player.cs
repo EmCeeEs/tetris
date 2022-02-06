@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private PlayerControls inputActions;
+    public Joystick joystick;
 
     private Board board;
 
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         board = GameObject.FindWithTag("Board").GetComponent<Board>();
+
     }
 
     private void OnEnable()
@@ -47,6 +49,15 @@ public class Player : MonoBehaviour
     {
         bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
         bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+
+        if (joystick.Horizontal > 0.5)
+        {
+            moveLeft = true;
+        }
+        if(joystick.Horizontal < -0.5)
+        {
+            moveRight = true;
+        }
 
         if (moveRight)
         {

@@ -6,6 +6,12 @@ using System.Linq;
 
 public class Board : MonoBehaviour
 {
+    public UIHandler uiHandler;
+    public bool isPlaying;
+    public float currentScore;
+    private float singleBlockPoint = 10;
+    private float tetrisScore = 100;
+
     public GameObject BlockPrefab;
 
     private GameObject currentBlock;
@@ -23,18 +29,23 @@ public class Board : MonoBehaviour
 
     private void Awake()
     {
+        uiHandler = FindObjectOfType<UIHandler>();
+
         playerBase = GameObject.FindWithTag("Base");
         slots = new GameObject[N_ROWS, N_BLOCKS_PER_ROW];
         rotationAngle = 360 / N_BLOCKS_PER_ROW;
         spawnSlot = N_ROWS - 1;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (currentBlock == null)
+        if (isPlaying)
         {
-            SpawnBlock();
-        }
+            if (currentBlock == null)
+            {
+                SpawnBlock();
+            }
+        }  
     }
 
     public bool IsEmpty(int slot)
@@ -52,12 +63,18 @@ public class Board : MonoBehaviour
         slots[slot, rotationState] = block;
         block.transform.SetParent(playerBase.transform);
 
-        foreach(int rowNumber in Enumerable.Range(0, N_ROWS))
+        currentScore += singleBlockPoint;
+        uiHandler.UpdateScore(currentScore);
+
+        foreach (int rowNumber in Enumerable.Range(0, N_ROWS))
         {
             if (IsRowComplete(rowNumber))
             {
                 Debug.Log("ROW COMPLETED");
                 RemoveRow(rowNumber);
+
+                currentScore += tetrisScore;
+                uiHandler.UpdateScore(currentScore);
             }
         }
 
@@ -131,14 +148,32 @@ public class Board : MonoBehaviour
         }
     }
 
+    public void DestroyAll()
+    {
+        // shift other rows
+        for (int i = 0; i < N_ROWS; i++)
+        {
+            for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
+            {
+                Destroy(slots[i, j]);
+            }
+        }
+    }
+
     public void SpawnBlock()
     {
         if (!IsEmpty(spawnSlot))
         {
             Debug.Log("GAME OVER");
+            DestroyAll();
+            isPlaying = false;
+            uiHandler.joystick.SetActive(false);
+            uiHandler.playButton.SetActive(true);
         }
-
-        currentBlock = Instantiate(BlockPrefab);
-        currentBlock.GetComponent<Block>().SetScale(Utils.Slot2Scale(spawnSlot));
+        if (isPlaying)
+        {
+            currentBlock = Instantiate(BlockPrefab);
+            currentBlock.GetComponent<Block>().SetScale(Utils.Slot2Scale(spawnSlot));
+        }
     }
 }
