@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6406818332043476253}
   - component: {fileID: 3907302592414679100}
   m_Layer: 0
-  m_Name: PlayerBlock
-  m_TagString: block
+  m_Name: Block
+  m_TagString: Block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24,14 +24,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452618622151811228}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7800866348418564392}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3907302592414679100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41,9 +41,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1452618622151811228}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7ec582e5fec836428285d07372ac333, type: 3}
+  m_Script: {fileID: 11500000, guid: ed052025083fafc2e8323a7287ed3712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentScale: 0
+  scaleChange: 0.02
+  isMoving: 0
 --- !u!1 &8287914356118470486
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,9 +60,8 @@ GameObject:
   - component: {fileID: 3489913708161866797}
   - component: {fileID: 7926398911488387537}
   - component: {fileID: 8700693509425050824}
-  - component: {fileID: 7323184189926928074}
   m_Layer: 0
-  m_Name: level1
+  m_Name: Block
   m_TagString: block
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,13 +74,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8287914356118470486}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 6406818332043476253}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &2906187909101683751
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -157,22 +159,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.001, y: 0.0021285817, z: 0.001}
   m_Center: {x: -0.0000000019790605, y: -0.0106251845, z: 6.42864e-13}
---- !u!114 &7323184189926928074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8287914356118470486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0ee0a49dba39ab4d8cee703f1a123eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockTransform: {fileID: 6406818332043476253}
-  parentGameObject: {fileID: 6406818332043476253}
-  additionalBlocks: []
-  currentSlot: {fileID: 0}
-  blockColliders: {fileID: 0}
-  blockCounter: 1
-  isDocked: 0
