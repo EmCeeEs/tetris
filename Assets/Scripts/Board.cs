@@ -15,60 +15,72 @@ public class Board : MonoBehaviour
     private int rotationState = 0;
     private GameObject[,] slots;
 
-    private const int N_ROWS = 10;
+    private const int N_ROWS = 12;
     private const int N_BLOCKS_PER_ROW = 12;
     private float rotationAngle;
-    private int baseSlot = -1;
-    private int spawnSlot;
+    private Slot spawnSlot;
+    public PolarGrid grid;
+
+    private GameObject blockSpawner;
 
     private void Awake()
     {
         playerBase = GameObject.FindWithTag("Base");
+        blockSpawner = GameObject.FindWithTag("BlockSpawner");
         slots = new GameObject[N_ROWS, N_BLOCKS_PER_ROW];
         rotationAngle = 360 / N_BLOCKS_PER_ROW;
-        spawnSlot = N_ROWS - 1;
+        spawnSlot = new Slot(N_ROWS - 4, 0);
+        grid = new PolarGrid();
     }
 
     private void Update()
     {
         if (currentBlock == null)
         {
-            SpawnBlock();
+            currentBlock = blockSpawner.GetComponent<BlockSpawner>().SpawnBlock(spawnSlot);
         }
     }
 
-    public bool IsEmpty(int slot)
+    public bool IsEmpty(Slot slot)
     {
-        if (slot == baseSlot)
+        if (slot.Scale == -1)
         {
             return false;
         }
 
-        return slots[slot, rotationState] == null;
+        int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
+        return slots[slot.Scale, totalRotation] == null;
     }
 
-    public void SetSlot(int slot, GameObject block)
+    public void SetSlot(Slot slot, GameObject block)
     {
-        slots[slot, rotationState] = block;
+        int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
+
         block.transform.SetParent(playerBase.transform);
 
+        slots[slot.Scale, totalRotation] = block;
+    }
+
+    public void CheckForCompleteRows()
+    {   
+        int offset = 0;
         foreach(int rowNumber in Enumerable.Range(0, N_ROWS))
         {
-            if (IsRowComplete(rowNumber))
+            int shifted = rowNumber - offset;
+            if (IsRowComplete(shifted))
             {
-                Debug.Log("ROW COMPLETED");
-                RemoveRow(rowNumber);
+                Debug.Log($"ROW COMPLETED {shifted}");
+                RemoveRow(shifted);
+                offset++;
             }
         }
-
-        currentBlock = null;
     }
 
 
     private bool IsRowComplete(int rowNumber)
     {
         return Enumerable.Range(0, N_BLOCKS_PER_ROW)
-            .Select(x => slots[rowNumber, x])
+            .Select(x => slots[rowNumber, x] != null)
             .All(x => x);
     }
 
@@ -79,6 +91,7 @@ public class Board : MonoBehaviour
         for (int j=0; j<N_BLOCKS_PER_ROW; j++)
         {
             Destroy(slots[rowNumber, j]);
+            slots[rowNumber, j] = null;
         }
         
         // shift other rows
@@ -87,58 +100,70 @@ public class Board : MonoBehaviour
             for (int j=0; j<N_BLOCKS_PER_ROW; j++)
             {
                 if (slots[i, j] != null) {
-                    slots[i, j].GetComponent<Block>().SetScale(Utils.Slot2Scale(i-1));
                     slots[i-1, j] = slots[i, j];
+                    grid.MoveToSlot(new Slot(i-1, j), slots[i, j]);
                     slots[i, j] = null;
                 }
             }
         }
+        // LogSlots();
     }
 
     public void RotateRight()
     {
-        int nextRotatationState = Utils.Mod(rotationState-1, N_BLOCKS_PER_ROW);
-        bool isValid = true;
+        Slot rotationAsSlot = new Slot(0, 1);
 
-        if (currentBlock) {
-            Block blockScript = currentBlock.GetComponent<Block>();
-            int slot = Utils.Scale2Slot(blockScript.GetScale());
-            
-            isValid = slots[slot, nextRotatationState] == null;
-        }
-
-        if (isValid) {
+        if (CanRotate(currentBlock, rotationAsSlot))
+        {
             playerBase.transform.Rotate(Vector3.up, -rotationAngle);
-            rotationState = nextRotatationState;
+            rotationState -= 1;
         }
+    }
+
+    private bool CanRotate(GameObject block, Slot rotationAsSlot)
+    {
+        // happens if block destroyed but none spawned yet
+        if (!block) {
+            return true;
+        }
+
+        Slot lowerSlot = grid.LowerSlot(block.transform);
+        Slot upperSlot = lowerSlot + new Slot(1, 0);
+
+        foreach (Slot layoutSlot in block.GetComponent<BlockParent>().BlockLayout)
+        {
+            if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot) || !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public void RotateLeft()
     {
-        int nextRotatationState = Utils.Mod(rotationState+1, N_BLOCKS_PER_ROW);
-        bool isValid = true;
+        Slot rotationAsSlot = new Slot(0, -1);
 
-        if (currentBlock) {
-            Block blockScript = currentBlock.GetComponent<Block>();
-            int slot = Utils.Scale2Slot(blockScript.GetScale());
-            
-            isValid = slots[slot, nextRotatationState] == null;
-        }
-
-        if (isValid) {
-            playerBase.transform.Rotate(Vector3.up, rotationAngle);
-            rotationState = nextRotatationState;
+        if (CanRotate(currentBlock, rotationAsSlot))
+        {
+            playerBase.transform.Rotate(Vector3.up, +rotationAngle);
+            rotationState += 1;
         }
     }
 
-    public void SpawnBlock()
+    private void LogSlots()
     {
-        if (!IsEmpty(spawnSlot))
+        string strMatrix = "";
+        for (var i = 0; i<slots.GetLength(0); i++)
         {
-            Debug.Log("GAME OVER");
+            for (var j = 0; j < slots.GetLength(1); j++)
+            {
+                strMatrix += !IsEmpty(new Slot(i, j));
+                strMatrix += " ";
+            }
+            strMatrix += "\n";
         }
-
-        currentBlock = Instantiate(BlockPrefab);
-        currentBlock.GetComponent<Block>().SetScale(Utils.Slot2Scale(spawnSlot));
+        Debug.Log(strMatrix);
     }
 }
