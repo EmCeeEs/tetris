@@ -17,7 +17,6 @@ public class Board : MonoBehaviour
     private GameObject currentBlock;
     private GameObject playerBase;
 
-    [ReadOnly, SerializeField]
     private int rotationState = 0;
     private GameObject[,] slots;
 
