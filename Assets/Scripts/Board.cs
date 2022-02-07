@@ -13,6 +13,7 @@ public class Board : MonoBehaviour
     private float tetrisScore = 100;
 
     public GameObject BlockPrefab;
+    public Color32[] colors;
 
     public GameObject currentBlock;
     private GameObject playerBase;
@@ -35,11 +36,23 @@ public class Board : MonoBehaviour
 
         playerBase = GameObject.FindWithTag("Base");
         blockSpawner = FindObjectOfType<BlockSpawner>();
-        //blockSpawner = GameObject.FindWithTag("BlockSpawner");
         slots = new GameObject[N_ROWS, N_BLOCKS_PER_ROW];
         rotationAngle = 360 / N_BLOCKS_PER_ROW;
         spawnSlot = new Slot(N_ROWS - 4, 0);
         grid = new PolarGrid();
+
+        colors = new Color32[9];
+        colors[0] = new Color32(0, 255, 0,1);
+        colors[1] = new Color32(153, 255, 102, 1);
+        colors[2] = new Color32(204, 255, 51, 1);
+        colors[3] = new Color32(204, 204, 0, 1);
+        colors[4] = new Color32(255, 153, 0, 1);
+        colors[5] = new Color32(204, 51, 0, 1);
+        colors[6] = new Color32(255, 0, 0, 1);
+        colors[7] = new Color32(153, 0, 51, 1);
+        colors[8] = new Color32(102, 0, 51, 1);
+  
+
     }
 
     private void LateUpdate()
@@ -74,6 +87,7 @@ public class Board : MonoBehaviour
         uiHandler.UpdateScore(currentScore);
 
         slots[slot.Scale, totalRotation] = block;
+        block.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", colors[slot.Scale]);
     }
 
     public void CheckForCompleteRows()
@@ -163,10 +177,11 @@ public class Board : MonoBehaviour
         {
             if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot) || !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
             {
+                this.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", Color.red);
                 return false;
             }
         }
-
+        this.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", Color.white);
         return true;
     }
 

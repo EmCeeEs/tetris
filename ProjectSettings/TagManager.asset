@@ -9,6 +9,11 @@ TagManager:
   - Base
   - block
   - BlockSpawner
+  - playButton
+  - score
+  - joystick
+  - Base_inner
+  - Base_outer
   layers:
   - Default
   - TransparentFX
