@@ -7,14 +7,12 @@ using UnityEngine.TestTools;
 using System; // Action
 using System.Linq;
 
-using GameLogic;
-
 public class GameLogicTest
 {
     [Test]
     public void RotationLeftTest()
     {
-        GameLogic.State state = new GameLogic.State(5, 12);
+        State state = new State(5, 12);
 
         Assert.AreEqual(state.getRotationState(), 0);
 
@@ -32,7 +30,7 @@ public class GameLogicTest
     [Test]
     public void RotationRightTest()
     {
-        GameLogic.State state = new GameLogic.State(5, 12);
+        State state = new State(5, 12);
 
         Assert.AreEqual(state.getRotationState(), 0);
 
@@ -51,7 +49,7 @@ public class GameLogicTest
     [Test]
     public void ActivateBlockTest()
     {
-        GameLogic.State state = new GameLogic.State(5, 12);
+        State state = new State(5, 12);
 
         state.activateBlock(0, 0);
         Assert.IsTrue(state.isBlockActive(0, 0));
@@ -66,7 +64,7 @@ public class GameLogicTest
     [Test]
     public void IsRowCompleteTest()
     {
-        GameLogic.State state = new GameLogic.State(10, 2);
+        State state = new State(10, 2);
 
         Assert.IsFalse(state.isRowComplete(0), "Row is initially empty.");
         
@@ -83,7 +81,7 @@ public class GameLogicTest
     [Test]
     public void BlowUpRowTest()
     {
-        GameLogic.State state = new GameLogic.State(7, 3);
+        State state = new State(7, 3);
 
         state.activateBlock(0, 0);
         state.activateBlock(0, 1);

@@ -11,12 +11,11 @@ public class Player : MonoBehaviour
 
     private int cooldownTimer = 0;
     [SerializeField]
-    private const int MAX_COOLDOWN = 3;
+    private const int MAX_COOLDOWN = 4;
 
     private void Awake()
     {
         board = GameObject.FindWithTag("Board").GetComponent<Board>();
-
     }
 
     private void OnEnable()
@@ -54,7 +53,7 @@ public class Player : MonoBehaviour
         {
             moveLeft = true;
         }
-        if(joystick.Horizontal < -0.5)
+        if (joystick.Horizontal < -0.5)
         {
             moveRight = true;
         }

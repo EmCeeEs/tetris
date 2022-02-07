@@ -7,6 +7,8 @@ TagManager:
   - Board
   - Block
   - Base
+  - block
+  - BlockSpawner
   layers:
   - Default
   - TransparentFX
