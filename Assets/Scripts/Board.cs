@@ -30,7 +30,7 @@ public class Board : MonoBehaviour
 
     private BlockSpawner blockSpawner;
 
-    private void Awake()
+    void Awake()
     {
         uiHandler = FindObjectOfType<UIHandler>();
 
@@ -42,7 +42,7 @@ public class Board : MonoBehaviour
         grid = new PolarGrid();
 
         colors = new Color32[9];
-        colors[0] = new Color32(0, 255, 0,1);
+        colors[0] = new Color32(0, 255, 0, 1);
         colors[1] = new Color32(153, 255, 102, 1);
         colors[2] = new Color32(204, 255, 51, 1);
         colors[3] = new Color32(204, 204, 0, 1);
@@ -51,10 +51,7 @@ public class Board : MonoBehaviour
         colors[6] = new Color32(255, 0, 0, 1);
         colors[7] = new Color32(153, 0, 51, 1);
         colors[8] = new Color32(102, 0, 51, 1);
-  
-
     }
-
     private void LateUpdate()
     {
         if (isPlaying)
@@ -91,9 +88,9 @@ public class Board : MonoBehaviour
     }
 
     public void CheckForCompleteRows()
-    {   
+    {
         int offset = 0;
-        foreach(int rowNumber in Enumerable.Range(0, N_ROWS))
+        foreach (int rowNumber in Enumerable.Range(0, N_ROWS))
         {
             int shifted = rowNumber - offset;
             if (IsRowComplete(shifted))
@@ -120,20 +117,21 @@ public class Board : MonoBehaviour
     private void RemoveRow(int rowNumber)
     {
         // remove row
-        for (int j=0; j<N_BLOCKS_PER_ROW; j++)
+        for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
         {
             Destroy(slots[rowNumber, j]);
             slots[rowNumber, j] = null;
         }
-        
+
         // shift other rows
-        for (int i=rowNumber+1; i<N_ROWS; i++)
+        for (int i = rowNumber + 1; i < N_ROWS; i++)
         {
-            for (int j=0; j<N_BLOCKS_PER_ROW; j++)
+            for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
             {
-                if (slots[i, j] != null) {
-                    slots[i-1, j] = slots[i, j];
-                    grid.MoveToSlot(new Slot(i-1, j), slots[i, j]);
+                if (slots[i, j] != null)
+                {
+                    slots[i - 1, j] = slots[i, j];
+                    grid.MoveToSlot(new Slot(i - 1, j), slots[i, j]);
                     slots[i, j] = null;
                 }
             }
@@ -166,7 +164,8 @@ public class Board : MonoBehaviour
     private bool CanRotate(GameObject block, Slot rotationAsSlot)
     {
         // happens if block destroyed but none spawned yet
-        if (!block) {
+        if (!block)
+        {
             return true;
         }
 
@@ -199,7 +198,7 @@ public class Board : MonoBehaviour
     private void LogSlots()
     {
         string strMatrix = "";
-        for (var i = 0; i<slots.GetLength(0); i++)
+        for (var i = 0; i < slots.GetLength(0); i++)
         {
             for (var j = 0; j < slots.GetLength(1); j++)
             {

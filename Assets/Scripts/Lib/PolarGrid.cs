@@ -7,7 +7,7 @@ public class PolarGrid
     private float rotationAngle;
     private Quaternion rotation;
 
-    public PolarGrid(int _periodicity=12, float _scale=1.2F)
+    public PolarGrid(int _periodicity = 12, float _scale = 1.2F)
     {
         scale = _scale;
         periodicity = _periodicity;
@@ -24,13 +24,13 @@ public class PolarGrid
     {
         return Utils.Mod(slot.Rotation, periodicity) * rotationAngle;
     }
-    
+
     public Slot LowerSlot(Transform transform)
     {
         float currentScale = transform.localScale.x;
 
         int scaleExponent = -1; // -1 is base
-        while (Mathf.Pow(scale, scaleExponent+1) < currentScale)
+        while (Mathf.Pow(scale, scaleExponent + 1) < currentScale)
         {
             scaleExponent++;
         }
@@ -60,7 +60,7 @@ public readonly struct Slot
 {
     public readonly int Scale;
     public readonly int Rotation;
-    
+
     public Slot(int scale, int rotation)
     {
         Scale = scale;
@@ -84,6 +84,6 @@ public class Utils
     // https://stackoverflow.com/questions/1082917
     public static int Mod(int k, int n)
     {
-        return ((k %= n) < 0) ? k+n : k;
+        return ((k %= n) < 0) ? k + n : k;
     }
 }

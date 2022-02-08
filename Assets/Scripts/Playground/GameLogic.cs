@@ -3,12 +3,14 @@ using System; // Array
 
 using UnityEngine; // Debug
 
-public class State {
+public class State
+{
 
     private int _rotationState = 0;
     private bool[,] _blocks;
 
-    public State(int nRows, int nBlocksPerRow){
+    public State(int nRows, int nBlocksPerRow)
+    {
         _blocks = new bool[nRows, nBlocksPerRow];
     }
 
@@ -24,15 +26,16 @@ public class State {
 
     public void rotateLeft()
     {
-        _rotationState = MyUtils.Mod(_rotationState+1, nBlocksPerRow());
-    }
-    
-    public void rotateRight()
-    {
-        _rotationState = MyUtils.Mod(_rotationState-1, nBlocksPerRow());
+        _rotationState = MyUtils.Mod(_rotationState + 1, nBlocksPerRow());
     }
 
-    public int getRotationState() {
+    public void rotateRight()
+    {
+        _rotationState = MyUtils.Mod(_rotationState - 1, nBlocksPerRow());
+    }
+
+    public int getRotationState()
+    {
         return _rotationState;
     }
 
@@ -68,10 +71,10 @@ public class State {
         bool[,] updatedBlocks = new bool[nRows(), nBlocksPerRow()];
 
         int nBlocksBeforeRow = nBlocksPerRow() * rowNumber;
-        int nBlocksAfterRow = nBlocksPerRow() *(nRows()-rowNumber-1);
+        int nBlocksAfterRow = nBlocksPerRow() * (nRows() - rowNumber - 1);
 
         int iCurrentRow = nBlocksPerRow() * rowNumber; // = nBlocksBeforeRow
-        int iNextRow = nBlocksPerRow() * (rowNumber+1);
+        int iNextRow = nBlocksPerRow() * (rowNumber + 1);
 
         // https://docs.microsoft.com/en-us/dotnet/api/system.array.copy
         Array.Copy(_blocks, 0, updatedBlocks, 0, nBlocksBeforeRow);
@@ -90,6 +93,6 @@ public class MyUtils
     // https://stackoverflow.com/questions/1082917
     public static int Mod(int k, int n)
     {
-        return ((k %= n) < 0) ? k+n : k;
+        return ((k %= n) < 0) ? k + n : k;
     }
 }

@@ -43,7 +43,7 @@ public class PolarGridTest
             "Scale of (0, 0) is 6.1917."
         );
     }
-    
+
     [Test]
     public void GetRotationTest()
     {

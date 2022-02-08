@@ -39,5 +39,5 @@ public readonly struct MySlot
     {
         X = x;
         Y = y;
-    } 
+    }
 }

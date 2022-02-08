@@ -27,7 +27,7 @@ public class BlockSpawner : MonoBehaviour
         List<Slot> blockLayout = layouts[layoutIndex];
 
         Slot boardSlot;
-        foreach(Slot layoutSlot in blockLayout)
+        foreach (Slot layoutSlot in blockLayout)
         {
             boardSlot = spawnSlot + layoutSlot;
             if (!board.IsEmpty(boardSlot))

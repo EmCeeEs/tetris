@@ -6,11 +6,9 @@ using System.Linq;
 
 public class BlockParent : MonoBehaviour
 {
-    public List<Slot> BlockLayout { get; set;}
-    public List<GameObject> Blocks { get; set;}
+    public List<Slot> BlockLayout { get; set; }
+    public List<GameObject> Blocks { get; set; }
     private Board board;
-
-    [SerializeField]
     public Slot lowerSlot;
     public Slot upperSlot;
 
@@ -25,7 +23,7 @@ public class BlockParent : MonoBehaviour
         upperSlot = lowerSlot + new Slot(1, 0);
 
         bool isValidMove = true;
-        foreach(Slot slot in BlockLayout)
+        foreach (Slot slot in BlockLayout)
         {
             if (!board.IsEmpty(lowerSlot + slot))
             {
@@ -40,11 +38,11 @@ public class BlockParent : MonoBehaviour
         else
         {
             board.grid.MoveToSlot(upperSlot, this.gameObject);
-            foreach(int i in Enumerable.Range(0, BlockLayout.Count))
+            foreach (int i in Enumerable.Range(0, BlockLayout.Count))
             {
                 GameObject block = Blocks[i];
                 Slot slot = BlockLayout[i];
-                board.SetSlot(upperSlot+slot, block);
+                board.SetSlot(upperSlot + slot, block);
             }
             board.CheckForCompleteRows();
             Destroy(this.gameObject);

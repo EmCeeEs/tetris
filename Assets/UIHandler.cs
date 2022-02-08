@@ -18,7 +18,7 @@ public class UIHandler : MonoBehaviour
         joystick.SetActive(false);
         playButton = GameObject.FindWithTag("playButton");
         playButton.SetActive(true);
-}
+    }
 
 
     public void StartGame()

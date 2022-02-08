@@ -19,7 +19,7 @@ public class GameLogicTest
         RepeatAction(12, state.rotateLeft);
         Assert.AreEqual(state.getRotationState(), 0,
             "Rotating left 12 times returns to starting postion.");
-        
+
         state.rotateLeft();
         Assert.AreEqual(state.getRotationState(), 1);
 
@@ -39,10 +39,10 @@ public class GameLogicTest
             "Rotating right 12 times returns to starting postion.");
 
         state.rotateRight();
-        Assert.AreEqual(state.getRotationState(), 12-1);
+        Assert.AreEqual(state.getRotationState(), 12 - 1);
 
         state.rotateRight();
-        Assert.AreEqual(state.getRotationState(), 12-2);
+        Assert.AreEqual(state.getRotationState(), 12 - 2);
 
     }
 
@@ -67,7 +67,7 @@ public class GameLogicTest
         State state = new State(10, 2);
 
         Assert.IsFalse(state.isRowComplete(0), "Row is initially empty.");
-        
+
         state.activateBlock(0, 0);
         Assert.IsFalse(state.isRowComplete(0), "Row is still incomplete.");
 
