@@ -210,4 +210,3 @@ public class Board : MonoBehaviour
         Debug.Log(strMatrix);
     }
 }
-
