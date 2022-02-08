@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     private Board board;
 
     private int cooldownTimer = 0;
-    [SerializeField]
     private const int MAX_COOLDOWN = 4;
 
     private void Awake()

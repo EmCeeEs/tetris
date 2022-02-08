@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public class MyBlock
 {
-    private List<MySlot> layout;
-    private MySlot startSlot;
-    private GameObject parent;
+    private readonly List<MySlot> layout;
+    private readonly MySlot startSlot;
+    private readonly GameObject parent;
 
     public MyBlock(List<MySlot> blockLayout, MySlot spawnSlot)
     {

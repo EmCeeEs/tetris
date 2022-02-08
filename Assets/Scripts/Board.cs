@@ -9,8 +9,8 @@ public class Board : MonoBehaviour
     public UIHandler uiHandler;
     public bool isPlaying;
     public float currentScore;
-    private float singleBlockPoint = 10;
-    private float tetrisScore = 100;
+    private readonly float singleBlockPoint = 10;
+    private readonly float tetrisScore = 100;
 
     public GameObject BlockPrefab;
     public Color32[] colors;
@@ -195,7 +195,7 @@ public class Board : MonoBehaviour
         }
     }
 
-    private void LogSlots()
+    public void LogSlots()
     {
         string strMatrix = "";
         for (var i = 0; i < slots.GetLength(0); i++)

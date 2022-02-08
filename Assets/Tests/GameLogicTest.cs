@@ -14,17 +14,17 @@ public class GameLogicTest
     {
         State state = new State(5, 12);
 
-        Assert.AreEqual(state.getRotationState(), 0);
+        Assert.AreEqual(state.GetRotationState(), 0);
 
-        RepeatAction(12, state.rotateLeft);
-        Assert.AreEqual(state.getRotationState(), 0,
+        RepeatAction(12, state.RotateLeft);
+        Assert.AreEqual(state.GetRotationState(), 0,
             "Rotating left 12 times returns to starting postion.");
 
-        state.rotateLeft();
-        Assert.AreEqual(state.getRotationState(), 1);
+        state.RotateLeft();
+        Assert.AreEqual(state.GetRotationState(), 1);
 
-        state.rotateLeft();
-        Assert.AreEqual(state.getRotationState(), 2);
+        state.RotateLeft();
+        Assert.AreEqual(state.GetRotationState(), 2);
     }
 
     [Test]
@@ -32,17 +32,17 @@ public class GameLogicTest
     {
         State state = new State(5, 12);
 
-        Assert.AreEqual(state.getRotationState(), 0);
+        Assert.AreEqual(state.GetRotationState(), 0);
 
-        RepeatAction(12, state.rotateRight);
-        Assert.AreEqual(state.getRotationState(), 0,
+        RepeatAction(12, state.RotateRight);
+        Assert.AreEqual(state.GetRotationState(), 0,
             "Rotating right 12 times returns to starting postion.");
 
-        state.rotateRight();
-        Assert.AreEqual(state.getRotationState(), 12 - 1);
+        state.RotateRight();
+        Assert.AreEqual(state.GetRotationState(), 12 - 1);
 
-        state.rotateRight();
-        Assert.AreEqual(state.getRotationState(), 12 - 2);
+        state.RotateRight();
+        Assert.AreEqual(state.GetRotationState(), 12 - 2);
 
     }
 
@@ -51,14 +51,14 @@ public class GameLogicTest
     {
         State state = new State(5, 12);
 
-        state.activateBlock(0, 0);
-        Assert.IsTrue(state.isBlockActive(0, 0));
+        state.ActivateBlock(0, 0);
+        Assert.IsTrue(state.IsBlockActive(0, 0));
 
-        state.activateBlock(1, 1);
-        Assert.IsTrue(state.isBlockActive(1, 1));
+        state.ActivateBlock(1, 1);
+        Assert.IsTrue(state.IsBlockActive(1, 1));
 
-        state.deactivateBlock(1, 1);
-        Assert.IsFalse(state.isBlockActive(1, 1));
+        state.DeactivateBlock(1, 1);
+        Assert.IsFalse(state.IsBlockActive(1, 1));
     }
 
     [Test]
@@ -66,16 +66,16 @@ public class GameLogicTest
     {
         State state = new State(10, 2);
 
-        Assert.IsFalse(state.isRowComplete(0), "Row is initially empty.");
+        Assert.IsFalse(state.IsRowComplete(0), "Row is initially empty.");
 
-        state.activateBlock(0, 0);
-        Assert.IsFalse(state.isRowComplete(0), "Row is still incomplete.");
+        state.ActivateBlock(0, 0);
+        Assert.IsFalse(state.IsRowComplete(0), "Row is still incomplete.");
 
-        state.activateBlock(0, 1);
-        Assert.IsTrue(state.isRowComplete(0), "Row is finally complete.");
+        state.ActivateBlock(0, 1);
+        Assert.IsTrue(state.IsRowComplete(0), "Row is finally complete.");
 
-        state.deactivateBlock(0, 1);
-        Assert.IsFalse(state.isRowComplete(0), "Row is incomplete again.");
+        state.DeactivateBlock(0, 1);
+        Assert.IsFalse(state.IsRowComplete(0), "Row is incomplete again.");
     }
 
     [Test]
@@ -83,26 +83,26 @@ public class GameLogicTest
     {
         State state = new State(7, 3);
 
-        state.activateBlock(0, 0);
-        state.activateBlock(0, 1);
-        state.activateBlock(0, 2);
-        state.activateBlock(1, 0);
-        state.activateBlock(2, 0);
+        state.ActivateBlock(0, 0);
+        state.ActivateBlock(0, 1);
+        state.ActivateBlock(0, 2);
+        state.ActivateBlock(1, 0);
+        state.ActivateBlock(2, 0);
 
-        state.activateBlock(6, 2);
+        state.ActivateBlock(6, 2);
 
-        Assert.IsTrue(state.isRowComplete(0));
-        state.blowUpRow(0);
+        Assert.IsTrue(state.IsRowComplete(0));
+        state.BlowUpRow(0);
 
-        Assert.IsFalse(state.isRowComplete(0));
-        Assert.IsTrue(state.isBlockActive(0, 0));
-        Assert.IsFalse(state.isBlockActive(0, 1));
-        Assert.IsFalse(state.isBlockActive(0, 2));
-        Assert.IsTrue(state.isBlockActive(1, 0));
-        Assert.IsFalse(state.isBlockActive(2, 0));
+        Assert.IsFalse(state.IsRowComplete(0));
+        Assert.IsTrue(state.IsBlockActive(0, 0));
+        Assert.IsFalse(state.IsBlockActive(0, 1));
+        Assert.IsFalse(state.IsBlockActive(0, 2));
+        Assert.IsTrue(state.IsBlockActive(1, 0));
+        Assert.IsFalse(state.IsBlockActive(2, 0));
 
-        Assert.IsFalse(state.isBlockActive(6, 2));
-        Assert.IsTrue(state.isBlockActive(5, 2));
+        Assert.IsFalse(state.IsBlockActive(6, 2));
+        Assert.IsTrue(state.IsBlockActive(5, 2));
 
     }
 

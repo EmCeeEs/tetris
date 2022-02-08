@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MyGrid
 {
-    private GameObject[,] slots;
+    private readonly GameObject[,] slots;
 
     public MyGrid(uint numberRows, uint numberCols)
     {

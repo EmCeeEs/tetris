@@ -2,17 +2,15 @@ using UnityEngine; // GameObject
 
 public class PolarGrid
 {
-    private float scale;
-    private int periodicity;
-    private float rotationAngle;
-    private Quaternion rotation;
+    private readonly float scale;
+    private readonly int periodicity;
+    private readonly float rotationAngle;
 
     public PolarGrid(int _periodicity = 12, float _scale = 1.2F)
     {
         scale = _scale;
         periodicity = _periodicity;
         rotationAngle = 360 / periodicity;
-        rotation = Quaternion.Euler(0, rotationAngle, 0);
     }
 
     public float GetScale(Slot slot)
@@ -78,8 +76,6 @@ public readonly struct Slot
 
 public class Utils
 {
-    private const float SCALE = 0.2f;
-
     // helper function implementing modulo operation
     // https://stackoverflow.com/questions/1082917
     public static int Mod(int k, int n)

@@ -80,14 +80,6 @@ public class PolarGridTest
             "Rotation of (7, -1) is 330 degrees."
         );
     }
-
-    [Test]
-    public void Move2SlotTest()
-    {
-        GameObject go = new GameObject();
-        PolarGrid grid = new PolarGrid();
-
-    }
 }
 
 public class MyGridTest
