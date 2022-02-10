@@ -3,5 +3,6 @@ root = true
 [*.cs]
 # https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/new-operator#constructor-invocation
 # disable analyzers for unsupported C# 9.0 features in unity
-dotnet_diagnostic.IDE0090.severity = none
+dotnet_diagnostic.IDE0017.severity = none
 dotnet_diagnostic.IDE0028.severity = none
+dotnet_diagnostic.IDE0090.severity = none

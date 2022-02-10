@@ -81,38 +81,3 @@ public class PolarGridTest
         );
     }
 }
-
-public class MyGridTest
-{
-    [Test]
-    public void SlotTest()
-    {
-        MyGrid grid = new MyGrid(12, 12);
-        MySlot slot5x5 = new MySlot(5, 5);
-        GameObject go = new GameObject();
-
-        Assert.IsTrue(
-            grid.IsEmpty(slot5x5),
-            "Slot (5, 5) is empty."
-        );
-
-        grid.SetSlot(slot5x5, go);
-
-        Assert.IsFalse(
-            grid.IsEmpty(slot5x5),
-            "Slot (5, 5) is not empty."
-        );
-        Assert.AreSame(
-            go,
-            grid.GetSlot(slot5x5),
-            "Slot (5, 5) holds correct game object."
-        );
-
-        grid.UnsetSlot(slot5x5);
-
-        Assert.IsTrue(
-            grid.IsEmpty(slot5x5),
-            "Slot (5, 5) is empty again."
-        );
-    }
-}
