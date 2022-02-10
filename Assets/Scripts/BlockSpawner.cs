@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+
+using System.Linq;
 
 // use type alias
 using Layout = System.Collections.Generic.List<Slot>;
@@ -22,7 +26,7 @@ public class BlockSpawner : MonoBehaviour
 
     public GameObject SpawnBlock(Slot spawnSlot)
     {
-        int layoutIndex = Random.Range(0, layouts.Count);
+        int layoutIndex = UnityEngine.Random.Range(0, layouts.Count);
         Layout blockLayout = layouts[layoutIndex];
 
         Slot boardSlot;
@@ -109,4 +113,14 @@ public class LayoutCreator
                 new Slot(-1, 0),
             },
         };
+
+    public static Layout InvertX(Layout layout)
+    {
+        return layout.Select(slot => Slot.InvertX(slot)).ToList();
+    }
+
+    public static Layout InvertY(Layout layout)
+    {
+        return layout.Select(slot => Slot.InvertY(slot)).ToList();
+    }
 }

@@ -3,14 +3,14 @@ using UnityEngine; // GameObject
 public class PolarGrid
 {
     private readonly float scale;
-    private readonly int periodicity;
+    public readonly int Periodicity;
     private readonly float rotationAngle;
 
     public PolarGrid(int _periodicity = 12, float _scale = 1.2F)
     {
         scale = _scale;
-        periodicity = _periodicity;
-        rotationAngle = 360 / periodicity;
+        Periodicity = _periodicity;
+        rotationAngle = 360 / Periodicity;
     }
 
     public float GetScale(Slot slot)
@@ -20,7 +20,7 @@ public class PolarGrid
 
     public float GetRotation(Slot slot)
     {
-        return Utils.Mod(slot.Rotation, periodicity) * rotationAngle;
+        return Utils.Mod(slot.Rotation, Periodicity) * rotationAngle;
     }
 
     public Slot LowerSlot(Transform transform)
@@ -33,7 +33,7 @@ public class PolarGrid
             scaleExponent++;
         }
         int angle = Mathf.RoundToInt(transform.localRotation.eulerAngles.y / rotationAngle);
-        int rotationState = Utils.Mod(angle, periodicity);
+        int rotationState = Utils.Mod(angle, Periodicity);
 
         return new Slot(scaleExponent, rotationState);
     }
@@ -70,6 +70,13 @@ public readonly struct Slot
 
     public static Slot operator -(Slot a, Slot b)
         => new Slot(a.Scale - b.Scale, a.Rotation - b.Rotation);
+
+
+    public static Slot InvertX(Slot Slot)
+        => new Slot(-Slot.Scale, Slot.Rotation);
+
+    public static Slot InvertY(Slot Slot)
+        => new Slot(Slot.Scale, -Slot.Rotation);
 
     public override string ToString() => $"({Scale}, {Rotation})";
 }
