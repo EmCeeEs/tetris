@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using System.Linq;
 public class Player : MonoBehaviour
 {
     private PlayerControls inputActions;
@@ -26,7 +27,7 @@ public class Player : MonoBehaviour
         }
         inputActions.Enable();
 
-        inputActions.PlayerMovement.PlayerInvertBlockX.started += HandleInversion;
+        inputActions.PlayerMovement.PlayerInvertBlockX.started += HandleXInversion;
     }
 
     private void OnDisable()
@@ -46,9 +47,17 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HandleInversion(InputAction.CallbackContext context)
+    private void HandleXInversion(InputAction.CallbackContext context)
     {
-        board.currentBlock.GetComponent<BlockParent>().InvertX();
+        BlockParent block = board.currentBlock.GetComponent<BlockParent>();
+        List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
+
+        bool canInvert = newLayout.All(slot => board.IsEmpty(slot + block.LowerSlot));
+
+        if (canInvert)
+        {
+            block.InvertX();
+        }
     }
 
     private void HandleRotation()

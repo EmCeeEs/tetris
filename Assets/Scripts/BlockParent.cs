@@ -13,8 +13,8 @@ public class BlockParent : MonoBehaviour
     public Layout BlockLayout { get; set; }
     public List<GameObject> Blocks { get; set; }
     private Board board;
-    public Slot lowerSlot;
-    public Slot upperSlot;
+    public Slot LowerSlot;
+    public Slot UpperSlot;
 
     private PolarGrid grid;
 
@@ -26,13 +26,13 @@ public class BlockParent : MonoBehaviour
 
     public void Update()
     {
-        lowerSlot = board.grid.LowerSlot(transform);
-        upperSlot = lowerSlot + new Slot(1, 0);
+        LowerSlot = board.grid.LowerSlot(transform);
+        UpperSlot = LowerSlot + new Slot(1, 0);
 
         bool isValidMove = true;
         foreach (Slot slot in BlockLayout)
         {
-            if (!board.IsEmpty(lowerSlot + slot))
+            if (!board.IsEmpty(LowerSlot + slot))
             {
                 isValidMove = false;
             }
@@ -44,12 +44,12 @@ public class BlockParent : MonoBehaviour
         }
         else
         {
-            board.grid.MoveToSlot(upperSlot, gameObject);
+            board.grid.MoveToSlot(UpperSlot, gameObject);
             foreach (int i in Enumerable.Range(0, BlockLayout.Count))
             {
                 GameObject block = Blocks[i];
                 Slot slot = BlockLayout[i];
-                board.SetSlot(upperSlot + slot, block);
+                board.SetSlot(UpperSlot + slot, block);
             }
             board.CheckForCompleteRows();
             Destroy(gameObject);

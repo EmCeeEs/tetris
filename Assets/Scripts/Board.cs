@@ -58,7 +58,7 @@ public class Board : MonoBehaviour
         {
             if (currentBlock == null || currentBlock == blockSpawner.emptyObject)
             {
-                currentBlock = blockSpawner.SpawnBlock(spawnSlot);
+                blockSpawner.SpawnBlock(spawnSlot);
             }
         }
     }
