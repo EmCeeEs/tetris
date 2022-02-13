@@ -1,7 +1,9 @@
 {
     "RoslynExtensionsOptions": {
         "EnableAnalyzersSupport": true,
-        "LocationPaths": ["./NuGet"]
+        "LocationPaths": [
+            "./NuGet"
+        ]
     },
     "FormattingOptions": {
         "enableEditorConfigSupport": true,

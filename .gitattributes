@@ -51,3 +51,12 @@
 *.meta linguist-generated
 *.prefab linguist-generated
 *.unity linguist-generated
+
+# https://github.com/alexkaratarakis/gitattributes
+# Auto detect text files and perform LF normalization
+*          text=auto
+*.cs       text diff=csharp
+*.cshtml   text diff=html
+*.csx      text diff=csharp
+*.sln      text eol=crlf merge=union
+*.csproj   text merge=union
