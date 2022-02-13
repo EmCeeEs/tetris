@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private Board board;
 
     private int cooldownTimer = 0;
-    private const int MAX_COOLDOWN = 15;
+    private const int MAX_COOLDOWN = 5;
 
     private void Awake()
     {

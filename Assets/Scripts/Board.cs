@@ -6,7 +6,7 @@ using System.Linq;
 
 public class Board : MonoBehaviour
 {
-    public float scaleChange = 0.05f;
+    public float scaleChange = 0.02F;
 
     public UIHandler uiHandler;
     public bool isPlaying;
@@ -107,7 +107,7 @@ public class Board : MonoBehaviour
 
                 currentScore += tetrisScore;
                 uiHandler.UpdateScore(currentScore);
-                scaleChange += 0.01f;
+                scaleChange += 0.005F;
             }
         }
     }
