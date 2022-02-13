@@ -6,6 +6,8 @@ using System.Linq;
 
 public class Board : MonoBehaviour
 {
+    public float scaleChange = 0.05f;
+
     public UIHandler uiHandler;
     public bool isPlaying;
     public float currentScore;
@@ -41,7 +43,7 @@ public class Board : MonoBehaviour
         spawnSlot = new Slot(N_ROWS - 4, 0);
         grid = new PolarGrid();
 
-        colors = new Color32[9];
+        colors = new Color32[10];
         colors[0] = new Color32(0, 255, 0, 1);
         colors[1] = new Color32(153, 255, 102, 1);
         colors[2] = new Color32(204, 255, 51, 1);
@@ -51,6 +53,7 @@ public class Board : MonoBehaviour
         colors[6] = new Color32(255, 0, 0, 1);
         colors[7] = new Color32(153, 0, 51, 1);
         colors[8] = new Color32(102, 0, 51, 1);
+        colors[9] = new Color32(102, 0, 51, 1);
     }
     private void LateUpdate()
     {
@@ -76,15 +79,18 @@ public class Board : MonoBehaviour
 
     public void SetSlot(Slot slot, GameObject block)
     {
-        int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
+        if(slot.Scale < colors.Length)
+        {
+            int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
 
-        block.transform.SetParent(playerBase.transform);
+            block.transform.SetParent(playerBase.transform);
 
-        currentScore += singleBlockPoint;
-        uiHandler.UpdateScore(currentScore);
+            currentScore += singleBlockPoint;
+            uiHandler.UpdateScore(currentScore);
 
-        slots[slot.Scale, totalRotation] = block;
-        block.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", colors[slot.Scale]);
+            slots[slot.Scale, totalRotation] = block;
+            block.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", colors[slot.Scale]);
+        }
     }
 
     public void CheckForCompleteRows()
@@ -101,6 +107,7 @@ public class Board : MonoBehaviour
 
                 currentScore += tetrisScore;
                 uiHandler.UpdateScore(currentScore);
+                scaleChange += 0.01f;
             }
         }
     }

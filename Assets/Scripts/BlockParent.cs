@@ -24,7 +24,7 @@ public class BlockParent : MonoBehaviour
         grid = new PolarGrid(board.grid.Periodicity);
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         LowerSlot = board.grid.LowerSlot(transform);
         UpperSlot = LowerSlot + new Slot(1, 0);
@@ -40,7 +40,7 @@ public class BlockParent : MonoBehaviour
 
         if (isValidMove)
         {
-            board.grid.MoveByTick(transform);
+            board.grid.MoveByTick(transform, board.scaleChange);
         }
         else
         {

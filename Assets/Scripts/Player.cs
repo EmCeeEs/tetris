@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private Board board;
 
     private int cooldownTimer = 0;
-    private const int MAX_COOLDOWN = 4;
+    private const int MAX_COOLDOWN = 15;
 
     private void Awake()
     {
@@ -26,8 +26,6 @@ public class Player : MonoBehaviour
             inputActions = new PlayerControls();
         }
         inputActions.Enable();
-
-        inputActions.PlayerMovement.PlayerInvertBlockX.started += HandleXInversion;
     }
 
     private void OnDisable()
@@ -40,6 +38,7 @@ public class Player : MonoBehaviour
         if (cooldownTimer == 0)
         {
             HandleRotation();
+            HandleXInversion();
         }
         else
         {
@@ -47,16 +46,28 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void HandleXInversion(InputAction.CallbackContext context)
+    private void HandleXInversion()
     {
-        BlockParent block = board.currentBlock.GetComponent<BlockParent>();
-        List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
+        bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
 
-        bool canInvert = newLayout.All(slot => board.IsEmpty(slot + block.LowerSlot));
-
-        if (canInvert)
+        if(joystick.Vertical > 0.5 || joystick.Vertical < -0.5)
         {
-            block.InvertX();
+            invertion = true;
+        }
+
+        if (board.currentBlock)
+        {
+            BlockParent block = board.currentBlock.GetComponent<BlockParent>();
+            List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
+
+            bool canInvert = newLayout.All(slot => board.IsEmpty(slot + block.LowerSlot));
+
+            if (canInvert && invertion)
+            {
+                block.InvertX();
+
+                cooldownTimer = MAX_COOLDOWN;
+            }
         }
     }
 

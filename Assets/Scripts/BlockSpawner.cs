@@ -42,10 +42,11 @@ public class BlockSpawner : MonoBehaviour
             uiHandler.playButton.SetActive(true);
             board.DestroyAll();
             board.currentBlock = null;
+        } else
+        {
+            InstantiateBlockFromLayout(spawnSlot, blockLayout);
+            board.currentBlock = currentBlock;
         }
-
-        InstantiateBlockFromLayout(spawnSlot, blockLayout);
-        board.currentBlock = currentBlock;
     }
 
     private void InstantiateBlockFromLayout(Slot spawnSlot, Layout layout)

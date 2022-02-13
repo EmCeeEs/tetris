@@ -56,17 +56,6 @@
                 },
                 {
                     "name": "",
-                    "id": "deb45a26-988f-4fb8-8f69-a1d314e7cdd6",
-                    "path": "<Touchscreen>/primaryTouch/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PlayerRotation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9430a224-4733-4d5c-a988-2b1325a218ea",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",

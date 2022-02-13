@@ -38,10 +38,17 @@ public class PolarGrid
         return new Slot(scaleExponent, rotationState);
     }
 
-    public void MoveByTick(Transform transform)
+    public void MoveByTick(Transform transform, float scaleChange)
     {
-        float scaleChange = 0.02F;
+        Debug.Log("Pre SCale scale");
+        Debug.Log(scaleChange);
+        Debug.Log(transform.localScale);
+        Debug.Break();
+
         transform.localScale -= new Vector3(scaleChange, 0, scaleChange);
+        Debug.Log("Post Scale scale");
+        Debug.Log(transform.localScale);
+        Debug.Break();
     }
 
     public void MoveToSlot(Slot slot, GameObject go)
