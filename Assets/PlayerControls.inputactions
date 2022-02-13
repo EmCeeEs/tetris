@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "PlayerInvertBlockX",
+                    "type": "Button",
+                    "id": "ec95b3c2-5a79-45cc-ad59-0893d4ea185e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -58,17 +67,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8cdfb085-6b00-424f-8ad6-3df65f1afd8f",
-                    "path": "<Keyboard>/upArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "PlayerRotationLeft",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "9430a224-4733-4d5c-a988-2b1325a218ea",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
@@ -80,8 +78,8 @@
                 },
                 {
                     "name": "",
-                    "id": "b7a35b3a-5512-4bf3-b801-9d14c0a05737",
-                    "path": "<Keyboard>/downArrow",
+                    "id": "bfc4a775-41c1-4106-a3f8-8dadc7fa300a",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -91,12 +89,23 @@
                 },
                 {
                     "name": "",
-                    "id": "bfc4a775-41c1-4106-a3f8-8dadc7fa300a",
-                    "path": "<Keyboard>/rightArrow",
+                    "id": "9d6a0006-9e37-4a43-b1ec-4ba74e1a18a6",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "PlayerRotationRight",
+                    "action": "PlayerInvertBlockX",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e99843a3-da15-4662-af2a-0c1d6886e010",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PlayerInvertBlockX",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

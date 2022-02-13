@@ -53,6 +53,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerInvertBlockX"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec95b3c2-5a79-45cc-ad59-0893d4ea185e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -80,34 +89,12 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8cdfb085-6b00-424f-8ad6-3df65f1afd8f"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""PlayerRotationLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""9430a224-4733-4d5c-a988-2b1325a218ea"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PlayerRotationLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b7a35b3a-5512-4bf3-b801-9d14c0a05737"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""PlayerRotationRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -121,6 +108,28 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""PlayerRotationRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9d6a0006-9e37-4a43-b1ec-4ba74e1a18a6"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerInvertBlockX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e99843a3-da15-4662-af2a-0c1d6886e010"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerInvertBlockX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -132,6 +141,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_PlayerMovement_PlayerRotation = m_PlayerMovement.FindAction("PlayerRotation", throwIfNotFound: true);
         m_PlayerMovement_PlayerRotationLeft = m_PlayerMovement.FindAction("PlayerRotationLeft", throwIfNotFound: true);
         m_PlayerMovement_PlayerRotationRight = m_PlayerMovement.FindAction("PlayerRotationRight", throwIfNotFound: true);
+        m_PlayerMovement_PlayerInvertBlockX = m_PlayerMovement.FindAction("PlayerInvertBlockX", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -194,6 +204,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMovement_PlayerRotation;
     private readonly InputAction m_PlayerMovement_PlayerRotationLeft;
     private readonly InputAction m_PlayerMovement_PlayerRotationRight;
+    private readonly InputAction m_PlayerMovement_PlayerInvertBlockX;
     public struct PlayerMovementActions
     {
         private @PlayerControls m_Wrapper;
@@ -201,6 +212,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @PlayerRotation => m_Wrapper.m_PlayerMovement_PlayerRotation;
         public InputAction @PlayerRotationLeft => m_Wrapper.m_PlayerMovement_PlayerRotationLeft;
         public InputAction @PlayerRotationRight => m_Wrapper.m_PlayerMovement_PlayerRotationRight;
+        public InputAction @PlayerInvertBlockX => m_Wrapper.m_PlayerMovement_PlayerInvertBlockX;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -219,6 +231,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PlayerRotationRight.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
                 @PlayerRotationRight.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
                 @PlayerRotationRight.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
+                @PlayerInvertBlockX.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
+                @PlayerInvertBlockX.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
+                @PlayerInvertBlockX.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
             }
             m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
             if (instance != null)
@@ -232,6 +247,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @PlayerRotationRight.started += instance.OnPlayerRotationRight;
                 @PlayerRotationRight.performed += instance.OnPlayerRotationRight;
                 @PlayerRotationRight.canceled += instance.OnPlayerRotationRight;
+                @PlayerInvertBlockX.started += instance.OnPlayerInvertBlockX;
+                @PlayerInvertBlockX.performed += instance.OnPlayerInvertBlockX;
+                @PlayerInvertBlockX.canceled += instance.OnPlayerInvertBlockX;
             }
         }
     }
@@ -241,5 +259,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnPlayerRotation(InputAction.CallbackContext context);
         void OnPlayerRotationLeft(InputAction.CallbackContext context);
         void OnPlayerRotationRight(InputAction.CallbackContext context);
+        void OnPlayerInvertBlockX(InputAction.CallbackContext context);
     }
 }

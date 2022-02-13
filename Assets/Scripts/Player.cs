@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+using System.Linq;
 public class Player : MonoBehaviour
 {
     private PlayerControls inputActions;
@@ -25,6 +26,8 @@ public class Player : MonoBehaviour
             inputActions = new PlayerControls();
         }
         inputActions.Enable();
+
+        inputActions.PlayerMovement.PlayerInvertBlockX.started += HandleXInversion;
     }
 
     private void OnDisable()
@@ -44,10 +47,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void HandleXInversion(InputAction.CallbackContext context)
+    {
+        BlockParent block = board.currentBlock.GetComponent<BlockParent>();
+        List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
+
+        bool canInvert = newLayout.All(slot => board.IsEmpty(slot + block.LowerSlot));
+
+        if (canInvert)
+        {
+            block.InvertX();
+        }
+    }
+
     private void HandleRotation()
     {
-        bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
-        bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == UnityEngine.InputSystem.InputActionPhase.Performed;
+        bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == InputActionPhase.Performed;
+        bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == InputActionPhase.Performed;
 
         if (joystick.Horizontal > 0.5)
         {

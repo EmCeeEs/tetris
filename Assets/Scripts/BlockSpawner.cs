@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
+
+using System.Linq;
 
 // use type alias
 using Layout = System.Collections.Generic.List<Slot>;
@@ -14,57 +18,56 @@ public class BlockSpawner : MonoBehaviour
 
     private Board board;
 
+    private GameObject currentBlock;
+
     public void Start()
     {
         uiHandler = FindObjectOfType<UIHandler>();
         board = FindObjectOfType<Board>();
     }
 
-    public GameObject SpawnBlock(Slot spawnSlot)
+    public void SpawnBlock(Slot spawnSlot)
     {
-        int layoutIndex = Random.Range(0, layouts.Count);
+        int layoutIndex = UnityEngine.Random.Range(0, layouts.Count);
         Layout blockLayout = layouts[layoutIndex];
 
-        Slot boardSlot;
-        foreach (Slot layoutSlot in blockLayout)
+        bool canSpawn = blockLayout.All(slot => board.IsEmpty(slot + spawnSlot));
+        if (!canSpawn)
         {
-            boardSlot = spawnSlot + layoutSlot;
-            if (!board.IsEmpty(boardSlot))
-            {
-                Debug.LogError("GAME OVER");
-                Debug.LogError("Cannot Spawn Block at boardSlot" + boardSlot);
-                board.isPlaying = false;
-                uiHandler.joystick.SetActive(false);
-                uiHandler.playButton.SetActive(true);
-                board.DestroyAll();
-                board.currentBlock = null;
-            }
+            Debug.LogError("GAME OVER");
+            Debug.LogError($"Cannot Spawn Block at {spawnSlot}");
+
+            board.isPlaying = false;
+            uiHandler.joystick.SetActive(false);
+            uiHandler.playButton.SetActive(true);
+            board.DestroyAll();
+            board.currentBlock = null;
         }
 
-        if (board.isPlaying)
+        InstantiateBlockFromLayout(spawnSlot, blockLayout);
+        board.currentBlock = currentBlock;
+    }
+
+    private void InstantiateBlockFromLayout(Slot spawnSlot, Layout layout)
+    {
+
+        GameObject parent = Instantiate(BlockParentPrefab);
+        List<GameObject> blocks = new List<GameObject>();
+
+        GameObject block;
+        foreach (Slot slot in layout)
         {
-            GameObject parent = Instantiate(BlockParentPrefab);
-            List<GameObject> blocks = new List<GameObject>();
-
-            GameObject block;
-            foreach (Slot layoutSlot in blockLayout)
-            {
-                block = Instantiate(BlockPrefab, parent.transform);
-                board.grid.MoveToSlot(layoutSlot, block);
-                blocks.Add(block);
-            }
-
-            parent.GetComponent<BlockParent>().BlockLayout = blockLayout;
-            parent.GetComponent<BlockParent>().Blocks = blocks;
-
-            board.grid.MoveToSlot(spawnSlot, parent);
-
-            return parent;
+            block = Instantiate(BlockPrefab, parent.transform);
+            board.grid.MoveToSlot(slot, block);
+            blocks.Add(block);
         }
-        else
-        {
-            return emptyObject;
-        }
+
+        parent.GetComponent<BlockParent>().BlockLayout = layout;
+        parent.GetComponent<BlockParent>().Blocks = blocks;
+
+        board.grid.MoveToSlot(spawnSlot, parent);
+
+        currentBlock = parent;
     }
 }
 
@@ -109,4 +112,14 @@ public class LayoutCreator
                 new Slot(-1, 0),
             },
         };
+
+    public static Layout InvertX(Layout layout)
+    {
+        return layout.Select(slot => Slot.InvertX(slot)).ToList();
+    }
+
+    public static Layout InvertY(Layout layout)
+    {
+        return layout.Select(slot => Slot.InvertY(slot)).ToList();
+    }
 }
