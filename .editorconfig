@@ -1,5 +1,13 @@
 root = true
 
+# editor agnostic styles
+indent_size = 4
+tab_width = 4
+indent_style = tab
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
 [*.cs]
 # https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/new-operator#constructor-invocation
 # disable analyzers for unsupported C# 9.0 features in unity

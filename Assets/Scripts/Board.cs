@@ -79,7 +79,7 @@ public class Board : MonoBehaviour
 
     public void SetSlot(Slot slot, GameObject block)
     {
-        if(slot.Scale < colors.Length)
+        if (slot.Scale < colors.Length)
         {
             int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
 

@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
     {
         bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
 
-        if(joystick.Vertical > 0.5 || joystick.Vertical < -0.5)
+        if (joystick.Vertical > 0.5 || joystick.Vertical < -0.5)
         {
             invertion = true;
         }
