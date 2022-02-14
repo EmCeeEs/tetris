@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7374092184299826808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7374092184299826758}
+  - component: {fileID: 7374092184299826759}
+  m_Layer: 0
+  m_Name: SpaceStuff
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7374092184299826758
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7374092184299826808}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7374092184299826759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7374092184299826808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0728f219611b924429374cb6d183208c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planets:
+  - {fileID: 7887236398739578506, guid: c716252fc3648c347b94170a6c78b09e, type: 3}
+  - {fileID: 7824517362728547664, guid: 560ccd72c5c74d44aae7d15aa590179c, type: 3}
+  spacecrafts:
+  - {fileID: 8378804518415536602, guid: 9b91adfc23b98094fb3b59c5cf71b563, type: 3}
+  - {fileID: 3101700743591765715, guid: e46fe14ff49d9264b83815449c41b1f9, type: 3}
+  planetSpawnLocations:
+  - {fileID: 0}
+  - {fileID: 0}
+  spaceCraftSpawnLocations:
+  - {fileID: 0}
+  - {fileID: 0}
