@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 
         // TODO: check validity
 
-        var action = ActionCreators.CreateRotateAction(1);
+        var action = new RotateAction() { NumberOfRotations = 1 };
         GM.Store.Dispatch(action);
     }
 
@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
 
         // TODO: check validity
 
-        var action = ActionCreators.CreateInvertAction();
+        var action = new InvertAction();
         GM.Store.Dispatch(action);
     }
 }
