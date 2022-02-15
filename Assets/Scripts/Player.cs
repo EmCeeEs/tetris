@@ -1,30 +1,37 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
     private GameManager GM;
+    private PlayerControls PC;
 
     private void Awake()
     {
         GM = GameManager.Instance;
+        PC = new PlayerControls();
+
+        PC.PlayerMovement.PlayerRotationLeft.started += RotateBoardLeft;
+        PC.PlayerMovement.PlayerRotationRight.started += RotateBoardRight;
+        PC.PlayerMovement.PlayerInvertBlockX.started += InvertBlockX;
+
+        // inputActions.Enable();
     }
 
-    public void RotateBoard()
+    public void RotateBoardRight(InputAction.CallbackContext context)
     {
-        State state = GM.Store.GetState();
-
-        // TODO: check validity
-
         var action = new RotateAction(1);
         GM.Store.Dispatch(action);
     }
 
-    public void InvertBlock()
+    public void RotateBoardLeft(InputAction.CallbackContext context)
     {
-        State state = GM.Store.GetState();
+        var action = new RotateAction(-1);
+        GM.Store.Dispatch(action);
+    }
 
-        // TODO: check validity
-
+    public void InvertBlockX(InputAction.CallbackContext context)
+    {
         var action = new InvertAction();
         GM.Store.Dispatch(action);
     }
