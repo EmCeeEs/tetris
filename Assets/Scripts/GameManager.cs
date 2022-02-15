@@ -21,10 +21,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(instance);
     }
 
-    public Store Store;
+    public Store<State> Store;
     private void Start()
     {
-        Store = new Store();
+        State state = new State();
+        Store = new Store<State>(Reducer.root, state);
     }
 
 }

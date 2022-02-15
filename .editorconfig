@@ -14,3 +14,6 @@ trim_trailing_whitespace = true
 dotnet_diagnostic.IDE0017.severity = none
 dotnet_diagnostic.IDE0028.severity = none
 dotnet_diagnostic.IDE0090.severity = none
+
+# csharp_style_pattern_local_over_anonymous_function
+dotnet_diagnostic.IDE0039.severity = none
