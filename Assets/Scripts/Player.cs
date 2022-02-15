@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
     private GameManager GM;
     private PlayerControls PC;
 
-    private void Awake()
+    private void Start()
     {
         GM = GameManager.Instance;
         PC = new PlayerControls();
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
         PC.PlayerMovement.PlayerRotationRight.started += RotateBoardRight;
         PC.PlayerMovement.PlayerInvertBlockX.started += InvertBlockX;
 
-        // inputActions.Enable();
+        PC.Enable();
     }
 
     public void RotateBoardRight(InputAction.CallbackContext context)

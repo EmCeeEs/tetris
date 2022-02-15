@@ -1,5 +1,4 @@
 using UnityEngine;
-
 using Redux;
 
 public class GameManager : MonoBehaviour
@@ -21,10 +20,12 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(instance);
+
+        CreateState();
     }
 
     public Store<State> Store;
-    private void Start()
+    private void CreateState()
     {
         State state = new State();
         Store = new Store<State>(Reducer.root, state);
