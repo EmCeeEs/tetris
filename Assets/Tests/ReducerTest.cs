@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
-using System.Linq;
+using Redux;
 
 public class ReducerTest
 {
@@ -9,8 +10,7 @@ public class ReducerTest
         ReducerDelegate<TState> reducer,
         TState initialState,
         IEnumerable<IAction> actions
-    )
-        => actions.Aggregate(initialState, reducer.Invoke);
+    ) => actions.Aggregate(initialState, reducer.Invoke);
 
     [Test]
     public void RotateTest()

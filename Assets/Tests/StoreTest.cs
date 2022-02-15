@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
+using Redux;
+
 public class StoreTest
 {
     private class DummyAction : IAction { };

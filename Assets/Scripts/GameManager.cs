@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using Redux;
+
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
