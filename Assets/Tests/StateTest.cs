@@ -46,4 +46,34 @@ public class ReducerTest
 
         Assert.AreEqual(true, Reduce(Reducer.invert, initialState, actions));
     }
+
+    [Test]
+    public void GridSetSlotTest()
+    {
+        var actions = new List<IAction>();
+        var state = new bool[12, 12];
+
+        Assert.AreEqual(state, Reduce(Reducer.grid, state, actions));
+
+        actions.Add(new SetSlotAction(0, 0));
+        state[0, 0] = true;
+
+        Assert.AreEqual(state, Reduce(Reducer.grid, state, actions));
+
+        actions.Add(new SetSlotAction(0, 11));
+        state[0, 11] = true;
+
+        Assert.AreEqual(state, Reduce(Reducer.grid, state, actions));
+
+        actions.Add(new UnsetSlotAction(0, 0));
+        state[0, 0] = false;
+
+        Assert.AreEqual(state, Reduce(Reducer.grid, state, actions));
+
+        // TODO: Fix
+        // actions.Add(new SetSlotAction(0, 12));
+        // state[0, 12] = true;
+
+        // Assert.AreEqual(state, Reduce(Reducer.grid, state, actions));
+    }
 }
