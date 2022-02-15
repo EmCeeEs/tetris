@@ -12,27 +12,37 @@ public readonly struct State : IState
 
 public readonly struct Reducer
 {
-    public static ReducerDelegate<State> root =
-        (state, action) => new State(
+    public static ReducerDelegate<State> root = (state, action)
+        => new State(
                 rotate(state.Rotation, action),
                 invert(state.Inversion, action)
             );
 
-    public static ReducerDelegate<int> rotate =
-        (state, action) => action is RotateAction
-            ? state + ((RotateAction)action).NumberOfRotations
-            : state;
+    public static ReducerDelegate<int> rotate = (state, action)
+        => action switch
+        {
+            RotateAction rotateAction => state + rotateAction.Payload,
+            _ => state,
+        };
 
 
-    public static ReducerDelegate<bool> invert =
-        (state, action) => action is InvertAction
-            ? !state
-            : state;
+    public static ReducerDelegate<bool> invert = (state, action)
+        => action switch
+        {
+            InvertAction invertAction => !state,
+            _ => state,
+        };
 }
 
-public class RotateAction : IAction
+
+public readonly struct RotateAction : IAction
 {
-    public int NumberOfRotations;
+    public readonly int Payload;
+
+    public RotateAction(int numberOfRotations)
+    {
+        Payload = numberOfRotations;
+    }
 }
 
-public class InvertAction : IAction { };
+public readonly struct InvertAction : IAction { };

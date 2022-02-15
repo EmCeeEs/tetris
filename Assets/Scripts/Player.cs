@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
 
         // TODO: check validity
 
-        var action = new RotateAction() { NumberOfRotations = 1 };
+        var action = new RotateAction(1);
         GM.Store.Dispatch(action);
     }
 

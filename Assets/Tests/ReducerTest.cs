@@ -20,11 +20,11 @@ public class ReducerTest
 
         Assert.AreEqual(0, Reduce(Reducer.rotate, initialState, actions));
 
-        actions.Add(new RotateAction() { NumberOfRotations = 1 });
+        actions.Add(new RotateAction(1));
 
         Assert.AreEqual(1, Reduce(Reducer.rotate, initialState, actions));
 
-        actions.Add(new RotateAction() { NumberOfRotations = -2 });
+        actions.Add(new RotateAction(-2));
 
         Assert.AreEqual(-1, Reduce(Reducer.rotate, initialState, actions));
 
