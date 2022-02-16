@@ -6,12 +6,6 @@ using Redux;
 
 public class BoardLogicTest
 {
-    private static TState Reduce<TState>(
-        ReducerDelegate<TState> reducer,
-        TState initialState,
-        IEnumerable<IAction> actions
-    ) => actions.Aggregate(initialState, reducer.Invoke);
-
     [Test]
     public void RotateTest()
     {
@@ -32,4 +26,10 @@ public class BoardLogicTest
 
         Assert.AreEqual(-1, Reduce(BoardLogic.Reducer.RotationOffset, initialState, actions));
     }
+
+    private static TState Reduce<TState>(
+        ReducerDelegate<TState> reducer,
+        TState initialState,
+        IEnumerable<IAction> actions
+    ) => actions.Aggregate(initialState, reducer.Invoke);
 }
