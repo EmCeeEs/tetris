@@ -15,12 +15,12 @@ public class PolarGrid
 
     public float GetScale(Slot slot)
     {
-        return Mathf.Pow(scale, slot.Scale);
+        return Mathf.Pow(scale, slot.X);
     }
 
     public float GetRotation(Slot slot)
     {
-        return Utils.Mod(slot.Rotation, Periodicity) * rotationAngle;
+        return Utils.Mod(slot.Y, Periodicity) * rotationAngle;
     }
 
     public Slot LowerSlot(Transform transform)
@@ -55,29 +55,29 @@ public class PolarGrid
 
 public readonly struct Slot
 {
-    public readonly int Scale;
-    public readonly int Rotation;
+    public readonly int X;
+    public readonly int Y;
 
-    public Slot(int scale, int rotation)
+    public Slot(int x, int y)
     {
-        Scale = scale;
-        Rotation = rotation;
+        X = x;
+        Y = y;
     }
 
     public static Slot operator +(Slot a, Slot b)
-        => new Slot(a.Scale + b.Scale, a.Rotation + b.Rotation);
+        => new Slot(a.X + b.X, a.Y + b.Y);
 
     public static Slot operator -(Slot a, Slot b)
-        => new Slot(a.Scale - b.Scale, a.Rotation - b.Rotation);
+        => new Slot(a.X - b.X, a.Y - b.Y);
 
 
     public static Slot InvertX(Slot Slot)
-        => new Slot(-Slot.Scale, Slot.Rotation);
+        => new Slot(-Slot.X, Slot.Y);
 
     public static Slot InvertY(Slot Slot)
-        => new Slot(Slot.Scale, -Slot.Rotation);
+        => new Slot(Slot.X, -Slot.Y);
 
-    public override string ToString() => $"({Scale}, {Rotation})";
+    public override string ToString() => $"({X}, {Y})";
 }
 
 public class Utils

@@ -18,21 +18,18 @@ public class Player : MonoBehaviour
         PC.Enable();
     }
 
-    public void RotateBoardRight(InputAction.CallbackContext context)
+    private void RotateBoardRight(InputAction.CallbackContext context)
     {
-        var action = new RotateAction(1);
-        GM.Store.Dispatch(action);
+        GM.Store.Dispatch(new BoardLogic.RotateRightAction());
     }
 
     public void RotateBoardLeft(InputAction.CallbackContext context)
     {
-        var action = new RotateAction(-1);
-        GM.Store.Dispatch(action);
+        GM.Store.Dispatch(new BoardLogic.RotateLeftAction());
     }
 
     public void InvertBlockX(InputAction.CallbackContext context)
     {
-        var action = new InvertAction();
-        GM.Store.Dispatch(action);
+        GM.Store.Dispatch(new BlockLogic.InvertXAction());
     }
 }
