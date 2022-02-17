@@ -4,24 +4,24 @@ namespace Redux
     public interface IAction { };
     public interface IState { };
 
-    public delegate void OnDispatchDelegate<TState>(TState state);
-    public delegate TState ReducerDelegate<TState>(TState state, IAction action);
+    public delegate void OnDispatchCallback<TState>(TState state);
+    public delegate TState Reducer<TState>(TState state, IAction action);
 
     public interface IStore<TState>
     {
         public TState GetState();
         public void Dispatch(IAction action);
-        public void Subscribe(OnDispatchDelegate<TState> callback);
+        public void Subscribe(OnDispatchCallback<TState> callback);
     };
 
     public class Store<TState> : IStore<TState>
     {
         private TState state;
 
-        private OnDispatchDelegate<TState> OnDispatch;
-        private readonly ReducerDelegate<TState> Reducer;
+        private OnDispatchCallback<TState> OnDispatch;
+        private readonly Reducer<TState> Reducer;
 
-        public Store(ReducerDelegate<TState> reducer, TState initialState)
+        public Store(Reducer<TState> reducer, TState initialState)
         {
             Reducer = reducer;
             state = initialState;
@@ -35,7 +35,7 @@ namespace Redux
             OnDispatch?.Invoke(state);
         }
 
-        public void Subscribe(OnDispatchDelegate<TState> callback)
+        public void Subscribe(OnDispatchCallback<TState> callback)
         {
             OnDispatch += callback;
         }

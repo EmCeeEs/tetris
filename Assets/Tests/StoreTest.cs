@@ -33,7 +33,7 @@ public class StoreTest
     public void DispatchTest()
     {
         int callCount = 0;
-        ReducerDelegate<int> mockReducer = (state, action) =>
+        Reducer<int> mockReducer = (state, action) =>
             {
                 callCount++;
                 return state;
@@ -57,7 +57,7 @@ public class StoreTest
     public void SubscribeTest()
     {
         int callCount = 0;
-        OnDispatchDelegate<int> mockOnDispatch = (state) =>
+        OnDispatchCallback<int> mockOnDispatch = (state) =>
             {
                 callCount++;
             };

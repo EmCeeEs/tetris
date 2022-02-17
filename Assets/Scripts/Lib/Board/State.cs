@@ -59,17 +59,18 @@ namespace BoardLogic
     #region REDUCER
     public readonly struct Reducer
     {
-        public static ReducerDelegate<State> Root =
-            (state, action) => action switch
-            {
-                ResetAction _action => new State(),
-                _ => new State(
-                    RotationOffset(state.RotationOffset, action),
-                    Slots(state.Slots, action)
-                ),
-            };
+        public static Reducer<State> Root =
+            (state, action) =>
+               action switch
+                {
+                    ResetAction _action => new State(),
+                    _ => new State(
+                        RotationOffset(state.RotationOffset, action),
+                        Slots(state.Slots, action)
+                    ),
+                };
 
-        public static ReducerDelegate<int> RotationOffset =
+        public static Reducer<int> RotationOffset =
             (state, action) =>
                 action switch
                 {
@@ -78,7 +79,7 @@ namespace BoardLogic
                     _ => state,
                 };
 
-        public static ReducerDelegate<bool[,]> Slots =
+        public static Reducer<bool[,]> Slots =
             (state, action) =>
                 action switch
                 {

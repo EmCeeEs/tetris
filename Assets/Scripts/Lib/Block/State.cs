@@ -31,7 +31,7 @@ namespace BlockLogic
     #region REDUCER
     public readonly struct Reducer
     {
-        public static ReducerDelegate<State> Root = (state, action) =>
+        public static Reducer<State> Root = (state, action) =>
             action switch
             {
                 InvertXAction _action => new State(!state.InvertX, state.InvertY),

@@ -14,7 +14,7 @@ public readonly struct State : IState
 
 public readonly struct Reducer
 {
-    public static ReducerDelegate<State> root = (state, action) =>
+    public static Reducer<State> root = (state, action) =>
         new State(
             BoardLogic.Reducer.Root(state.Board, action),
             BlockLogic.Reducer.Root(state.Block, action)

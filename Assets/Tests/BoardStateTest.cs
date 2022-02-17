@@ -28,7 +28,7 @@ public class BoardLogicTest
     }
 
     private static TState Reduce<TState>(
-        ReducerDelegate<TState> reducer,
+        Reducer<TState> reducer,
         TState initialState,
         IEnumerable<IAction> actions
     ) => actions.Aggregate(initialState, reducer.Invoke);
