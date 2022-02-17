@@ -7,7 +7,7 @@ public readonly struct BlockState : IState
     public readonly bool InvertX;
     public readonly bool InvertY;
 
-    public BlockState(bool invertX = false, bool invertY = false)
+    public BlockState(bool invertX, bool invertY)
     {
         InvertX = invertX;
         InvertY = invertY;

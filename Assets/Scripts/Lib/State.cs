@@ -5,10 +5,10 @@ public readonly struct State : IState
     public readonly BoardState Board;
     public readonly BlockState Block;
 
-    public State(BoardState? board = null, BlockState? block = null)
+    public State(BoardState board, BlockState block)
     {
-        Board = board ?? new BoardState();
-        Block = block ?? new BlockState();
+        Board = board;
+        Block = block;
     }
 }
 

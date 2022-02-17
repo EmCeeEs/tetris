@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-
 using Redux;
 
 public readonly struct BoardState : IState
@@ -8,13 +7,14 @@ public readonly struct BoardState : IState
     public readonly int RotationOffset;
     public readonly bool[,] Slots;
 
-    public BoardState(
-        int? rotationOffset = null,
-        bool[,] slots = null
+    // WARNING: structs have default constructor which sets all values to null
+    internal BoardState(
+        int rotationOffset,
+        bool[,] slots
     )
     {
-        RotationOffset = rotationOffset ?? 0;
-        Slots = slots ?? GridUtils.CreateSlots();
+        RotationOffset = rotationOffset;
+        Slots = slots;
     }
 
     public readonly static Reducer<BoardState> Reducer =
@@ -39,15 +39,17 @@ public readonly struct BoardState : IState
 
     public readonly static Reducer<bool[,]> SlotsReducer =
         (state, action) =>
-            action switch
+        {
+            // init the state
+            state ??= GridUtils.CreateSlots();
+
+            return action switch
             {
                 FlagSlotsAction _action => GridUtils.FlagSlots(state, _action.Slots),
                 DeleteRowAction _action => GridUtils.DeleteRow(state, _action.RowNumber),
                 _ => state,
             };
-
-    public readonly static Func<BoardState, int> GetRotationOffset = (state) => state.RotationOffset;
-    public readonly static Func<BoardState, bool[,]> GetSlots = (state) => state.Slots;
+        };
 }
 
 public readonly struct GridUtils
