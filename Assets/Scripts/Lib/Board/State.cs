@@ -3,141 +3,132 @@ using System.Collections.Generic;
 
 using Redux;
 
-namespace BoardLogic
+public readonly struct BoardState : IState
 {
-    #region STATE
-    public readonly struct State : IState
-    {
-        public readonly int RotationOffset;
-        public readonly bool[,] Slots;
+    public readonly int RotationOffset;
+    public readonly bool[,] Slots;
 
-        public State(
-            int? rotationOffset = null,
-            bool[,] slots = null
-        )
-        {
-            RotationOffset = rotationOffset ?? 0;
-            Slots = slots ?? Utils.CreateSlots();
-        }
-    }
-    #endregion
-
-    #region ACTIONS
-    public readonly struct ResetAction : IAction
+    public BoardState(
+        int? rotationOffset = null,
+        bool[,] slots = null
+    )
     {
+        RotationOffset = rotationOffset ?? 0;
+        Slots = slots ?? GridUtils.CreateSlots();
     }
 
-    public readonly struct RotateLeftAction : IAction
-    {
-    }
-
-    public readonly struct RotateRightAction : IAction
-    {
-    }
-
-    public readonly struct FlagSlotsAction : IAction
-    {
-        public readonly List<Slot> Slots;
-
-        public FlagSlotsAction(List<Slot> slots)
-        {
-            Slots = slots;
-        }
-    }
-
-    public readonly struct DeleteRowAction : IAction
-    {
-        public readonly int RowNumber;
-
-        public DeleteRowAction(int rowNumber)
-        {
-            RowNumber = rowNumber;
-        }
-    }
-    #endregion
-
-    #region REDUCER
-    public readonly struct Reducer
-    {
-        public static Reducer<State> Root =
-            (state, action) =>
-               action switch
-                {
-                    ResetAction _action => new State(),
-                    _ => new State(
-                        RotationOffset(state.RotationOffset, action),
-                        Slots(state.Slots, action)
-                    ),
-                };
-
-        public static Reducer<int> RotationOffset =
-            (state, action) =>
-                action switch
-                {
-                    RotateLeftAction _action => state + 1,
-                    RotateRightAction _action => state - 1,
-                    _ => state,
-                };
-
-        public static Reducer<bool[,]> Slots =
-            (state, action) =>
-                action switch
-                {
-                    FlagSlotsAction _action => Utils.FlagSlots(state, _action.Slots),
-                    DeleteRowAction _action => Utils.DeleteRow(state, _action.RowNumber),
-                    _ => state,
-                };
-    }
-    #endregion
-
-    # region UTILS
-    public readonly struct Utils
-    {
-        private const int xDim = 12;
-        private const int yDim = 12;
-
-        public readonly static Func<bool[,]> CreateSlots =
-            () => new bool[xDim, yDim];
-
-        public readonly static Func<bool[,], List<Slot>, bool[,]> FlagSlots = (state, slots) =>
-        {
-            bool[,] copy = CreateSlots();
-
-            for (var i = 0; i < xDim; i++)
+    public readonly static Reducer<BoardState> Reducer =
+        (state, action) =>
+           action switch
             {
-                for (var j = 0; j < yDim; j++)
-                {
-                    copy[i, j] = state[i, j];
-                }
-            }
+                ResetAction _action => new BoardState(),
+                _ => new BoardState(
+                    RotationOffsetRecuder(state.RotationOffset, action),
+                    SlotsReducer(state.Slots, action)
+                ),
+            };
 
-            slots.ForEach(slot => copy[slot.X, slot.Y] = true);
-            return copy;
-        };
+    public readonly static Reducer<int> RotationOffsetRecuder =
+        (state, action) =>
+            action switch
+            {
+                RotateLeftAction _action => state + 1,
+                RotateRightAction _action => state - 1,
+                _ => state,
+            };
 
-        public readonly static Func<bool[,], int, bool[,]> DeleteRow = (state, rowNumber) =>
+    public readonly static Reducer<bool[,]> SlotsReducer =
+        (state, action) =>
+            action switch
+            {
+                FlagSlotsAction _action => GridUtils.FlagSlots(state, _action.Slots),
+                DeleteRowAction _action => GridUtils.DeleteRow(state, _action.RowNumber),
+                _ => state,
+            };
+
+    public readonly static Func<BoardState, int> GetRotationOffset = (state) => state.RotationOffset;
+    public readonly static Func<BoardState, bool[,]> GetSlots = (state) => state.Slots;
+}
+
+public readonly struct GridUtils
+{
+    private const int xDim = 12;
+    private const int yDim = 12;
+
+    public readonly static Func<bool[,]> CreateSlots =
+        () => new bool[xDim, yDim];
+
+    public readonly static Func<bool[,], List<Slot>, bool[,]> FlagSlots = (state, slots) =>
+    {
+        bool[,] copy = CreateSlots();
+
+        for (var i = 0; i < xDim; i++)
         {
-            bool[,] copy = CreateSlots();
-
-            for (var i = 0; i < rowNumber; i++)
+            for (var j = 0; j < yDim; j++)
             {
-                for (var j = 0; j < yDim; j++)
-                {
-                    copy[i, j] = state[i, j];
-                }
+                copy[i, j] = state[i, j];
             }
+        }
 
-            for (var i = rowNumber + 1; i < xDim; i++)
+        slots.ForEach(slot => copy[slot.X, slot.Y] = true);
+        return copy;
+    };
+
+    public readonly static Func<bool[,], int, bool[,]> DeleteRow = (state, rowNumber) =>
+    {
+        bool[,] copy = CreateSlots();
+
+        for (var i = 0; i < rowNumber; i++)
+        {
+            for (var j = 0; j < yDim; j++)
             {
-                for (var j = 0; j < yDim; j++)
-                {
-                    copy[i - 1, j] = state[i, j];
-                }
+                copy[i, j] = state[i, j];
             }
+        }
 
-            return copy;
-        };
+        for (var i = rowNumber + 1; i < xDim; i++)
+        {
+            for (var j = 0; j < yDim; j++)
+            {
+                copy[i - 1, j] = state[i, j];
+            }
+        }
 
+        return copy;
+    };
+
+}
+
+
+public readonly struct ResetAction : IAction
+{
+}
+
+public readonly struct RotateLeftAction : IAction
+{
+}
+
+public readonly struct RotateRightAction : IAction
+{
+}
+
+
+public readonly struct FlagSlotsAction : IAction
+{
+    public readonly List<Slot> Slots;
+
+    public FlagSlotsAction(List<Slot> slots)
+    {
+        Slots = slots;
     }
-    # endregion
+}
+
+public readonly struct DeleteRowAction : IAction
+{
+    public readonly int RowNumber;
+
+    public DeleteRowAction(int rowNumber)
+    {
+        RowNumber = rowNumber;
+    }
 }

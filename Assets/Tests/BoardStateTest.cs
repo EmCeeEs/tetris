@@ -4,27 +4,27 @@ using NUnit.Framework;
 
 using Redux;
 
-public class BoardLogicTest
+public class BoardStateTest
 {
     [Test]
-    public void RotateTest()
+    public void RotationOffsetTest()
     {
         var actions = new List<IAction>();
         var initialState = 0;
 
-        Assert.AreEqual(0, Reduce(BoardLogic.Reducer.RotationOffset, initialState, actions));
+        Assert.AreEqual(0, Reduce(BoardState.RotationOffsetRecuder, initialState, actions));
 
-        actions.Add(new BoardLogic.RotateLeftAction());
+        actions.Add(new RotateLeftAction());
 
-        Assert.AreEqual(1, Reduce(BoardLogic.Reducer.RotationOffset, initialState, actions));
+        Assert.AreEqual(1, Reduce(BoardState.RotationOffsetRecuder, initialState, actions));
 
-        actions.Add(new BoardLogic.RotateRightAction());
+        actions.Add(new RotateRightAction());
 
-        Assert.AreEqual(0, Reduce(BoardLogic.Reducer.RotationOffset, initialState, actions));
+        Assert.AreEqual(0, Reduce(BoardState.RotationOffsetRecuder, initialState, actions));
 
-        actions.Add(new BoardLogic.RotateRightAction());
+        actions.Add(new RotateRightAction());
 
-        Assert.AreEqual(-1, Reduce(BoardLogic.Reducer.RotationOffset, initialState, actions));
+        Assert.AreEqual(-1, Reduce(BoardState.RotationOffsetRecuder, initialState, actions));
     }
 
     private static TState Reduce<TState>(

@@ -2,50 +2,33 @@ using System;
 
 using Redux;
 
-namespace BlockLogic
+public readonly struct BlockState : IState
 {
-    #region STATE
-    public readonly struct State : IState
-    {
-        public readonly bool InvertX;
-        public readonly bool InvertY;
+    public readonly bool InvertX;
+    public readonly bool InvertY;
 
-        public State(bool invertX = false, bool invertY = false)
+    public BlockState(bool invertX = false, bool invertY = false)
+    {
+        InvertX = invertX;
+        InvertY = invertY;
+    }
+
+    public readonly static Reducer<BlockState> Reducer = (state, action) =>
+        action switch
         {
-            InvertX = invertX;
-            InvertY = invertY;
-        }
-    }
-    #endregion
+            InvertXAction _action => new BlockState(!state.InvertX, state.InvertY),
+            InvertYAction _action => new BlockState(state.InvertX, !state.InvertY),
+            _ => state,
+        };
 
-    #region ACTIONS
-    public readonly struct InvertXAction : IAction
-    {
-    };
-
-    public readonly struct InvertYAction : IAction
-    {
-    };
-    #endregion
-
-    #region REDUCER
-    public readonly struct Reducer
-    {
-        public static Reducer<State> Root = (state, action) =>
-            action switch
-            {
-                InvertXAction _action => new State(!state.InvertX, state.InvertY),
-                InvertYAction _action => new State(state.InvertX, !state.InvertY),
-                _ => state,
-            };
-    }
-    #endregion
-
-    #region SELECTORS
-    public readonly struct Selector
-    {
-        public static Func<State, bool> GetInvertX = (state) => state.InvertX;
-        public static Func<State, bool> GetInvertY = (state) => state.InvertY;
-    }
-    #endregion
+    public readonly static Func<BlockState, bool> GetInvertX = (state) => state.InvertX;
+    public readonly static Func<BlockState, bool> GetInvertY = (state) => state.InvertY;
 }
+
+public readonly struct InvertXAction : IAction
+{
+};
+
+public readonly struct InvertYAction : IAction
+{
+};

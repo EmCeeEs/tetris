@@ -20,16 +20,16 @@ public class Player : MonoBehaviour
 
     private void RotateBoardRight(InputAction.CallbackContext context)
     {
-        GM.Store.Dispatch(new BoardLogic.RotateRightAction());
+        GM.Store.Dispatch(new RotateRightAction());
     }
 
     public void RotateBoardLeft(InputAction.CallbackContext context)
     {
-        GM.Store.Dispatch(new BoardLogic.RotateLeftAction());
+        GM.Store.Dispatch(new RotateLeftAction());
     }
 
     public void InvertBlockX(InputAction.CallbackContext context)
     {
-        GM.Store.Dispatch(new BlockLogic.InvertXAction());
+        GM.Store.Dispatch(new InvertXAction());
     }
 }
