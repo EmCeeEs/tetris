@@ -10,11 +10,8 @@ public readonly struct State : IState
         Board = board;
         Block = block;
     }
-}
 
-public readonly struct Reducer
-{
-    public static Reducer<State> root = (state, action) =>
+    public readonly static Reducer<State> Reducer = (state, action) =>
         new State(
             BoardState.Reducer(state.Board, action),
             BlockState.Reducer(state.Block, action)

@@ -30,5 +30,4 @@ public class UIHandler : MonoBehaviour
         Debug.Log("QUIT");
         Application.Quit();
     }
-
 }

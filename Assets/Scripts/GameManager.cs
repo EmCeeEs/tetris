@@ -3,6 +3,8 @@ using Redux;
 
 public class GameManager : MonoBehaviour
 {
+    public Canvas UI;
+
     private static GameManager instance;
     public static GameManager Instance
     {
@@ -28,7 +30,7 @@ public class GameManager : MonoBehaviour
     private void CreateState()
     {
         State state = new State();
-        Store = new Store<State>(Reducer.root, state, Logger);
+        Store = new Store<State>(State.Reducer, state, Logger);
     }
 
     private readonly static Middleware<State> Logger = (store, next) => (action) =>
