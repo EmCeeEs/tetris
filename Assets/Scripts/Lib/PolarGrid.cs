@@ -1,5 +1,8 @@
 using System;
 using UnityEngine;
+using UnityEngine.Assertions;
+
+using WinstonPuckett.PipeExtensions;
 
 public class PolarGrid
 {
@@ -18,34 +21,31 @@ public class PolarGrid
         Periodicity = periodicity;
     }
 
-    private float RotationAngle() => 360 / Periodicity;
+    public float RotationAngle(int offset)
+        => offset * 360 / Periodicity;
 
     public float GetScale(Slot slot)
-    {
-        return Mathf.Pow(Scale, slot.X);
-    }
+        => Mathf.Pow(Scale, slot.X);
 
     public float GetRotation(Slot slot)
-    {
-        return Utils.Mod(slot.Y, Periodicity) * RotationAngle();
-    }
+        => Utils.Mod(slot.Y, Periodicity).Pipe(RotationAngle);
+
+    // public Point GetCoordinates(Slot slot)
+    //     => new Point(GetScale(slot), GetRotation(slot));
 
     public Slot LowerSlot(ref GameObject go)
     {
-        Transform transform = go.transform;
-        float currentScale = transform.localScale.x;
+        Point coords = Point.GetCoordinates(ref go);
 
         int scaleExponent = -1; // -1 is base
-        while (Mathf.Pow(Scale, scaleExponent + 1) < currentScale)
-        {
+        while (Mathf.Pow(Scale, scaleExponent + 1) < coords.Scale)
             scaleExponent++;
-        }
-        int angle = Mathf.RoundToInt(transform.localRotation.eulerAngles.y / RotationAngle());
-        int rotationState = Utils.Mod(angle, Periodicity);
+
+        int rotationOffset = Mathf.RoundToInt(coords.Angle / Periodicity * 360);
+        int rotationState = Utils.Mod(rotationOffset, Periodicity);
 
         return new Slot(scaleExponent, rotationState);
     }
-
 
     public void MoveToSlot(Slot slot, ref GameObject go)
     {
@@ -60,6 +60,34 @@ public class PolarGrid
     public static void MoveByTick(ref GameObject go, float scaleChange)
     {
         go.transform.localScale -= new Vector3(scaleChange, 0, scaleChange);
+    }
+}
+
+public readonly struct Point
+{
+    public readonly float Scale;
+    public readonly float Angle;
+
+    public Point(float scale, float angle)
+    {
+        Scale = scale;
+        Angle = angle;
+    }
+
+    public static Point GetCoordinates(ref GameObject go)
+    {
+        Vector3 localScale = go.transform.localScale;
+        Vector3 localEulerRotation = go.transform.localRotation.eulerAngles;
+
+        Assert.AreApproximatelyEqual(localScale.x, localScale.z);
+        Assert.AreEqual(localScale.y, 1);
+        Assert.AreEqual(localEulerRotation.x, 0);
+        Assert.AreEqual(localEulerRotation.z, 0);
+
+        return new Point(
+            localScale.x,
+            localEulerRotation.y
+        );
     }
 }
 
@@ -79,7 +107,6 @@ public readonly struct Slot
 
     public static Slot operator -(Slot a, Slot b)
         => new Slot(a.X - b.X, a.Y - b.Y);
-
 
     public static Slot InvertX(Slot Slot)
         => new Slot(-Slot.X, Slot.Y);
