@@ -1,11 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 public class PolarGridTest
 {
+
+    [Test]
+    public void ConstructorTest()
+    {
+        Assert.Throws<ArgumentException>(() => new PolarGrid(-5, 12));
+        Assert.Throws<ArgumentException>(() => new PolarGrid(0, 12));
+        Assert.Throws<ArgumentException>(() => new PolarGrid(12, -5));
+        Assert.Throws<ArgumentException>(() => new PolarGrid(12, 0));
+
+        Assert.DoesNotThrow(() => new PolarGrid(1, 0.1F));
+        Assert.DoesNotThrow(() => new PolarGrid(100, 100));
+    }
+
     [Test]
     public void GetScaleTest()
     {

@@ -1,55 +1,65 @@
-using UnityEngine; // GameObject
+using System;
+using UnityEngine;
 
 public class PolarGrid
 {
-    private readonly float scale;
+    private readonly float Scale;
     public readonly int Periodicity;
-    private readonly float rotationAngle;
 
-    public PolarGrid(int _periodicity = 12, float _scale = 1.2F)
+    public PolarGrid(int periodicity = 12, float scale = 1.2F)
     {
-        scale = _scale;
-        Periodicity = _periodicity;
-        rotationAngle = 360 / Periodicity;
+        if (periodicity <= 0)
+            throw new ArgumentException("Periodicity must be greater 0");
+
+        if (scale <= 0)
+            throw new ArgumentException("Scale must be greater 0");
+
+        Scale = scale;
+        Periodicity = periodicity;
     }
+
+    private float RotationAngle() => 360 / Periodicity;
 
     public float GetScale(Slot slot)
     {
-        return Mathf.Pow(scale, slot.X);
+        return Mathf.Pow(Scale, slot.X);
     }
 
     public float GetRotation(Slot slot)
     {
-        return Utils.Mod(slot.Y, Periodicity) * rotationAngle;
+        return Utils.Mod(slot.Y, Periodicity) * RotationAngle();
     }
 
-    public Slot LowerSlot(Transform transform)
+    public Slot LowerSlot(ref GameObject go)
     {
+        Transform transform = go.transform;
         float currentScale = transform.localScale.x;
 
         int scaleExponent = -1; // -1 is base
-        while (Mathf.Pow(scale, scaleExponent + 1) < currentScale)
+        while (Mathf.Pow(Scale, scaleExponent + 1) < currentScale)
         {
             scaleExponent++;
         }
-        int angle = Mathf.RoundToInt(transform.localRotation.eulerAngles.y / rotationAngle);
+        int angle = Mathf.RoundToInt(transform.localRotation.eulerAngles.y / RotationAngle());
         int rotationState = Utils.Mod(angle, Periodicity);
 
         return new Slot(scaleExponent, rotationState);
     }
 
-    public void MoveByTick(Transform transform, float scaleChange)
-    {
-        transform.localScale -= new Vector3(scaleChange, 0, scaleChange);
-    }
 
-    public void MoveToSlot(Slot slot, GameObject go)
+    public void MoveToSlot(Slot slot, ref GameObject go)
     {
         float newScale = GetScale(slot);
         float newRotation = GetRotation(slot);
 
         go.transform.localScale = new Vector3(newScale, 1, newScale);
         go.transform.localRotation = Quaternion.Euler(0, newRotation, 0);
+    }
+
+    // this should take scale into account
+    public static void MoveByTick(ref GameObject go, float scaleChange)
+    {
+        go.transform.localScale -= new Vector3(scaleChange, 0, scaleChange);
     }
 }
 
