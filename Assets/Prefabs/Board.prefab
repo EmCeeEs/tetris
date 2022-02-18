@@ -44,16 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f75de5dfc1c621a5844548b57d30f18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiHandler: {fileID: 0}
-  isPlaying: 0
-  currentScore: 0
   BlockPrefab: {fileID: 512807390751012026, guid: 72dcbacceb85f020e90eb68604fc1a13, type: 3}
-  colors:
-  - serializedVersion: 2
-    rgba: 4278190335
-  - serializedVersion: 2
-    rgba: 4294901760
-  currentBlock: {fileID: 0}
 --- !u!1 &5367623789388206206
 GameObject:
   m_ObjectHideFlags: 0
