@@ -28,7 +28,12 @@ public class GameManager : MonoBehaviour
     private void CreateState()
     {
         State state = new State();
-        Store = new Store<State>(Reducer.root, state);
+        Store = new Store<State>(Reducer.root, state, Logger);
     }
 
+    private readonly static Middleware<State> Logger = (store, next) => (action) =>
+    {
+        Debug.Log($"ACTION: {action}");
+        return next(action);
+    };
 }

@@ -34,21 +34,21 @@ public class Board : MonoBehaviour
         GM.Store.Subscribe(SyncState);
     }
 
-    private void SyncState(State state)
+    private void SyncState()
     {
+        BoardState boardsState = GM.Store.GetState().Board;
+
         Action<GameObject, bool> SetActive = (go, flag) => go.SetActive(flag);
-        // Action<GameObject> Activate = (go) => SetActive(go, true);
-        // Action<GameObject> Deactivate = (go) => SetActive(go, false);
 
         // sync slots
         for (int i = 0; i < 12; i++)
             for (int j = 0; j < 12; j++)
-                SetActive(slotHolder[i, j], state.Board.Slots[i, j]);
+                SetActive(slotHolder[i, j], boardsState.Slots[i, j]);
 
         // sync rotation
         playerBase.transform.rotation = Quaternion.Euler(
             0,
-            grid.RotationAngle(state.Board.RotationOffset),
+            grid.RotationAngle(boardsState.RotationOffset),
             0
         );
     }

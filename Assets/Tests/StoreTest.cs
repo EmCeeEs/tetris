@@ -57,7 +57,7 @@ public class StoreTest
     public void SubscribeTest()
     {
         int callCount = 0;
-        OnDispatchCallback<int> mockOnDispatch = (state) =>
+        OnDispatch mockOnDispatch = () =>
             {
                 callCount++;
             };
@@ -75,5 +75,21 @@ public class StoreTest
         store.Dispatch(new DummyAction());
 
         Assert.AreEqual(3, callCount);
+    }
+
+    [Test]
+    public void MiddlewareTest()
+    {
+        int callCount = 0;
+        Middleware<int> mockMiddleware = (state, dispatch) =>
+            (action) => { callCount++; return action; };
+
+        var store = new Store<int>((state, action) => state, 0, mockMiddleware);
+
+        Assert.AreEqual(0, callCount);
+
+        store.Dispatch(new DummyAction());
+
+        Assert.AreEqual(1, callCount);
     }
 }
