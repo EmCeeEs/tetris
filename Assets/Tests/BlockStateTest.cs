@@ -5,68 +5,119 @@ using NUnit.Framework;
 
 using Redux;
 using WinstonPuckett.PipeExtensions;
+using PolarCoordinates;
 
 public class BlockStateTest
 {
     [Test]
-    public void InvertXTest()
+    public void ConstructorTest()
     {
-        Assert.IsFalse(
-            new List<IAction>() { }
-                .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.GetInvertX),
-            "By default, block should not be inverted at X axis."
-        );
-
-        Assert.IsTrue(
-            new List<IAction>() {
-                    new InvertXAction()
-                }
-                .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.GetInvertX),
-            "InvertXAction should set inversion flag for X axis."
-        );
-
-        Assert.IsFalse(
-            new List<IAction>(){
-                    new InvertXAction(),
-                    new InvertXAction()
-                }
-                .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.GetInvertX),
-            "Second InvertXAction should reset inversion flag for X axis."
+        Assert.IsEmpty(
+            new BlockState()
+                .Pipe(BlockState.selectBlocks),
+            "Constructor initializes empty list of blocks."
         );
     }
 
     [Test]
-    public void InvertYTest()
+    public void NewBlockActionTest()
     {
-        Assert.IsFalse(
-            new List<IAction>() { }
-                .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.GetInvertY),
-            "By default, block should not be inverted at Y axis."
+        var block = new Block
+        (
+            new Point(10, 0),
+            new List<Slot>(){
+                new Slot(0, 0),
+                new Slot(1, 0)
+            }
         );
 
-        Assert.IsTrue(
+        Assert.AreEqual(
+            block,
             new List<IAction>() {
-                    new InvertYAction()
+                    new NewBlockAction(block)
                 }
                 .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.GetInvertY),
-            "InvertYAction should set inversion flag for Y axis."
+                .Pipe(BlockState.selectBlocks)
+                .Pipe(Enumerable.First),
+            "Block layout is set correctly."
         );
 
-        Assert.IsFalse(
-            new List<IAction>(){
-                    new InvertYAction(),
-                    new InvertYAction()
-                }
-                .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.GetInvertY),
-            "Second InvertYAction should reset inversion flag for Y axis."
-        );
+        // Assert.AreEqual(
+        //     spawnPoint1,
+        //     new List<IAction>() {
+        //             new NewBlockAction(spawnPoint1, layout1)
+        //         }
+        //         .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
+        //         .Pipe(BlockState.selectPosition),
+        //     "Block position is set correctly."
+        // );
+
+        // var spawnPoint2 = new Point(8, 8);
+        // var layout2 = new List<Slot>(){
+        //     new Slot(0, 0),
+        //     new Slot(0, 1),
+        //     new Slot(1, 0),
+        //     new Slot(1, 1)
+        // };
+
+        // Assert.AreEqual(
+        //     layout2,
+        //     new List<IAction>() {
+        //             new NewBlockAction(spawnPoint1, layout1),
+        //             new NewBlockAction(spawnPoint2, layout2)
+        //         }
+        //         .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
+        //         .Pipe(BlockState.selectLayout),
+        //     "New block layout is set correctly"
+        // );
+
+        // Assert.AreEqual(
+        //     spawnPoint2,
+        //     new List<IAction>() {
+        //             new NewBlockAction(spawnPoint1, layout1),
+        //             new NewBlockAction(spawnPoint2, layout2)
+        //         }
+        //         .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
+        //         .Pipe(BlockState.selectPosition),
+        //     "New block position is set correctly."
+        // );
     }
+
+    // [Test]
+    // public void MoveBlocksActionTest()
+    // {
+    //     var spawnPoint = new Point(10, 0);
+    //     var layout = new List<Slot>(){
+    //         new Slot(0, 0),
+    //         new Slot(1, 0)
+    //     };
+    //     Func<Point, float> selectX = (point) => point.X;
+
+    //     Assert.AreEqual(
+    //         new Point(9, 0)
+    //             .Pipe(selectX),
+    //         new List<IAction>() {
+    //                 new NewBlockAction(spawnPoint, layout),
+    //                 new MoveBlocksAction(new Point(1, 0))
+    //             }
+    //             .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
+    //             .Pipe(BlockState.selectPosition)
+    //             .Pipe(selectX),
+    //         "Block is moved down by one slot."
+    //     );
+
+    //     Assert.AreEqual(
+    //         new Point(9, 0)
+    //             .Pipe(selectX),
+    //         new List<IAction>() {
+    //                 new MoveBlocksAction(new Point(1, 0))
+    //             }
+    //             .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
+    //             .Pipe(BlockState.selectPosition)
+    //             .Pipe(selectX),
+    //         "Block is moved down by one slot."
+    //     );
+    // }
 
     private static TState Reduce<TState>(
         Reducer<TState> reducer,

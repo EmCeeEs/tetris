@@ -1,34 +1,80 @@
 using System;
+using System.Collections.Generic;
 
 using Redux;
+using System.Linq;
 
-public readonly struct BlockState : IState
+public class Block
 {
-    public readonly bool InvertX;
-    public readonly bool InvertY;
+    private readonly List<Slot> Layout;
+    private readonly Point Position;
 
-    public BlockState(bool invertX, bool invertY)
+    public Block(
+        Point position,
+        List<Slot> layout)
     {
-        InvertX = invertX;
-        InvertY = invertY;
+        Position = position;
+        Layout = layout;
+    }
+
+    public readonly static Func<Block, List<Slot>> selectLayout =
+        (state) => state.Layout;
+
+    public readonly static Func<Block, Point> selectPosition =
+        (state) => state.Position;
+}
+
+public class BlockState : IState
+{
+    private readonly List<Block> Blocks;
+
+    public BlockState(List<Block> blocks = null)
+    {
+        Blocks = blocks ?? new List<Block>();
     }
 
     public readonly static Reducer<BlockState> Reducer = (state, action) =>
         action switch
         {
-            InvertXAction _action => new BlockState(!state.InvertX, state.InvertY),
-            InvertYAction _action => new BlockState(state.InvertX, !state.InvertY),
+            NewBlockAction _action => new BlockState(
+                    state.Blocks.Append(_action.block).ToList()
+                ),
             _ => state,
         };
 
-    public readonly static Func<BlockState, bool> GetInvertX = (state) => state.InvertX;
-    public readonly static Func<BlockState, bool> GetInvertY = (state) => state.InvertY;
+    public readonly static Func<BlockState, List<Block>> selectBlocks = (state) => state.Blocks;
 }
 
-public readonly struct InvertXAction : IAction
+public class NewBlockAction : IAction
 {
-};
+    public readonly Block block;
 
-public readonly struct InvertYAction : IAction
+    public NewBlockAction(Block newBlock)
+    {
+        block = newBlock;
+    }
+}
+
+namespace PolarCoordinates
 {
-};
+    public class Point
+    {
+        public readonly float X;
+        public readonly float Y;
+
+        public Point(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public static Point operator +(Point a, Point b)
+            => new Point(a.X + b.X, a.Y + b.Y);
+
+        public static Point operator -(Point a, Point b)
+            => new Point(a.X - b.X, a.Y - b.Y);
+
+        public override string ToString() => $"({X}, {Y})";
+    }
+
+}

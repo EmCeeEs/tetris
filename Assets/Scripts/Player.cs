@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
 
     public void InvertBlockX(InputAction.CallbackContext context)
     {
-        GM.Store.Dispatch(new InvertXAction());
+        // GM.Store.Dispatch(new InvertXAction());
     }
 
     private void Update()
