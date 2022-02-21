@@ -8,13 +8,19 @@ public class Board : MonoBehaviour
 {
     public float scaleChange = 0.02F;
 
+	public Material disolve;
+
     public UIHandler uiHandler;
+	private SoundHandler soundHandler;
     public bool isPlaying;
     public float currentScore;
     private readonly float singleBlockPoint = 10;
     private readonly float tetrisScore = 100;
 
-    public GameObject BlockPrefab;
+	public bool foundRow = false;
+	public float disolveTimer = 0;
+
+	public GameObject BlockPrefab;
     public Color32[] colors;
 
     public GameObject currentBlock;
@@ -35,8 +41,9 @@ public class Board : MonoBehaviour
     void Awake()
     {
         uiHandler = FindObjectOfType<UIHandler>();
+		soundHandler = FindObjectOfType<SoundHandler>();
 
-        playerBase = GameObject.FindWithTag("Base");
+		playerBase = GameObject.FindWithTag("Base");
         blockSpawner = FindObjectOfType<BlockSpawner>();
         slots = new GameObject[N_ROWS, N_BLOCKS_PER_ROW];
         rotationAngle = 360 / N_BLOCKS_PER_ROW;
@@ -59,11 +66,16 @@ public class Board : MonoBehaviour
     {
         if (isPlaying)
         {
-            if (currentBlock == null || currentBlock == blockSpawner.emptyObject)
+			if (currentBlock == null || currentBlock == blockSpawner.emptyObject)
             {
-                blockSpawner.SpawnBlock(spawnSlot);
+                blockSpawner.SpawnBlock(spawnSlot);			
             }
-        }
+			if (foundRow)
+			{
+				disolveTimer += Time.deltaTime;
+				disolve.SetFloat("_time", disolveTimer);
+			}
+		}
     }
 
     public bool IsEmpty(Slot slot)
@@ -82,15 +94,14 @@ public class Board : MonoBehaviour
         if (slot.Scale < colors.Length)
         {
             int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
-
-            block.transform.SetParent(playerBase.transform);
+			block.transform.SetParent(playerBase.transform);
 
             currentScore += singleBlockPoint;
             uiHandler.UpdateScore(currentScore);
 
             slots[slot.Scale, totalRotation] = block;
-            block.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", colors[slot.Scale]);
-        }
+			block.GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", colors[slot.Scale]);
+		}
     }
 
     public void CheckForCompleteRows()
@@ -102,12 +113,15 @@ public class Board : MonoBehaviour
             if (IsRowComplete(shifted))
             {
                 Debug.Log($"ROW COMPLETED {shifted}");
-                RemoveRow(shifted);
-                offset++;
-
-                currentScore += tetrisScore;
-                uiHandler.UpdateScore(currentScore);
-                scaleChange += 0.005F;
+				if (foundRow == false)
+				{
+					foundRow = true;
+					StartCoroutine(RemoveRow(shifted));
+					offset++;
+					currentScore += tetrisScore;
+					uiHandler.UpdateScore(currentScore);
+					scaleChange += 0.001F;
+				}
             }
         }
     }
@@ -121,32 +135,41 @@ public class Board : MonoBehaviour
     }
 
 
-    private void RemoveRow(int rowNumber)
+    IEnumerator RemoveRow(int rowNumber)
     {
+		
         // remove row
         for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
         {
-            Destroy(slots[rowNumber, j]);
+			slots[rowNumber, j].GetComponentsInChildren<Renderer>()[0].material = disolve;
+			Destroy(slots[rowNumber, j],1);
             slots[rowNumber, j] = null;
+			foundRow = true;
         }
 
-        // shift other rows
-        for (int i = rowNumber + 1; i < N_ROWS; i++)
-        {
-            for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
-            {
-                if (slots[i, j] != null)
-                {
-                    slots[i - 1, j] = slots[i, j];
-                    grid.MoveToSlot(new Slot(i - 1, j), slots[i, j]);
-                    slots[i, j] = null;
-                }
-            }
-        }
-        // LogSlots();
-    }
+		yield return new WaitForSeconds(1);
+		disolveTimer = 0;
+		disolve.SetFloat("_time", disolveTimer);
 
-    public void DestroyAll()
+		// shift other rows
+		for (int i = rowNumber + 1; i < N_ROWS; i++)
+		{
+			for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
+			{
+				if (slots[i, j] != null)
+				{
+					slots[i - 1, j] = slots[i, j];
+					grid.MoveToSlot(new Slot(i - 1, j), slots[i, j]);
+					slots[i-1,j].GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", colors[i-1]);
+					slots[i, j] = null;
+				}
+			}
+		}
+		foundRow = false;
+		// LogSlots();
+	}
+
+	public void DestroyAll()
     {
         for (int i = 0; i < N_ROWS; i++)
         {
@@ -165,7 +188,8 @@ public class Board : MonoBehaviour
         {
             playerBase.transform.Rotate(Vector3.up, -rotationAngle);
             rotationState -= 1;
-        }
+			soundHandler.CanRotateNoise();
+		}
     }
 
     private bool CanRotate(GameObject block, Slot rotationAsSlot)
@@ -183,11 +207,11 @@ public class Board : MonoBehaviour
         {
             if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot) || !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
             {
-                this.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", Color.red);
+                this.GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", Color.red);
                 return false;
             }
         }
-        this.GetComponentsInChildren<Renderer>()[1].material.SetColor("_Color", Color.white);
+        this.GetComponentsInChildren<Renderer>()[1].material.SetColor("_BaseColor", Color.white);
         return true;
     }
 
@@ -199,7 +223,9 @@ public class Board : MonoBehaviour
         {
             playerBase.transform.Rotate(Vector3.up, +rotationAngle);
             rotationState += 1;
-        }
+			soundHandler.CanRotateNoise();
+
+		}
     }
 
     public void LogSlots()

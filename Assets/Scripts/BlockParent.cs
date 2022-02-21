@@ -49,9 +49,10 @@ public class BlockParent : MonoBehaviour
             {
                 GameObject block = Blocks[i];
                 Slot slot = BlockLayout[i];
+	
                 board.SetSlot(UpperSlot + slot, block);
-            }
-            board.CheckForCompleteRows();
+			}
+			board.CheckForCompleteRows();
             Destroy(gameObject);
         }
     }

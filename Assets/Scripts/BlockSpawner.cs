@@ -45,8 +45,11 @@ public class BlockSpawner : MonoBehaviour
 		}
 		else
 		{
-			InstantiateBlockFromLayout(spawnSlot, blockLayout);
-			board.currentBlock = currentBlock;
+			if (!board.foundRow)
+			{
+				InstantiateBlockFromLayout(spawnSlot, blockLayout);
+				board.currentBlock = currentBlock;
+			}
 		}
 	}
 

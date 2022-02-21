@@ -192,8 +192,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 0}
-  joystick: {fileID: 0}
-  playButton: {fileID: 0}
+  joystick: {fileID: 8087099737420160939}
+  playButton: {fileID: 97128431616717675}
   score: {fileID: 97128432649306337}
 --- !u!1 &97128431616717675
 GameObject:
@@ -699,6 +699,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
+--- !u!1 &8087099737420160939 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8170153791668043269, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
+  m_PrefabInstance: {fileID: 97128431492948398}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8087099737420160938 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8170153791668043268, guid: 0d230cc8be529a542a08cb878ab14b18, type: 3}
