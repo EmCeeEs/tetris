@@ -25,16 +25,16 @@ public class PolarGrid
     public float RotationAngle(int offset)
         => offset * 360 / Periodicity;
 
-    public float GetScale(Slot slot)
+    public float GetScale(GridPoint slot)
         => Mathf.Pow(Scale, slot.X);
 
-    public float GetRotation(Slot slot)
+    public float GetRotation(GridPoint slot)
         => Utils.Mod(slot.Y, Periodicity).Pipe(RotationAngle);
 
     // public Point GetCoordinates(Slot slot)
     //     => new Point(GetScale(slot), GetRotation(slot));
 
-    public Slot LowerSlot(ref GameObject go)
+    public GridPoint LowerSlot(ref GameObject go)
     {
         Point coords = Point.GetCoordinates(ref go);
 
@@ -45,10 +45,10 @@ public class PolarGrid
         int rotationOffset = Mathf.RoundToInt(coords.Angle / Periodicity * 360);
         int rotationState = Utils.Mod(rotationOffset, Periodicity);
 
-        return new Slot(scaleExponent, rotationState);
+        return new GridPoint(scaleExponent, rotationState);
     }
 
-    public void MoveToSlot(Slot slot, ref GameObject go)
+    public void MoveToSlot(GridPoint slot, ref GameObject go)
     {
         float newScale = GetScale(slot);
         float newRotation = GetRotation(slot);

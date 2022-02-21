@@ -62,7 +62,7 @@ public readonly struct GridUtils
     public readonly static Func<bool[,]> CreateSlots =
         () => new bool[xDim, yDim];
 
-    public readonly static Func<bool[,], List<Slot>, bool[,]> FlagSlots = (state, slots) =>
+    public readonly static Func<bool[,], List<GridPoint>, bool[,]> FlagSlots = (state, slots) =>
     {
         bool[,] copy = CreateSlots();
 
@@ -119,9 +119,9 @@ public readonly struct RotateRightAction : IAction
 
 public readonly struct FlagSlotsAction : IAction
 {
-    public readonly List<Slot> Slots;
+    public readonly List<GridPoint> Slots;
 
-    public FlagSlotsAction(List<Slot> slots)
+    public FlagSlotsAction(List<GridPoint> slots)
     {
         Slots = slots;
     }

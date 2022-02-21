@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour
 {
     public Canvas UI;
 
+    public enum STATE { MENU, PLAYING, PAUSE, GAME_OVER }
+
     private static GameManager instance;
     public static GameManager Instance
     {
@@ -22,13 +24,15 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(instance);
-
-        CreateState();
     }
 
     public Store<State> Store;
-    private void CreateState()
+    public void StartGame()
     {
+        int xDim = 12;
+        int yDim = 12;
+
+        MyGrid grid = new MyGrid(xDim, yDim);
         State state = new State();
         Store = new Store<State>(State.Reducer, state, Logger);
     }
@@ -38,4 +42,14 @@ public class GameManager : MonoBehaviour
         Debug.Log($"ACTION: {action}");
         return next(action);
     };
+}
+
+public class MyGrid
+{
+    public readonly (int, int) dimension;
+
+    public MyGrid(int xDim, int yDim)
+    {
+        dimension = (xDim, yDim);
+    }
 }

@@ -46,7 +46,7 @@ public class BlockStateTest
         Assert.AreNotEqual(
             blockFromState,
             BLOCK_1,
-            "Blocks are not equal (hold different references)."
+            "Blocks are not equal (hold different references to layout)."
         );
 
         Assert.AreNotSame(
@@ -77,26 +77,26 @@ public class BlockStateTest
 
     readonly Block BLOCK_1 = new Block(
         position: new Point(10, 0),
-        layout: new List<Slot>() {
-            new Slot(0, 0),
-            new Slot(1, 0)
+        layout: new List<GridPoint>() {
+            new GridPoint(0, 0),
+            new GridPoint(1, 0)
         }
     );
 
     readonly Block BLOCK_2 = new Block(
         position: new Point(10, 10),
-        layout: new List<Slot>(){
-            new Slot(0, 0),
-            new Slot(0, 1),
-            new Slot(1, 0),
-            new Slot(1, 1)
+        layout: new List<GridPoint>(){
+            new GridPoint(0, 0),
+            new GridPoint(0, 1),
+            new GridPoint(1, 0),
+            new GridPoint(1, 1)
         }
     );
 
     readonly Block BLOCK_3 = new Block(
         position: new Point(0, 0),
-        layout: new List<Slot>(){
-                new Slot(0, 0),
+        layout: new List<GridPoint>(){
+                new GridPoint(0, 0),
         }
     );
 

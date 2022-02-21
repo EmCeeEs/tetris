@@ -1,7 +1,8 @@
 using System;
-using System.Collections.Generic;
-using Redux;
 using System.Linq;
+using System.Collections.Generic;
+
+using Redux;
 using PolarCoordinates;
 
 public class BlockState : IState
@@ -28,18 +29,18 @@ public class BlockState : IState
 
 public class Block
 {
-    private readonly List<Slot> Layout;
+    private readonly List<GridPoint> Layout;
     private readonly Point Position;
 
     public Block(
         Point position,
-        List<Slot> layout)
+        List<GridPoint> layout)
     {
         Position = position;
         Layout = layout;
     }
 
-    public readonly static Func<Block, List<Slot>> selectLayout =
+    public readonly static Func<Block, List<GridPoint>> selectLayout =
         (state) => state.Layout;
 
     public readonly static Func<Block, Point> selectPosition =
@@ -47,7 +48,7 @@ public class Block
 
     public Block Copy() => new Block(
         Position,
-        Layout.Select(slot => slot).ToList()
+        Layout.Select(slot => new GridPoint(slot.X, slot.Y)).ToList()
     );
 }
 
@@ -74,29 +75,22 @@ namespace PolarCoordinates
             => $"({X}, {Y})";
     }
 
-    // GridPoint
-    public readonly struct Slot
+    public readonly struct GridPoint
     {
         public readonly int X;
         public readonly int Y;
 
-        public Slot(int x, int y)
+        public GridPoint(int x, int y)
         {
             X = x;
             Y = y;
         }
 
-        public static Slot operator +(Slot a, Slot b)
-            => new Slot(a.X + b.X, a.Y + b.Y);
+        public static GridPoint operator +(GridPoint a, GridPoint b)
+            => new GridPoint(a.X + b.X, a.Y + b.Y);
 
-        public static Slot operator -(Slot a, Slot b)
-            => new Slot(a.X - b.X, a.Y - b.Y);
-
-        public static Slot InvertX(Slot Slot)
-            => new Slot(-Slot.X, Slot.Y);
-
-        public static Slot InvertY(Slot Slot)
-            => new Slot(Slot.X, -Slot.Y);
+        public static GridPoint operator -(GridPoint a, GridPoint b)
+            => new GridPoint(a.X - b.X, a.Y - b.Y);
 
         public override string ToString()
             => $"({X}, {Y})";

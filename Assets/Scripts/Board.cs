@@ -23,7 +23,7 @@ public class Board : MonoBehaviour
             for (int j = 0; j < 12; j++)
             {
                 block = Instantiate(BlockPrefab, playerBase.transform);
-                grid.MoveToSlot(new Slot(i, j), ref block);
+                grid.MoveToSlot(new GridPoint(i, j), ref block);
                 slotHolder[i, j] = block;
                 slotHolder[i, j].SetActive(false);
             }

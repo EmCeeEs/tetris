@@ -78,7 +78,7 @@ public class BoardStateTest
         Assert.IsFalse(
             new List<IAction>() {
                 new FlagSlotsAction(
-                    new List<Slot>() {})}
+                    new List<GridPoint>() {})}
                 .Pipe(reduceSlots)
                 .Pipe((state) => state[7, 9])
         );
@@ -86,8 +86,8 @@ public class BoardStateTest
         Assert.IsTrue(
             new List<IAction>() {
                 new FlagSlotsAction(
-                    new List<Slot>() {
-                        new Slot(7, 9)
+                    new List<GridPoint>() {
+                        new GridPoint(7, 9)
                     }
                 )
             }
@@ -103,8 +103,8 @@ public class BoardStateTest
             new BoardState(),
             new List<IAction>() {
                 new FlagSlotsAction(
-                        new List<Slot>() {
-                            new Slot(0, 0)
+                        new List<GridPoint>() {
+                            new GridPoint(0, 0)
                         }
                     ),
                     new ResetAction()
