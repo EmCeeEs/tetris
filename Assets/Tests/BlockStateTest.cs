@@ -9,6 +9,7 @@ using PolarCoordinates;
 
 public class BlockStateTest
 {
+
     [Test]
     public void ConstructorTest()
     {
@@ -20,68 +21,84 @@ public class BlockStateTest
     }
 
     [Test]
-    public void NewBlockActionTest()
+    public void AddBlockTest()
     {
-        var block = new Block
-        (
-            new Point(10, 0),
-            new List<Slot>(){
-                new Slot(0, 0),
-                new Slot(1, 0)
-            }
+        Block blockFromState =
+            new List<IAction>() {
+                    new AddBlockAction(BLOCK_1)
+                }
+                .Pipe(Reduce(BlockState.Reducer, new BlockState()))
+                .Pipe(BlockState.selectBlocks)
+                .Pipe(Enumerable.First);
+
+        Assert.AreEqual(
+            Block.selectPosition(blockFromState),
+            Block.selectPosition(BLOCK_1),
+            "Block position is equal."
         );
 
         Assert.AreEqual(
-            block,
-            new List<IAction>() {
-                    new NewBlockAction(block)
-                }
-                .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-                .Pipe(BlockState.selectBlocks)
-                .Pipe(Enumerable.First),
-            "Block layout is set correctly."
+            Block.selectLayout(blockFromState),
+            Block.selectLayout(BLOCK_1),
+            "Block layout is equal."
         );
 
-        // Assert.AreEqual(
-        //     spawnPoint1,
-        //     new List<IAction>() {
-        //             new NewBlockAction(spawnPoint1, layout1)
-        //         }
-        //         .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-        //         .Pipe(BlockState.selectPosition),
-        //     "Block position is set correctly."
-        // );
+        Assert.AreNotEqual(
+            blockFromState,
+            BLOCK_1,
+            "Blocks are not equal (hold different references)."
+        );
 
-        // var spawnPoint2 = new Point(8, 8);
-        // var layout2 = new List<Slot>(){
-        //     new Slot(0, 0),
-        //     new Slot(0, 1),
-        //     new Slot(1, 0),
-        //     new Slot(1, 1)
-        // };
-
-        // Assert.AreEqual(
-        //     layout2,
-        //     new List<IAction>() {
-        //             new NewBlockAction(spawnPoint1, layout1),
-        //             new NewBlockAction(spawnPoint2, layout2)
-        //         }
-        //         .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-        //         .Pipe(BlockState.selectLayout),
-        //     "New block layout is set correctly"
-        // );
-
-        // Assert.AreEqual(
-        //     spawnPoint2,
-        //     new List<IAction>() {
-        //             new NewBlockAction(spawnPoint1, layout1),
-        //             new NewBlockAction(spawnPoint2, layout2)
-        //         }
-        //         .Pipe((actions) => Reduce(BlockState.Reducer, new BlockState(), actions))
-        //         .Pipe(BlockState.selectPosition),
-        //     "New block position is set correctly."
-        // );
+        Assert.AreNotSame(
+            blockFromState,
+            BLOCK_1,
+            "Blocks are not the same (have distinct references)."
+        );
     }
+
+    public void AddMultipleBlocksTest()
+    {
+        int numberOfBlocksInState =
+            new List<IAction>() {
+                    new AddBlockAction(BLOCK_1),
+                    new AddBlockAction(BLOCK_2),
+                    new AddBlockAction(BLOCK_3)
+                }
+                .Pipe(Reduce(BlockState.Reducer, new BlockState()))
+                .Pipe(BlockState.selectBlocks)
+                .Pipe(Enumerable.Count);
+
+        Assert.AreEqual(
+            3,
+            numberOfBlocksInState,
+            "State contains exactly three blocks."
+        );
+    }
+
+    readonly Block BLOCK_1 = new Block(
+        position: new Point(10, 0),
+        layout: new List<Slot>() {
+            new Slot(0, 0),
+            new Slot(1, 0)
+        }
+    );
+
+    readonly Block BLOCK_2 = new Block(
+        position: new Point(10, 10),
+        layout: new List<Slot>(){
+            new Slot(0, 0),
+            new Slot(0, 1),
+            new Slot(1, 0),
+            new Slot(1, 1)
+        }
+    );
+
+    readonly Block BLOCK_3 = new Block(
+        position: new Point(0, 0),
+        layout: new List<Slot>(){
+                new Slot(0, 0),
+        }
+    );
 
     // [Test]
     // public void MoveBlocksActionTest()
@@ -123,5 +140,12 @@ public class BlockStateTest
         Reducer<TState> reducer,
         TState initialState,
         IEnumerable<IAction> actions
+    ) => actions.Aggregate(initialState, reducer.Invoke);
+
+    private static Func<IEnumerable<IAction>, TState> Reduce<TState>(
+        Reducer<TState> reducer,
+        TState initialState
+    ) => (
+        actions
     ) => actions.Aggregate(initialState, reducer.Invoke);
 }

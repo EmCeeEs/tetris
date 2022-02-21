@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 using Redux;
 using WinstonPuckett.PipeExtensions;
+using PolarCoordinates;
 
 public class BoardStateTest
 {

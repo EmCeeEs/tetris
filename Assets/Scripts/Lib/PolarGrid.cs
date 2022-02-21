@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 
 using WinstonPuckett.PipeExtensions;
+using PolarCoordinates;
 
 public class PolarGrid
 {
@@ -89,32 +90,6 @@ public readonly struct Point
             localEulerRotation.y
         );
     }
-}
-
-public readonly struct Slot
-{
-    public readonly int X;
-    public readonly int Y;
-
-    public Slot(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
-
-    public static Slot operator +(Slot a, Slot b)
-        => new Slot(a.X + b.X, a.Y + b.Y);
-
-    public static Slot operator -(Slot a, Slot b)
-        => new Slot(a.X - b.X, a.Y - b.Y);
-
-    public static Slot InvertX(Slot Slot)
-        => new Slot(-Slot.X, Slot.Y);
-
-    public static Slot InvertY(Slot Slot)
-        => new Slot(Slot.X, -Slot.Y);
-
-    public override string ToString() => $"({X}, {Y})";
 }
 
 public class Utils

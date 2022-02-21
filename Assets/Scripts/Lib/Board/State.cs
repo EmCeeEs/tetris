@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Redux;
 
+using PolarCoordinates;
+
 public readonly struct BoardState : IState
 {
     public readonly int RotationOffset;
