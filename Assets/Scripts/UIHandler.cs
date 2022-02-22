@@ -7,6 +7,7 @@ public class UIHandler : MonoBehaviour
 {
 	private GameManager GM;
 
+	public GameObject Panel;
 	public FloatingJoystick Joystick;
 	public Button PlayButton;
 	public Button QuitButton;
@@ -25,6 +26,7 @@ public class UIHandler : MonoBehaviour
 
 	public void ShowMenu()
 	{
+		Panel.SetActive(true);
 		Joystick.gameObject.SetActive(false);
 		PlayButton.gameObject.SetActive(true);
 		QuitButton.gameObject.SetActive(true);
@@ -32,6 +34,7 @@ public class UIHandler : MonoBehaviour
 
 	public void HideMenu()
 	{
+		Panel.SetActive(false);
 		Joystick.gameObject.SetActive(true);
 		PlayButton.gameObject.SetActive(false);
 		QuitButton.gameObject.SetActive(false);

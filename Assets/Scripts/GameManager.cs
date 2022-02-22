@@ -8,6 +8,7 @@ public class GameManager : Singleton<GameManager>
 	public Board Board;
 	public BlockSpawner BlockSpawner;
 	public SoundHandler SoundHandler;
+	public Player Player;
 
 	public enum GameState { MENU, PLAYING }
 	private GameState gameState = GameState.MENU;
@@ -20,15 +21,16 @@ public class GameManager : Singleton<GameManager>
 		Board = FindObjectOfType<Board>();
 		BlockSpawner = FindObjectOfType<BlockSpawner>();
 		SoundHandler = FindObjectOfType<SoundHandler>();
+		Player = FindObjectOfType<Player>();
 	}
 
 	private void FixedUpdate()
 	{
 		if (gameState == GameState.PLAYING)
-			DoUpdate();
+			UpdateGame();
 	}
 
-	private void DoUpdate()
+	private void UpdateGame()
 	{
 		if (currentBlock == null)
 		{
@@ -49,6 +51,7 @@ public class GameManager : Singleton<GameManager>
 		UIHandler.HideMenu();
 		UIHandler.UpdateScore(0);
 
+		Player.gameObject.SetActive(true);
 		gameState = GameState.PLAYING;
 	}
 
@@ -56,6 +59,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		UIHandler.ShowMenu();
 
+		Player.gameObject.SetActive(false);
 		gameState = GameState.MENU;
 	}
 

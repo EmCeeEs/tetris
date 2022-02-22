@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d86ae3544f9ba8941a539d2a2fbbaedc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Panel: {fileID: 426127235}
   Joystick: {fileID: 1254342925}
   PlayButton: {fileID: 1730646253}
   QuitButton: {fileID: 1617073198}
@@ -379,6 +380,11 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!1 &426127235 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1975527108714840783, guid: f5e35981908a095408b7b8e2758a1b82, type: 3}
+  m_PrefabInstance: {fileID: 55101714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &435633924 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2258727364613013456, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
