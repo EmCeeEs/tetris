@@ -11,10 +11,6 @@ public class Board : MonoBehaviour
 
 	public Material disolve;
 
-	public float currentScore;
-	private readonly float singleBlockPoint = 10;
-	private readonly float tetrisScore = 100;
-
 	public bool foundRow = false;
 	public float disolveTimer = 0;
 
@@ -55,8 +51,8 @@ public class Board : MonoBehaviour
 			int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
 			block.transform.SetParent(PlayerBase.transform);
 
-			currentScore += singleBlockPoint;
-			GM.UIHandler.UpdateScore(currentScore);
+			GM.CurrentScore += GM.ScoreSettings.baseBlockScore;
+			GM.UIHandler.UpdateScore(GM.CurrentScore);
 
 			slots[slot.Scale, totalRotation] = block;
 			block.GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", ColorManager.colors[slot.Scale]);
@@ -77,8 +73,8 @@ public class Board : MonoBehaviour
 					foundRow = true;
 					StartCoroutine(RemoveRow(shifted));
 					offset++;
-					currentScore += tetrisScore;
-					GM.UIHandler.UpdateScore(currentScore);
+					GM.CurrentScore += GM.ScoreSettings.singleRowScore;
+					GM.UIHandler.UpdateScore(GM.CurrentScore);
 					scaleChange += 0.001F;
 				}
 			}
