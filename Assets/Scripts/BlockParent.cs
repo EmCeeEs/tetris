@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,76 +8,78 @@ using Layout = System.Collections.Generic.List<Slot>;
 
 public class BlockParent : MonoBehaviour
 {
-    public Layout BlockLayout { get; set; }
-    public List<GameObject> Blocks { get; set; }
-    private Board board;
-    public Slot LowerSlot;
-    public Slot UpperSlot;
+	private GameManager GM;
 
-    private PolarGrid grid;
+	public Layout BlockLayout { get; set; }
+	public List<GameObject> Blocks { get; set; }
 
-    public void Start()
-    {
-        board = GameObject.FindWithTag("Board").GetComponent<Board>();
-        grid = new PolarGrid(board.grid.Periodicity);
-    }
+	public Slot LowerSlot;
+	public Slot UpperSlot;
 
-    public void FixedUpdate()
-    {
-        LowerSlot = board.grid.LowerSlot(transform);
-        UpperSlot = LowerSlot + new Slot(1, 0);
+	private PolarGrid grid;
 
-        bool isValidMove = true;
-        foreach (Slot slot in BlockLayout)
-        {
-            if (!board.IsEmpty(LowerSlot + slot))
-            {
-                isValidMove = false;
-            }
-        }
+	public void Awake()
+	{
+		GM = GameManager.Instance;
+		grid = new PolarGrid(GM.Board.grid.Periodicity);
+	}
 
-        if (isValidMove)
-        {
-            board.grid.MoveByTick(transform, board.scaleChange);
-        }
-        else
-        {
-            board.grid.MoveToSlot(UpperSlot, gameObject);
-            foreach (int i in Enumerable.Range(0, BlockLayout.Count))
-            {
-                GameObject block = Blocks[i];
-                Slot slot = BlockLayout[i];
-	
-                board.SetSlot(UpperSlot + slot, block);
+	public void FixedUpdate()
+	{
+		LowerSlot = GM.Board.grid.LowerSlot(transform);
+		UpperSlot = LowerSlot + new Slot(1, 0);
+
+		bool isValidMove = true;
+		foreach (Slot slot in BlockLayout)
+		{
+			if (!GM.Board.IsEmpty(LowerSlot + slot))
+			{
+				isValidMove = false;
 			}
-			board.CheckForCompleteRows();
-            Destroy(gameObject);
-        }
-    }
+		}
 
-    public void InvertX()
-    {
-        Layout invertedLayout = LayoutCreator.InvertX(BlockLayout);
+		if (isValidMove)
+		{
+			GM.Board.grid.MoveByTick(transform, GM.Board.scaleChange);
+		}
+		else
+		{
+			GM.Board.grid.MoveToSlot(UpperSlot, gameObject);
+			foreach (int i in Enumerable.Range(0, BlockLayout.Count))
+			{
+				GameObject block = Blocks[i];
+				Slot slot = BlockLayout[i];
 
-        ApplyLayout(invertedLayout);
-    }
+				GM.Board.SetSlot(UpperSlot + slot, block);
+			}
+			GM.Board.CheckForCompleteRows();
+			Destroy(gameObject);
+		}
+	}
 
-    public void ApplyLayout(Layout layout)
-    {
-        BlockLayout = layout;
+	public void InvertX()
+	{
+		Layout invertedLayout = LayoutCreator.InvertX(BlockLayout);
 
-        foreach (int i in Enumerable.Range(0, BlockLayout.Count))
-        {
-            GameObject block = Blocks[i];
-            Slot slot = BlockLayout[i];
-            grid.MoveToSlot(slot, block);
-        }
-    }
+		ApplyLayout(invertedLayout);
+	}
 
-    public void InvertY()
-    {
-        Layout invertedLayout = LayoutCreator.InvertY(BlockLayout);
+	public void ApplyLayout(Layout layout)
+	{
+		BlockLayout = layout;
 
-        ApplyLayout(invertedLayout);
-    }
+		foreach (int i in Enumerable.Range(0, BlockLayout.Count))
+		{
+			GameObject block = Blocks[i];
+			Slot slot = BlockLayout[i];
+			grid.MoveToSlot(slot, block);
+		}
+	}
+
+	public void InvertY()
+	{
+		Layout invertedLayout = LayoutCreator.InvertY(BlockLayout);
+
+		ApplyLayout(invertedLayout);
+	}
 }

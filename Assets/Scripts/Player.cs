@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,95 +5,94 @@ using UnityEngine.InputSystem;
 using System.Linq;
 public class Player : MonoBehaviour
 {
-    private PlayerControls inputActions;
-    public Joystick joystick;
+	private GameManager GM;
 
-    private Board board;
+	private PlayerControls inputActions;
 
-    private int cooldownTimer = 0;
-    private const int MAX_COOLDOWN = 5;
+	private int cooldownTimer = 0;
+	private const int MAX_COOLDOWN = 5;
 
-    private void Awake()
-    {
-        board = GameObject.FindWithTag("Board").GetComponent<Board>();
-    }
+	private void Awake()
+	{
+		GM = GameManager.Instance;
+	}
 
-    private void OnEnable()
-    {
-        if (inputActions == null)
-        {
-            inputActions = new PlayerControls();
-        }
-        inputActions.Enable();
-    }
+	private void OnEnable()
+	{
+		if (inputActions == null)
+		{
+			inputActions = new PlayerControls();
+		}
+		inputActions.Enable();
+	}
 
-    private void OnDisable()
-    {
-        inputActions.Disable();
-    }
+	private void OnDisable()
+	{
+		inputActions.Disable();
+	}
 
-    private void FixedUpdate()
-    {
-        if (cooldownTimer == 0)
-        {
-            HandleRotation();
-            HandleXInversion();
-        }
-        else
-        {
-            cooldownTimer -= 1;
-        }
-    }
+	private void FixedUpdate()
+	{
+		if (cooldownTimer == 0)
+		{
+			HandleRotation();
+			HandleXInversion();
+		}
+		else
+		{
+			cooldownTimer -= 1;
+		}
+	}
 
-    private void HandleXInversion()
-    {
-        bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
+	private void HandleXInversion()
+	{
+		bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
 
-        if (joystick.Vertical > 0.5 || joystick.Vertical < -0.5)
-        {
-            invertion = true;
-        }
+		if (GM.UIHandler.Joystick.Vertical > 0.5 || GM.UIHandler.Joystick.Vertical < -0.5)
+		{
+			invertion = true;
+		}
 
-        if (board.currentBlock)
-        {
-            BlockParent block = board.currentBlock.GetComponent<BlockParent>();
-            List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
+		if (GM.currentBlock)
+		{
+			BlockParent block = GM.currentBlock.GetComponent<BlockParent>();
+			List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
 
-            bool canInvert = newLayout.All(slot => board.IsEmpty(slot + block.LowerSlot));
+			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + block.LowerSlot));
 
-            if (canInvert && invertion)
-            {
-                block.InvertX();
+			if (canInvert && invertion)
+			{
+				block.InvertX();
 
-                cooldownTimer = MAX_COOLDOWN;
-            }
-        }
-    }
+				cooldownTimer = MAX_COOLDOWN;
+			}
+		}
+	}
 
-    private void HandleRotation()
-    {
-        bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == InputActionPhase.Performed;
-        bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == InputActionPhase.Performed;
+	private void HandleRotation()
+	{
+		bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == InputActionPhase.Performed;
+		bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == InputActionPhase.Performed;
 
-        if (joystick.Horizontal > 0.5)
-        {
-            moveLeft = true;
-        }
-        if (joystick.Horizontal < -0.5)
-        {
-            moveRight = true;
-        }
+		if (GM.UIHandler.Joystick.Horizontal > 0.5)
+		{
+			moveLeft = true;
+		}
+		if (GM.UIHandler.Joystick.Horizontal < -0.5)
+		{
+			moveRight = true;
+		}
 
-        if (moveRight)
-        {
-            board.RotateRight();
+		if (moveRight)
+		{
+			GM.Board.RotateRight();
 
-            cooldownTimer = MAX_COOLDOWN;
-        }
-        if (moveLeft)
-        {
-            board.RotateLeft();
-            cooldownTimer = MAX_COOLDOWN;
-        }
-    }
+			cooldownTimer = MAX_COOLDOWN;
+		}
+		if (moveLeft)
+		{
+			GM.Board.RotateLeft();
+			cooldownTimer = MAX_COOLDOWN;
+		}
+	}
 }

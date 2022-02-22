@@ -1,37 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 using TMPro;
 
 public class UIHandler : MonoBehaviour
 {
-    public Board board;
-    public GameObject joystick;
-    public GameObject playButton;
-    public TextMeshProUGUI score;
+	private GameManager GM;
 
-    void Start()
-    {
-        board = FindObjectOfType<Board>();
+	public FloatingJoystick Joystick;
+	public Button PlayButton;
+	public Button QuitButton;
+	public TextMeshProUGUI Score;
 
-        joystick = GameObject.FindWithTag("joystick");
-        joystick.SetActive(false);
-        playButton = GameObject.FindWithTag("playButton");
-        playButton.SetActive(true);
-    }
+	private void Awake()
+	{
+		GM = GameManager.Instance;
 
+		QuitButton.onClick.AddListener(QuitGame);
+		PlayButton.onClick.AddListener(PlayGame);
+		Score.gameObject.SetActive(false);
 
-    public void StartGame()
-    {
-        board.isPlaying = true;
+		ShowMenu();
+	}
 
-        joystick.SetActive(true);
-        playButton.SetActive(false);
-        board.currentScore = 0;
-    }
+	public void ShowMenu()
+	{
+		Joystick.gameObject.SetActive(false);
+		PlayButton.gameObject.SetActive(true);
+		QuitButton.gameObject.SetActive(true);
+	}
 
-    public void UpdateScore(float currentScore)
-    {
-        score.text = "Score: " + currentScore.ToString();
-    }
+	public void HideMenu()
+	{
+		Joystick.gameObject.SetActive(true);
+		PlayButton.gameObject.SetActive(false);
+		QuitButton.gameObject.SetActive(false);
+	}
+
+	public void PlayGame()
+	{
+		Score.gameObject.SetActive(true);
+		GM.StartGame();
+	}
+
+	public void QuitGame()
+	{
+		Debug.Log("QUIT");
+		Application.Quit();
+	}
+
+	public void UpdateScore(float currentScore)
+	{
+		Score.text = "Score: " + currentScore.ToString();
+	}
 }
