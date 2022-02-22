@@ -8,17 +8,28 @@ using System.Linq;
 // use type alias
 using Layout = System.Collections.Generic.List<Slot>;
 
+[Serializable]
+public struct Point
+{
+	public int X;
+	public int Y;
+
+	public Point(int x, int y) { X = x; Y = y; }
+}
+
 public class BlockSpawner : MonoBehaviour
 {
-	public UIHandler uiHandler;
+	private UIHandler uiHandler;
+	private Board board;
+
 	public GameObject BlockPrefab;
 	public GameObject BlockParentPrefab;
 	public GameObject emptyObject;
 	public List<Layout> layouts = LayoutCreator.Create3BlockLayouts();
 
-	private Board board;
 
 	private GameObject currentBlock;
+	public Point SpawnSlot;
 
 	public void Start()
 	{
@@ -34,12 +45,11 @@ public class BlockSpawner : MonoBehaviour
 		bool canSpawn = blockLayout.All(slot => board.IsEmpty(slot + spawnSlot));
 		if (!canSpawn)
 		{
-			Debug.LogError("GAME OVER");
-			Debug.LogError($"Cannot Spawn Block at {spawnSlot}");
+			Debug.Log("GAME OVER");
+			Debug.Log($"Cannot Spawn Block at {spawnSlot}");
 
 			board.isPlaying = false;
-			uiHandler.joystick.SetActive(false);
-			uiHandler.playButton.SetActive(true);
+			GameManager.Instance.EndGame();
 			board.DestroyAll();
 			board.currentBlock = null;
 		}
