@@ -561,6 +561,10 @@ PrefabInstance:
       propertyPath: BlockPrefab
       value: 
       objectReference: {fileID: 512807390751012026, guid: 72dcbacceb85f020e90eb68604fc1a13, type: 3}
+    - target: {fileID: 2258727364613013456, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
+      propertyPath: ColorManager
+      value: 
+      objectReference: {fileID: 11400000, guid: cf9fbac789de9cd15be4e5b2b7045a61, type: 2}
     - target: {fileID: 2258727364613013457, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
       propertyPath: m_RootOrder
       value: 1
