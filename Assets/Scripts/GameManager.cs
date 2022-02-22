@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
-using System.Collections.Generic;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
 	public UIHandler UIHandler;
 	public Board Board;
@@ -10,34 +9,16 @@ public class GameManager : MonoBehaviour
 	public enum GameState { MENU, PLAYING }
 	private GameState gameState = GameState.MENU;
 
-	private static GameManager instance;
-	public static GameManager Instance
-	{
-		get
-		{
-			if (instance == null)
-			{
-				Debug.LogError("Game Manager is NULL.");
-			}
-			return instance;
-		}
-	}
-
 	private void Awake()
 	{
-		instance = this;
-		DontDestroyOnLoad(instance);
+		UIHandler = FindObjectOfType<UIHandler>();
+		Board = FindObjectOfType<Board>();
 	}
-
 	private void FixedUpdate()
 	{
 		if (gameState == GameState.PLAYING)
 			DoUpdate();
 	}
-
-	private readonly (int, int) spawnPoint = (12, 0);
-	private readonly (float, float) positionChange = (0.1F, 0);
-
 
 	private void DoUpdate()
 	{
@@ -56,4 +37,20 @@ public class GameManager : MonoBehaviour
 		UIHandler.ShowMenu();
 	}
 
+}
+
+// https://blog.mzikmund.com/2019/01/a-modern-singleton-in-unity/
+public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
+{
+	private static readonly Lazy<T> LazyInstance = new Lazy<T>(CreateSingleton);
+
+	public static T Instance => LazyInstance.Value;
+
+	private static T CreateSingleton()
+	{
+		var ownerObject = new GameObject($"{typeof(T).Name} (singleton)");
+		var instance = ownerObject.AddComponent<T>();
+		DontDestroyOnLoad(ownerObject);
+		return instance;
+	}
 }

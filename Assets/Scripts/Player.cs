@@ -17,12 +17,11 @@ public class Player : MonoBehaviour
 	private void Awake()
 	{
 		board = GameObject.FindWithTag("Board").GetComponent<Board>();
+		joystick = GameManager.Instance.UIHandler.Joystick;
 	}
 
 	private void Start()
 	{
-		joystick = GameManager.Instance.UIHandler.Joystick;
-
 	}
 
 	private void OnEnable()
