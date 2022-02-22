@@ -3,17 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Board
-  - Block
-  - Base
-  - block
-  - BlockSpawner
-  - playButton
-  - score
-  - joystick
-  - Base_inner
-  - Base_outer
+  tags: []
   layers:
   - Default
   - TransparentFX

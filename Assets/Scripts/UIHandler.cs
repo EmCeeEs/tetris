@@ -5,19 +5,20 @@ using TMPro;
 
 public class UIHandler : MonoBehaviour
 {
+	private GameManager GM;
+
 	public FloatingJoystick Joystick;
 	public Button PlayButton;
 	public Button QuitButton;
 	public TextMeshProUGUI Score;
 
-	private GameManager GM;
-
-	private void Start()
+	private void Awake()
 	{
 		GM = GameManager.Instance;
 
 		QuitButton.onClick.AddListener(QuitGame);
-		PlayButton.onClick.AddListener(StartGame);
+		PlayButton.onClick.AddListener(PlayGame);
+		Score.gameObject.SetActive(false);
 
 		ShowMenu();
 	}
@@ -36,9 +37,9 @@ public class UIHandler : MonoBehaviour
 		QuitButton.gameObject.SetActive(false);
 	}
 
-	public void StartGame()
+	public void PlayGame()
 	{
-		HideMenu();
+		Score.gameObject.SetActive(true);
 		GM.StartGame();
 	}
 

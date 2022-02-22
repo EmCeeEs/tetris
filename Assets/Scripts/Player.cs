@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,22 +5,16 @@ using UnityEngine.InputSystem;
 using System.Linq;
 public class Player : MonoBehaviour
 {
-	private PlayerControls inputActions;
-	public Joystick joystick;
+	private GameManager GM;
 
-	private Board board;
+	private PlayerControls inputActions;
 
 	private int cooldownTimer = 0;
 	private const int MAX_COOLDOWN = 5;
 
 	private void Awake()
 	{
-		board = GameObject.FindWithTag("Board").GetComponent<Board>();
-		joystick = GameManager.Instance.UIHandler.Joystick;
-	}
-
-	private void Start()
-	{
+		GM = GameManager.Instance;
 	}
 
 	private void OnEnable()
@@ -55,17 +48,17 @@ public class Player : MonoBehaviour
 	{
 		bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
 
-		if (joystick.Vertical > 0.5 || joystick.Vertical < -0.5)
+		if (GM.UIHandler.Joystick.Vertical > 0.5 || GM.UIHandler.Joystick.Vertical < -0.5)
 		{
 			invertion = true;
 		}
 
-		if (board.currentBlock)
+		if (GM.currentBlock)
 		{
-			BlockParent block = board.currentBlock.GetComponent<BlockParent>();
+			BlockParent block = GM.currentBlock.GetComponent<BlockParent>();
 			List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
 
-			bool canInvert = newLayout.All(slot => board.IsEmpty(slot + block.LowerSlot));
+			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + block.LowerSlot));
 
 			if (canInvert && invertion)
 			{
@@ -81,24 +74,24 @@ public class Player : MonoBehaviour
 		bool moveLeft = inputActions.PlayerMovement.PlayerRotationLeft.phase == InputActionPhase.Performed;
 		bool moveRight = inputActions.PlayerMovement.PlayerRotationRight.phase == InputActionPhase.Performed;
 
-		if (joystick.Horizontal > 0.5)
+		if (GM.UIHandler.Joystick.Horizontal > 0.5)
 		{
 			moveLeft = true;
 		}
-		if (joystick.Horizontal < -0.5)
+		if (GM.UIHandler.Joystick.Horizontal < -0.5)
 		{
 			moveRight = true;
 		}
 
 		if (moveRight)
 		{
-			board.RotateRight();
+			GM.Board.RotateRight();
 
 			cooldownTimer = MAX_COOLDOWN;
 		}
 		if (moveLeft)
 		{
-			board.RotateLeft();
+			GM.Board.RotateLeft();
 			cooldownTimer = MAX_COOLDOWN;
 		}
 	}

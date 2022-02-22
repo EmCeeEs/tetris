@@ -234,6 +234,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1975527109090828772, guid: f5e35981908a095408b7b8e2758a1b82, type: 3}
+      propertyPath: m_text
+      value: 'Score: -'
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1975527108546922278, guid: f5e35981908a095408b7b8e2758a1b82, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f5e35981908a095408b7b8e2758a1b82, type: 3}
@@ -490,6 +494,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a47f546fc70ec8428172694e78e4288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1487516082 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2100384816272300281, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
+  m_PrefabInstance: {fileID: 2258727364339001016}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1617073198 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1975527109355856385, guid: f5e35981908a095408b7b8e2758a1b82, type: 3}
@@ -538,6 +547,10 @@ PrefabInstance:
       propertyPath: uiHandler
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2258727364613013456, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
+      propertyPath: PlayerBase
+      value: 
+      objectReference: {fileID: 1487516082}
     - target: {fileID: 2258727364613013456, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
       propertyPath: BlockPrefab
       value: 

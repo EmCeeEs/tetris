@@ -3,17 +3,25 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
+	// References to other MonoBehaviour scripts
 	public UIHandler UIHandler;
 	public Board Board;
+	public BlockSpawner BlockSpawner;
+	public SoundHandler SoundHandler;
 
 	public enum GameState { MENU, PLAYING }
 	private GameState gameState = GameState.MENU;
+
+	public GameObject currentBlock = null;
 
 	private void Awake()
 	{
 		UIHandler = FindObjectOfType<UIHandler>();
 		Board = FindObjectOfType<Board>();
+		BlockSpawner = FindObjectOfType<BlockSpawner>();
+		SoundHandler = FindObjectOfType<SoundHandler>();
 	}
+
 	private void FixedUpdate()
 	{
 		if (gameState == GameState.PLAYING)
@@ -22,19 +30,33 @@ public class GameManager : Singleton<GameManager>
 
 	private void DoUpdate()
 	{
+		if (currentBlock == null)
+		{
+			currentBlock = BlockSpawner.SpawnBlock();
+		}
+		if (Board.foundRow)
+		{
+			Board.disolveTimer += Time.deltaTime;
+			Board.disolve.SetFloat("_time", Board.disolveTimer);
+		}
 	}
 
 	public void StartGame()
 	{
-		gameState = GameState.PLAYING;
-		Board.isPlaying = true;
+		Board.Clear();
 		Board.currentScore = 0;
+
+		UIHandler.HideMenu();
+		UIHandler.UpdateScore(0);
+
+		gameState = GameState.PLAYING;
 	}
 
 	public void EndGame()
 	{
-		gameState = GameState.MENU;
 		UIHandler.ShowMenu();
+
+		gameState = GameState.MENU;
 	}
 
 }

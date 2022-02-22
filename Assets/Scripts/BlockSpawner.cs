@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 
 using System.Linq;
@@ -8,62 +6,46 @@ using System.Linq;
 // use type alias
 using Layout = System.Collections.Generic.List<Slot>;
 
-[Serializable]
-public struct Point
-{
-	public int X;
-	public int Y;
-
-	public Point(int x, int y) { X = x; Y = y; }
-}
-
 public class BlockSpawner : MonoBehaviour
 {
-	private UIHandler uiHandler;
-	private Board board;
+	private GameManager GM;
 
 	public GameObject BlockPrefab;
 	public GameObject BlockParentPrefab;
-	public GameObject emptyObject;
+
 	public List<Layout> layouts = LayoutCreator.Create3BlockLayouts();
 
+	private readonly Slot spawnSlot = new Slot(8, 0);
 
-	private GameObject currentBlock;
-	public Point SpawnSlot;
-
-	public void Start()
+	public void Awake()
 	{
-		uiHandler = FindObjectOfType<UIHandler>();
-		board = FindObjectOfType<Board>();
+		GM = GameManager.Instance;
 	}
 
-	public void SpawnBlock(Slot spawnSlot)
+	public GameObject SpawnBlock()
 	{
+		GameObject newBlock = null;
+
 		int layoutIndex = UnityEngine.Random.Range(0, layouts.Count);
 		Layout blockLayout = layouts[layoutIndex];
 
-		bool canSpawn = blockLayout.All(slot => board.IsEmpty(slot + spawnSlot));
+		bool canSpawn = blockLayout.All(slot => GM.Board.IsEmpty(slot + spawnSlot));
 		if (!canSpawn)
 		{
-			Debug.Log("GAME OVER");
-			Debug.Log($"Cannot Spawn Block at {spawnSlot}");
-
-			board.isPlaying = false;
-			GameManager.Instance.EndGame();
-			board.DestroyAll();
-			board.currentBlock = null;
+			GM.EndGame();
 		}
 		else
 		{
-			if (!board.foundRow)
+			if (!GM.Board.foundRow)
 			{
-				InstantiateBlockFromLayout(spawnSlot, blockLayout);
-				board.currentBlock = currentBlock;
+				newBlock = InstantiateBlockFromLayout(spawnSlot, blockLayout);
 			}
 		}
+		return newBlock;
 	}
 
-	private void InstantiateBlockFromLayout(Slot spawnSlot, Layout layout)
+
+	private GameObject InstantiateBlockFromLayout(Slot spawnSlot, Layout layout)
 	{
 
 		GameObject parent = Instantiate(BlockParentPrefab);
@@ -73,16 +55,16 @@ public class BlockSpawner : MonoBehaviour
 		foreach (Slot slot in layout)
 		{
 			block = Instantiate(BlockPrefab, parent.transform);
-			board.grid.MoveToSlot(slot, block);
+			GM.Board.grid.MoveToSlot(slot, block);
 			blocks.Add(block);
 		}
 
 		parent.GetComponent<BlockParent>().BlockLayout = layout;
 		parent.GetComponent<BlockParent>().Blocks = blocks;
 
-		board.grid.MoveToSlot(spawnSlot, parent);
+		GM.Board.grid.MoveToSlot(spawnSlot, parent);
 
-		currentBlock = parent;
+		return parent;
 	}
 }
 

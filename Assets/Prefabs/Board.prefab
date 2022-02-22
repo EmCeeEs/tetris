@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 2258727364613013456}
   m_Layer: 0
   m_Name: Board
-  m_TagString: Board
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78,12 +78,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleChange: 0.02
   disolve: {fileID: 2100000, guid: 164a9e29da4e02346bc136353e90bd67, type: 2}
-  uiHandler: {fileID: 0}
-  isPlaying: 0
   currentScore: 0
-  BlockPrefab: {fileID: 512807390751012026, guid: 72dcbacceb85f020e90eb68604fc1a13, type: 3}
+  foundRow: 0
+  disolveTimer: 0
   colors: []
-  currentBlock: {fileID: 0}
+  PlayerBase: {fileID: 0}
 --- !u!1001 &1381832822817651103
 PrefabInstance:
   m_ObjectHideFlags: 0
