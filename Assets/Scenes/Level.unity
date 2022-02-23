@@ -538,6 +538,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2104201191
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2104201193}
+  - component: {fileID: 2104201192}
+  m_Layer: 0
+  m_Name: Settings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!114 &2104201192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104201191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1da58a0b57d45e1a7b177f4dcd65dfef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreSettings: {fileID: 11400000, guid: a1a5c1bac85df6fdd9ae14f38c445546, type: 2}
+--- !u!4 &2104201193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2104201191}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.24166709, y: -0.0536471, z: -0.15132624}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2258727364339001016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -561,6 +605,10 @@ PrefabInstance:
       propertyPath: BlockPrefab
       value: 
       objectReference: {fileID: 512807390751012026, guid: 72dcbacceb85f020e90eb68604fc1a13, type: 3}
+    - target: {fileID: 2258727364613013456, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
+      propertyPath: ColorManager
+      value: 
+      objectReference: {fileID: 11400000, guid: cf9fbac789de9cd15be4e5b2b7045a61, type: 2}
     - target: {fileID: 2258727364613013457, guid: e77ed1643ad08933a92556aa25733d03, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -621,6 +669,10 @@ PrefabInstance:
     - target: {fileID: 2491710088205216576, guid: 35b9343dca502cb4e9a31a4a8b4f9073, type: 3}
       propertyPath: m_Name
       value: SoundManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2491710088205216576, guid: 35b9343dca502cb4e9a31a4a8b4f9073, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 2491710088205216578, guid: 35b9343dca502cb4e9a31a4a8b4f9073, type: 3}
       propertyPath: cannotSound.Array.size

@@ -13,8 +13,15 @@ public class GameManager : Singleton<GameManager>
 	public enum GameState { MENU, PLAYING }
 	private GameState gameState = GameState.MENU;
 
+	public ScoreSettings ScoreSettings;
+	public int CurrentScore { get; set; }
+	public int Speed { get; set; }
+
 	public GameObject currentBlock = null;
 
+	// This is somehow contradictory. Use Singleton but search for normal objects, that
+	// should be sigletons as well in oder to make sense. But than everything, including
+	// prefab and gameobject instantiation, which leaves the scene black.
 	private void Awake()
 	{
 		UIHandler = FindObjectOfType<UIHandler>();
@@ -22,6 +29,7 @@ public class GameManager : Singleton<GameManager>
 		BlockSpawner = FindObjectOfType<BlockSpawner>();
 		SoundHandler = FindObjectOfType<SoundHandler>();
 		Player = FindObjectOfType<Player>();
+		ScoreSettings = FindObjectOfType<Settings>().scoreSettings;
 	}
 
 	private void FixedUpdate()
@@ -46,7 +54,8 @@ public class GameManager : Singleton<GameManager>
 	public void StartGame()
 	{
 		Board.Clear();
-		Board.currentScore = 0;
+		CurrentScore = 0;
+		Speed = 1;
 
 		UIHandler.HideMenu();
 		UIHandler.UpdateScore(0);

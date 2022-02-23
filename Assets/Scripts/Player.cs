@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
 			BlockParent block = GM.currentBlock.GetComponent<BlockParent>();
 			List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
 
-			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + block.LowerSlot));
+			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + GridUtils.SnapToNextX(block.Position)));
 
 			if (canInvert && invertion)
 			{

@@ -55,14 +55,15 @@ public class BlockSpawner : MonoBehaviour
 		foreach (Slot slot in layout)
 		{
 			block = Instantiate(BlockPrefab, parent.transform);
-			GM.Board.grid.MoveToSlot(slot, block);
+			Geometry.MoveToPoint(slot, block);
 			blocks.Add(block);
 		}
 
 		parent.GetComponent<BlockParent>().BlockLayout = layout;
 		parent.GetComponent<BlockParent>().Blocks = blocks;
+		parent.GetComponent<BlockParent>().Position = spawnSlot.AsPoint();
 
-		GM.Board.grid.MoveToSlot(spawnSlot, parent);
+		Geometry.MoveToPoint(spawnSlot, parent);
 
 		return parent;
 	}

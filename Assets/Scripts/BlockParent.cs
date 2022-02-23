@@ -13,21 +13,17 @@ public class BlockParent : MonoBehaviour
 	public Layout BlockLayout { get; set; }
 	public List<GameObject> Blocks { get; set; }
 
-	public Slot LowerSlot;
-	public Slot UpperSlot;
-
-	private PolarGrid grid;
+	public Point Position;
 
 	public void Awake()
 	{
 		GM = GameManager.Instance;
-		grid = new PolarGrid(GM.Board.grid.Periodicity);
 	}
 
 	public void FixedUpdate()
 	{
-		LowerSlot = GM.Board.grid.LowerSlot(transform);
-		UpperSlot = LowerSlot + new Slot(1, 0);
+		Slot LowerSlot = GridUtils.SnapToNextX(Position);
+		Slot UpperSlot = GridUtils.SnapToPreviousX(Position);
 
 		bool isValidMove = true;
 		foreach (Slot slot in BlockLayout)
@@ -40,11 +36,12 @@ public class BlockParent : MonoBehaviour
 
 		if (isValidMove)
 		{
-			GM.Board.grid.MoveByTick(transform, GM.Board.scaleChange);
+			Position -= new Point(0.04F + 0.01F * GM.Speed, 0);
+			Geometry.MoveToPoint(Position, gameObject);
 		}
 		else
 		{
-			GM.Board.grid.MoveToSlot(UpperSlot, gameObject);
+			Geometry.MoveToPoint(UpperSlot, gameObject);
 			foreach (int i in Enumerable.Range(0, BlockLayout.Count))
 			{
 				GameObject block = Blocks[i];
@@ -72,7 +69,7 @@ public class BlockParent : MonoBehaviour
 		{
 			GameObject block = Blocks[i];
 			Slot slot = BlockLayout[i];
-			grid.MoveToSlot(slot, block);
+			Geometry.MoveToPoint(slot, block);
 		}
 	}
 
