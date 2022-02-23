@@ -3,7 +3,7 @@ using UnityEngine;
 
 using System.Linq;
 
-// use type alias
+// use type alias (this file only)
 using Layout = System.Collections.Generic.List<Slot>;
 
 public class BlockSpawner : MonoBehaviour
@@ -14,6 +14,7 @@ public class BlockSpawner : MonoBehaviour
 	public GameObject BlockParentPrefab;
 
 	public List<Layout> layouts = LayoutCreator.Create3BlockLayouts();
+	// public List<Layout> layouts = LayoutCreator.Create4BlockLayouts();
 
 	private readonly Slot spawnSlot = new Slot(8, 0);
 
@@ -26,7 +27,7 @@ public class BlockSpawner : MonoBehaviour
 	{
 		GameObject newBlock = null;
 
-		int layoutIndex = UnityEngine.Random.Range(0, layouts.Count);
+		int layoutIndex = Random.Range(0, layouts.Count);
 		Layout blockLayout = layouts[layoutIndex];
 
 		bool canSpawn = blockLayout.All(slot => GM.Board.IsEmpty(slot + spawnSlot));
@@ -107,6 +108,94 @@ public class LayoutCreator
             new Layout(){
 				new Slot(0, -1),
 				new Slot(0, 0),
+				new Slot(-1, 0),
+			},
+		};
+
+	public static List<Layout> Create4BlockLayouts()
+		=> new List<Layout>(){
+            // 2x2 layout
+            new Layout(){
+				new Slot(0, 0),
+				new Slot(0, 1),
+				new Slot(1, 1),
+				new Slot(1, 0),
+			},
+            // I layout
+            new Layout(){
+				new Slot(3, 0),
+				new Slot(2, 0),
+				new Slot(1, 0),
+				new Slot(0, 0),
+			},
+            // Line layout
+            new Layout(){
+				new Slot(0, -1),
+				new Slot(0, 0),
+				new Slot(0, 1),
+				new Slot(0, 2),
+			},
+            // L layout
+            new Layout(){
+				new Slot(2, 0),
+				new Slot(1, 0),
+				new Slot(0, 0),
+				new Slot(0, 1),
+			},
+            // J layout
+            new Layout(){
+				new Slot(2, 0),
+				new Slot(1, 0),
+				new Slot(0, 0),
+				new Slot(0, -1),
+			},
+			// ___| layout
+            new Layout(){
+				new Slot(0, -1),
+				new Slot(0, 0),
+				new Slot(0, 1),
+				new Slot(1, 1),
+			},
+			// |___ layout
+            new Layout(){
+				new Slot(1, -1),
+				new Slot(0, -1),
+				new Slot(0, 0),
+				new Slot(0, 1),
+			},
+            // S layout
+            new Layout(){
+				new Slot(0, -1),
+				new Slot(0, 0),
+				new Slot(1, 0),
+				new Slot(1, 1),
+			},
+            // Z layout
+            new Layout(){
+				new Slot(1, -1),
+				new Slot(1, 0),
+				new Slot(0, 0),
+				new Slot(0, 1),
+			},
+			// T layout
+			new Layout(){
+				new Slot(0, -1),
+				new Slot(0, 0),
+				new Slot(1, 0),
+				new Slot(0, 1),
+			},
+			// |- layout
+			new Layout(){
+				new Slot(1, 0),
+				new Slot(0, 0),
+				new Slot(0, 1),
+				new Slot(-1, 0),
+			},
+			// -| layout
+			new Layout(){
+				new Slot(1, 0),
+				new Slot(0, 0),
+				new Slot(0, -1),
 				new Slot(-1, 0),
 			},
 		};
