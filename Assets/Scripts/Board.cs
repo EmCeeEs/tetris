@@ -6,7 +6,6 @@ using System.Linq;
 public class Board : MonoBehaviour
 {
 	private GameManager GM;
-	public float scaleChange = 0.02F;
 	public ColorManager ColorManager;
 
 	public Material disolve;
@@ -23,7 +22,7 @@ public class Board : MonoBehaviour
 	{
 		GM = GameManager.Instance;
 
-		slots = new GameObject[12, 12];
+		slots = new GameObject[12, Geometry.PERIODICITY];
 	}
 
 	public bool IsEmpty(Slot slot)
@@ -68,7 +67,7 @@ public class Board : MonoBehaviour
 					offset++;
 					GM.CurrentScore += GM.ScoreSettings.singleRowScore;
 					GM.UIHandler.UpdateScore(GM.CurrentScore);
-					scaleChange += 0.001F;
+					GM.Speed += 1;
 				}
 			}
 		}

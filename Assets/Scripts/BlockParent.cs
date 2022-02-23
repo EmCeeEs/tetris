@@ -36,7 +36,7 @@ public class BlockParent : MonoBehaviour
 
 		if (isValidMove)
 		{
-			Position -= new Point(0.05F, 0);
+			Position -= new Point(0.04F + 0.01F * GM.Speed, 0);
 			Geometry.MoveToPoint(Position, gameObject);
 		}
 		else

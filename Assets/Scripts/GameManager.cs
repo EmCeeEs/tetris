@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager>
 
 	public ScoreSettings ScoreSettings;
 	public int CurrentScore { get; set; }
+	public int Speed { get; set; }
 
 	public GameObject currentBlock = null;
 
@@ -54,6 +55,7 @@ public class GameManager : Singleton<GameManager>
 	{
 		Board.Clear();
 		CurrentScore = 0;
+		Speed = 1;
 
 		UIHandler.HideMenu();
 		UIHandler.UpdateScore(0);
