@@ -19,50 +19,43 @@ public class Board : MonoBehaviour
 	private int rotationState = 0;
 	private GameObject[,] slots;
 
-	private const int N_ROWS = 12;
-	private const int N_BLOCKS_PER_ROW = 12;
-	private float rotationAngle;
-	public PolarGrid grid;
-
 	void Awake()
 	{
 		GM = GameManager.Instance;
 
-		slots = new GameObject[N_ROWS, N_BLOCKS_PER_ROW];
-		rotationAngle = 360 / N_BLOCKS_PER_ROW;
-		grid = new PolarGrid();
+		slots = new GameObject[12, 12];
 	}
 
 	public bool IsEmpty(Slot slot)
 	{
-		if (slot.Scale == -1)
+		if (slot.X == -1)
 		{
 			return false;
 		}
 
-		int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
-		return slots[slot.Scale, totalRotation] == null;
+		int totalRotation = Utils.Mod(slot.Y - rotationState, Geometry.PERIODICITY);
+		return slots[slot.X, totalRotation] == null;
 	}
 
 	public void SetSlot(Slot slot, GameObject block)
 	{
-		if (slot.Scale < ColorManager.colors.Length)
+		if (slot.X < ColorManager.colors.Length)
 		{
-			int totalRotation = Utils.Mod(slot.Rotation - rotationState, N_BLOCKS_PER_ROW);
+			int totalRotation = Utils.Mod(slot.Y - rotationState, Geometry.PERIODICITY);
 			block.transform.SetParent(PlayerBase.transform);
 
 			GM.CurrentScore += GM.ScoreSettings.baseBlockScore;
 			GM.UIHandler.UpdateScore(GM.CurrentScore);
 
-			slots[slot.Scale, totalRotation] = block;
-			block.GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", ColorManager.colors[slot.Scale]);
+			slots[slot.X, totalRotation] = block;
+			block.GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", ColorManager.colors[slot.X]);
 		}
 	}
 
 	public void CheckForCompleteRows()
 	{
 		int offset = 0;
-		foreach (int rowNumber in Enumerable.Range(0, N_ROWS))
+		foreach (int rowNumber in Enumerable.Range(0, slots.GetLength(0)))
 		{
 			int shifted = rowNumber - offset;
 			if (IsRowComplete(shifted))
@@ -84,7 +77,7 @@ public class Board : MonoBehaviour
 
 	private bool IsRowComplete(int rowNumber)
 	{
-		return Enumerable.Range(0, N_BLOCKS_PER_ROW)
+		return Enumerable.Range(0, Geometry.PERIODICITY)
 			.Select(x => slots[rowNumber, x] != null)
 			.All(x => x);
 	}
@@ -93,7 +86,7 @@ public class Board : MonoBehaviour
 	private IEnumerator RemoveRow(int rowNumber)
 	{
 		// remove row
-		for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
+		for (int j = 0; j < Geometry.PERIODICITY; j++)
 		{
 			slots[rowNumber, j].GetComponentsInChildren<Renderer>()[0].material = disolve;
 			Destroy(slots[rowNumber, j], 1);
@@ -106,14 +99,14 @@ public class Board : MonoBehaviour
 		disolve.SetFloat("_time", disolveTimer);
 
 		// shift other rows
-		for (int i = rowNumber + 1; i < N_ROWS; i++)
+		for (int i = rowNumber + 1; i < slots.GetLength(0); i++)
 		{
-			for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
+			for (int j = 0; j < Geometry.PERIODICITY; j++)
 			{
 				if (slots[i, j] != null)
 				{
 					slots[i - 1, j] = slots[i, j];
-					grid.MoveToSlot(new Slot(i - 1, j), slots[i, j]);
+					Geometry.MoveToPoint(new Slot(i - 1, j), slots[i, j]);
 					slots[i - 1, j].GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", ColorManager.colors[i - 1]);
 					slots[i, j] = null;
 				}
@@ -124,9 +117,9 @@ public class Board : MonoBehaviour
 
 	public void Clear()
 	{
-		for (int i = 0; i < N_ROWS; i++)
+		for (int i = 0; i < slots.GetLength(0); i++)
 		{
-			for (int j = 0; j < N_BLOCKS_PER_ROW; j++)
+			for (int j = 0; j < Geometry.PERIODICITY; j++)
 			{
 				Destroy(slots[i, j]);
 			}
@@ -139,7 +132,7 @@ public class Board : MonoBehaviour
 
 		if (CanRotate(GM.currentBlock, rotationAsSlot))
 		{
-			PlayerBase.transform.Rotate(Vector3.up, -rotationAngle);
+			PlayerBase.transform.Rotate(Vector3.up, -Geometry.RotationAngle());
 			rotationState -= 1;
 			GM.SoundHandler.CanRotateNoise();
 		}
@@ -153,7 +146,8 @@ public class Board : MonoBehaviour
 			return true;
 		}
 
-		Slot lowerSlot = grid.LowerSlot(block.transform);
+		BlockParent blockScript = block.GetComponent<BlockParent>();
+		Slot lowerSlot = GridUtils.SnapToNextX(blockScript.Position);
 		Slot upperSlot = lowerSlot + new Slot(1, 0);
 
 		foreach (Slot layoutSlot in block.GetComponent<BlockParent>().BlockLayout)
@@ -174,7 +168,7 @@ public class Board : MonoBehaviour
 
 		if (CanRotate(GM.currentBlock, rotationAsSlot))
 		{
-			PlayerBase.transform.Rotate(Vector3.up, +rotationAngle);
+			PlayerBase.transform.Rotate(Vector3.up, +Geometry.RotationAngle());
 			rotationState += 1;
 			GM.SoundHandler.CanRotateNoise();
 
