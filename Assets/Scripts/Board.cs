@@ -27,7 +27,7 @@ public class Board : MonoBehaviour
 
 	public bool IsEmpty(Slot slot)
 	{
-		if (slot.X == -1)
+		if (slot.X <= -1)
 		{
 			return false;
 		}
