@@ -9,6 +9,11 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# .NET formatting rules
+[*.{cs,vb}]
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
 [*.cs]
 # https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/new-operator#constructor-invocation
 # disable analyzers for unsupported C# 9.0 features in unity

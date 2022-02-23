@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
+
 using UnityEngine;
 
-using System.Linq;
 
 // use type alias (this file only)
 using Layout = System.Collections.Generic.List<Slot>;

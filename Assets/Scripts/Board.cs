@@ -1,7 +1,7 @@
 using System.Collections;
-using UnityEngine;
-
 using System.Linq;
+
+using UnityEngine;
 
 public class Board : MonoBehaviour
 {
@@ -170,7 +170,6 @@ public class Board : MonoBehaviour
 			PlayerBase.transform.Rotate(Vector3.up, +Geometry.RotationAngle());
 			rotationState += 1;
 			GM.SoundHandler.CanRotateNoise();
-
 		}
 	}
 }
