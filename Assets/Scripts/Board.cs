@@ -65,6 +65,7 @@ public class Board : MonoBehaviour
 			disolve.SetFloat("_time", time);
 			yield return null;
 		}
+		disolve.SetFloat("_time", 0);
 
 		RemoveRows(completedRows);
 
