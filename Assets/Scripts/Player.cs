@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-using System.Linq;
 public class Player : MonoBehaviour
 {
 	private GameManager GM;

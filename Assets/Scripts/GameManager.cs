@@ -1,4 +1,5 @@
 using System;
+
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
@@ -10,11 +11,20 @@ public class GameManager : Singleton<GameManager>
 	public SoundHandler SoundHandler;
 	public Player Player;
 
-	public enum GameState { MENU, PLAYING }
+	public enum GameState { MENU, PLAYING, ANIMATION_PAUSE }
 	private GameState gameState = GameState.MENU;
 
 	public ScoreSettings ScoreSettings;
-	public int CurrentScore { get; set; }
+
+	[SerializeField]
+	private int currentScore;
+	public int CurrentScore
+	{
+		get => currentScore;
+		set { currentScore = value; UIHandler.UpdateScore(currentScore); }
+	}
+
+	[field: SerializeField]
 	public int Speed { get; set; }
 
 	public GameObject currentBlock = null;
@@ -44,23 +54,28 @@ public class GameManager : Singleton<GameManager>
 		{
 			currentBlock = BlockSpawner.SpawnBlock();
 		}
-		if (Board.foundRow)
-		{
-			Board.disolveTimer += Time.deltaTime;
-			Board.disolve.SetFloat("_time", Board.disolveTimer);
-		}
 	}
 
 	public void StartGame()
 	{
 		Board.Clear();
 		CurrentScore = 0;
-		Speed = 1;
+		Speed = 2;
 
 		UIHandler.HideMenu();
 		UIHandler.UpdateScore(0);
 
 		Player.gameObject.SetActive(true);
+		gameState = GameState.PLAYING;
+	}
+
+	public void StartAnimation()
+	{
+		gameState = GameState.ANIMATION_PAUSE;
+	}
+
+	public void StopAnimation()
+	{
 		gameState = GameState.PLAYING;
 	}
 

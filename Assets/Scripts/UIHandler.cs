@@ -1,6 +1,5 @@
-using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine;
 using TMPro;
 
 public class UIHandler : MonoBehaviour
