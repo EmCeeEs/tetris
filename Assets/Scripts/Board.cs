@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Collections; // IEnumerator
+using System.Collections.Generic; // IEnumerable
 using System.Linq;
 
 using UnityEngine;
@@ -10,19 +11,93 @@ public class Board : MonoBehaviour
 
 	public Material disolve;
 
-	public bool foundRow = false;
-	public float disolveTimer = 0;
-
 	public GameObject PlayerBase;
 
+	[SerializeField]
 	private int rotationState = 0;
 	private GameObject[,] slots;
+
+	// Move to settings
+	private const int ANIMATION_DURATION = 1;
+	private const int N_ROWS = 13;
 
 	void Awake()
 	{
 		GM = GameManager.Instance;
 
-		slots = new GameObject[12, Geometry.PERIODICITY];
+		slots = new GameObject[N_ROWS, Geometry.PERIODICITY];
+	}
+
+	public void CheckForCompleteRows()
+	{
+		List<int> completedRows = GetCompletedRows();
+
+		int count = completedRows.Count();
+
+		if (count > 0)
+		{
+			StartCoroutine(
+				RemoveRowsAnimated(completedRows, ANIMATION_DURATION)
+			);
+
+			GM.CurrentScore += count switch
+			{
+				1 => GM.ScoreSettings.singleRowScore,
+				2 => GM.ScoreSettings.doubleRowScore,
+				3 => GM.ScoreSettings.tripleRowScore,
+				4 => GM.ScoreSettings.quatrupleRowScore,
+				_ => 0,
+			};
+
+
+			GM.Speed += 1;
+		}
+	}
+
+	private IEnumerator RemoveRowsAnimated(List<int> completedRows, int seconds)
+	{
+		GM.StartAnimation();
+
+		completedRows.ForEach(rowNumber => SetRowMaterial(rowNumber, disolve));
+
+		for (float time = 0; time <= seconds; time += Time.deltaTime)
+		{
+			disolve.SetFloat("_time", time);
+			yield return null;
+		}
+
+		RemoveRows(completedRows);
+
+		GM.StopAnimation();
+	}
+
+	private void RemoveRows(List<int> completedRows)
+	{
+		int offset = 0;
+		foreach (int rowNumber in completedRows)
+		{
+			ShiftRowsOnto(rowNumber - offset);
+			offset++;
+		}
+	}
+
+	private void ShiftRowsOnto(int rowNumber)
+	{
+		ClearRow(rowNumber);
+
+		for (int i = rowNumber + 1; i < slots.GetLength(0); i++)
+		{
+			for (int j = 0; j < Geometry.PERIODICITY; j++)
+			{
+				if (slots[i, j] != null)
+				{
+					slots[i - 1, j] = slots[i, j];
+					Geometry.MoveToPoint(new Slot(i - 1, j), slots[i, j]);
+					SetBlockColor(slots[i - 1, j], ColorManager.colors[i - 1]);
+					slots[i, j] = null;
+				}
+			}
+		}
 	}
 
 	public bool IsEmpty(Slot slot)
@@ -43,87 +118,38 @@ public class Board : MonoBehaviour
 			int totalRotation = Utils.Mod(slot.Y - rotationState, Geometry.PERIODICITY);
 			block.transform.SetParent(PlayerBase.transform);
 
-			GM.CurrentScore += GM.ScoreSettings.baseBlockScore;
-			GM.UIHandler.UpdateScore(GM.CurrentScore);
-
 			slots[slot.X, totalRotation] = block;
-			block.GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", ColorManager.colors[slot.X]);
+			SetBlockColor(block, ColorManager.colors[slot.X]);
+
+			GM.CurrentScore += GM.ScoreSettings.baseBlockScore;
 		}
-	}
-
-	public void CheckForCompleteRows()
-	{
-		int offset = 0;
-		foreach (int rowNumber in Enumerable.Range(0, slots.GetLength(0)))
-		{
-			int shifted = rowNumber - offset;
-			if (IsRowComplete(shifted))
-			{
-				Debug.Log($"ROW COMPLETED {shifted}");
-				if (foundRow == false)
-				{
-					foundRow = true;
-					StartCoroutine(RemoveRow(shifted));
-					offset++;
-					GM.CurrentScore += GM.ScoreSettings.singleRowScore;
-					GM.UIHandler.UpdateScore(GM.CurrentScore);
-					GM.Speed += 1;
-				}
-			}
-		}
-	}
-
-
-	private bool IsRowComplete(int rowNumber)
-	{
-		return Enumerable.Range(0, Geometry.PERIODICITY)
-			.Select(x => slots[rowNumber, x] != null)
-			.All(x => x);
-	}
-
-
-	private IEnumerator RemoveRow(int rowNumber)
-	{
-		// remove row
-		for (int j = 0; j < Geometry.PERIODICITY; j++)
-		{
-			slots[rowNumber, j].GetComponentsInChildren<Renderer>()[0].material = disolve;
-			Destroy(slots[rowNumber, j], 1);
-			slots[rowNumber, j] = null;
-			foundRow = true;
-		}
-
-		yield return new WaitForSeconds(1);
-		disolveTimer = 0;
-		disolve.SetFloat("_time", disolveTimer);
-
-		// shift other rows
-		for (int i = rowNumber + 1; i < slots.GetLength(0); i++)
-		{
-			for (int j = 0; j < Geometry.PERIODICITY; j++)
-			{
-				if (slots[i, j] != null)
-				{
-					slots[i - 1, j] = slots[i, j];
-					Geometry.MoveToPoint(new Slot(i - 1, j), slots[i, j]);
-					slots[i - 1, j].GetComponentsInChildren<Renderer>()[0].material.SetColor("_BaseColor", ColorManager.colors[i - 1]);
-					slots[i, j] = null;
-				}
-			}
-		}
-		foundRow = false;
 	}
 
 	public void Clear()
 	{
-		for (int i = 0; i < slots.GetLength(0); i++)
+		for (int iRow = 0; iRow < slots.GetLength(0); iRow++)
 		{
-			for (int j = 0; j < Geometry.PERIODICITY; j++)
-			{
-				Destroy(slots[i, j]);
-			}
+			ClearRow(iRow);
 		}
 	}
+
+	public void ClearRow(int iRow)
+	{
+		for (int j = 0; j < Geometry.PERIODICITY; j++)
+		{
+			Destroy(slots[iRow, j]);
+			slots[iRow, j] = null;
+		}
+	}
+
+	private List<int> GetCompletedRows()
+		=> Enumerable.Range(0, slots.GetLength(0))
+			.Where(IsRowComplete)
+			.ToList();
+
+	private bool IsRowComplete(int rowNumber)
+		=> Enumerable.Range(0, Geometry.PERIODICITY)
+			.All(x => slots[rowNumber, x] != null);
 
 	public void RotateRight()
 	{
@@ -153,11 +179,11 @@ public class Board : MonoBehaviour
 		{
 			if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot) || !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
 			{
-				GetComponentsInChildren<Renderer>()[1].material.SetColor("_BaseColor", Color.red);
+				SetPlayerBaseColor(Color.red);
 				return false;
 			}
 		}
-		GetComponentsInChildren<Renderer>()[1].material.SetColor("_BaseColor", Color.white);
+		SetPlayerBaseColor(Color.white);
 		return true;
 	}
 
@@ -172,4 +198,20 @@ public class Board : MonoBehaviour
 			GM.SoundHandler.CanRotateNoise();
 		}
 	}
+
+	private void SetBlockColor(GameObject block, Color32 color)
+		=> block.GetComponentInChildren<Renderer>().material.SetColor("_BaseColor", color);
+
+	private void SetBlockMaterial(GameObject block, Material material)
+		=> block.GetComponentInChildren<Renderer>().material = material;
+
+	private void SetRowMaterial(int rowNumber, Material material)
+	 	=> Enumerable.Range(0, Geometry.PERIODICITY)
+	 		.ToList()
+			.ForEach(
+				(columnIndex) => SetBlockMaterial(slots[rowNumber, columnIndex], material)
+			);
+
+	private void SetPlayerBaseColor(Color32 color)
+		=> PlayerBase.GetComponentsInChildren<Renderer>()[1].material.SetColor("_BaseColor", color);
 }

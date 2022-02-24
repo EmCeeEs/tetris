@@ -16,8 +16,9 @@ public class BlockSpawner : MonoBehaviour
 
 	public List<Layout> layouts = LayoutCreator.Create3BlockLayouts();
 	// public List<Layout> layouts = LayoutCreator.Create4BlockLayouts();
+	// public List<Layout> layouts = LayoutCreator.SquareBlockzz();
 
-	private readonly Slot spawnSlot = new Slot(8, 0);
+	private readonly Slot spawnSlot = new Slot(10, 0);
 
 	public void Awake()
 	{
@@ -26,8 +27,6 @@ public class BlockSpawner : MonoBehaviour
 
 	public GameObject SpawnBlock()
 	{
-		GameObject newBlock = null;
-
 		int layoutIndex = Random.Range(0, layouts.Count);
 		Layout blockLayout = layouts[layoutIndex];
 
@@ -35,15 +34,10 @@ public class BlockSpawner : MonoBehaviour
 		if (!canSpawn)
 		{
 			GM.EndGame();
-		}
-		else
-		{
-			if (!GM.Board.foundRow)
-			{
-				newBlock = InstantiateBlockFromLayout(spawnSlot, blockLayout);
-			}
-		}
-		return newBlock;
+			return null;
+		};
+
+		return InstantiateBlockFromLayout(spawnSlot, blockLayout);
 	}
 
 
@@ -73,6 +67,16 @@ public class BlockSpawner : MonoBehaviour
 
 public class LayoutCreator
 {
+	public static List<Layout> SquareBlockzz()
+		=> new List<Layout>(){
+			// I layout
+			new Layout(){
+				new Slot(-1, 0),
+				new Slot(0, 0),
+				new Slot(1, 0),
+			},
+		};
+
 	public static List<Layout> Create3BlockLayouts()
 		=> new List<Layout>(){
             // I layout
