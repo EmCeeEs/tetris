@@ -14,7 +14,7 @@ public class GameManager : Singleton<GameManager>
 	public enum GameState { MENU, PLAYING, ANIMATION_PAUSE }
 	private GameState gameState = GameState.MENU;
 
-	public ScoreSettings ScoreSettings;
+	public ScoreParameters ScoreParameters;
 
 	[SerializeField]
 	private int currentScore;
@@ -39,7 +39,7 @@ public class GameManager : Singleton<GameManager>
 		BlockSpawner = FindObjectOfType<BlockSpawner>();
 		SoundHandler = FindObjectOfType<SoundHandler>();
 		Player = FindObjectOfType<Player>();
-		ScoreSettings = FindObjectOfType<Settings>().scoreSettings;
+		ScoreParameters = FindObjectOfType<Settings>().ScoreParameters;
 	}
 
 	private void FixedUpdate()

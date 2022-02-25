@@ -32,24 +32,15 @@ public class Board : MonoBehaviour
 	{
 		List<int> completedRows = GetCompletedRows();
 
-		int count = completedRows.Count();
+		int nCompletedRows = completedRows.Count();
 
-		if (count > 0)
+		if (nCompletedRows > 0)
 		{
 			StartCoroutine(
 				RemoveRowsAnimated(completedRows, ANIMATION_DURATION)
 			);
 
-			GM.CurrentScore += count switch
-			{
-				1 => GM.ScoreSettings.singleRowScore,
-				2 => GM.ScoreSettings.doubleRowScore,
-				3 => GM.ScoreSettings.tripleRowScore,
-				4 => GM.ScoreSettings.quatrupleRowScore,
-				_ => 0,
-			};
-
-
+			GM.CurrentScore += GM.ScoreParameters.GetRowPoints(nCompletedRows);
 			GM.Speed += 1;
 		}
 	}
@@ -122,7 +113,7 @@ public class Board : MonoBehaviour
 			slots[slot.X, totalRotation] = block;
 			SetBlockColor(block, ColorManager.colors[slot.X]);
 
-			GM.CurrentScore += GM.ScoreSettings.baseBlockScore;
+			GM.CurrentScore += GM.ScoreParameters.GetBlockPoints();
 		}
 	}
 

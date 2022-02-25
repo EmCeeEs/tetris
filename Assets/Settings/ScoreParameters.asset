@@ -9,7 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ColorManager
-  m_EditorClassIdentifier: Assembly-CSharp::ColorManagerScriptableObject
-  colors: []
+  m_Script: {fileID: 11500000, guid: 39413883b0ec083e6b3bdf68b94ec6f6, type: 3}
+  m_Name: ScoreParameters
+  m_EditorClassIdentifier: 
+  pointsFor1Block: 10
+  pointsFor1Row: 100
+  pointsFor2Rows: 200
+  pointsFor3Rows: 400
+  pointsFor4Rows: 1000
