@@ -3,80 +3,82 @@ using UnityEngine;
 
 using System.Linq;
 
-// use type alias
-using Layout = System.Collections.Generic.List<Slot>;
-
-public class BlockParent : MonoBehaviour
+namespace Tetris
 {
-	private GameManager GM;
+	using Layout = List<Slot>;
 
-	public Layout BlockLayout { get; set; }
-	public List<GameObject> Blocks { get; set; }
-
-	public Point Position;
-
-	public void Awake()
+	public class BlockParent : MonoBehaviour
 	{
-		GM = GameManager.Instance;
-	}
+		private GameManager GM;
 
-	public void FixedUpdate()
-	{
-		Slot LowerSlot = GridUtils.SnapToNextX(Position);
-		Slot UpperSlot = GridUtils.SnapToPreviousX(Position);
+		public Layout BlockLayout { get; set; }
+		public List<GameObject> Blocks { get; set; }
 
-		bool isValidMove = true;
-		foreach (Slot slot in BlockLayout)
+		public Point Position;
+
+		public void Awake()
 		{
-			if (!GM.Board.IsEmpty(LowerSlot + slot))
+			GM = GameManager.Instance;
+		}
+
+		public void FixedUpdate()
+		{
+			Slot LowerSlot = GridUtils.SnapToNextX(Position);
+			Slot UpperSlot = GridUtils.SnapToPreviousX(Position);
+
+			bool isValidMove = true;
+			foreach (Slot slot in BlockLayout)
 			{
-				isValidMove = false;
+				if (!GM.Board.IsEmpty(LowerSlot + slot))
+				{
+					isValidMove = false;
+				}
+			}
+
+			if (isValidMove)
+			{
+				Position -= new Point(0.04F + 0.01F * GM.Speed, 0);
+				Geometry.MoveToPoint(Position, gameObject);
+			}
+			else
+			{
+				Geometry.MoveToPoint(UpperSlot, gameObject);
+				foreach (int i in Enumerable.Range(0, BlockLayout.Count))
+				{
+					GameObject block = Blocks[i];
+					Slot slot = BlockLayout[i];
+
+					GM.Board.SetSlot(UpperSlot + slot, block);
+				}
+				GM.Board.CheckForCompleteRows();
+				Destroy(gameObject);
 			}
 		}
 
-		if (isValidMove)
+		public void ApplyLayout(Layout layout)
 		{
-			Position -= new Point(0.04F + 0.01F * GM.Speed, 0);
-			Geometry.MoveToPoint(Position, gameObject);
-		}
-		else
-		{
-			Geometry.MoveToPoint(UpperSlot, gameObject);
+			BlockLayout = layout;
+
 			foreach (int i in Enumerable.Range(0, BlockLayout.Count))
 			{
 				GameObject block = Blocks[i];
 				Slot slot = BlockLayout[i];
-
-				GM.Board.SetSlot(UpperSlot + slot, block);
+				Geometry.MoveToPoint(slot, block);
 			}
-			GM.Board.CheckForCompleteRows();
-			Destroy(gameObject);
 		}
-	}
 
-	public void InvertX()
-	{
-		Layout invertedLayout = LayoutCreator.InvertX(BlockLayout);
-
-		ApplyLayout(invertedLayout);
-	}
-
-	public void ApplyLayout(Layout layout)
-	{
-		BlockLayout = layout;
-
-		foreach (int i in Enumerable.Range(0, BlockLayout.Count))
+		public void InvertX()
 		{
-			GameObject block = Blocks[i];
-			Slot slot = BlockLayout[i];
-			Geometry.MoveToPoint(slot, block);
+			Layout invertedLayout = LayoutCreator.InvertX(BlockLayout);
+
+			ApplyLayout(invertedLayout);
 		}
-	}
 
-	public void InvertY()
-	{
-		Layout invertedLayout = LayoutCreator.InvertY(BlockLayout);
+		public void InvertY()
+		{
+			Layout invertedLayout = LayoutCreator.InvertY(BlockLayout);
 
-		ApplyLayout(invertedLayout);
+			ApplyLayout(invertedLayout);
+		}
 	}
 }

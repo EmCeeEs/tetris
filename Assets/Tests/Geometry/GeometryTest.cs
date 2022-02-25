@@ -1,5 +1,7 @@
 using NUnit.Framework;
 
+using Tetris;
+
 [TestFixture]
 public class GeometryTest
 {

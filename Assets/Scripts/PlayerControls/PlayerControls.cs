@@ -12,15 +12,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Utilities;
 
 public partial class @PlayerControls : IInputActionCollection2, IDisposable
 {
-    public InputActionAsset asset { get; }
-    public @PlayerControls()
-    {
-        asset = InputActionAsset.FromJson(@"{
+	public InputActionAsset asset { get; }
+	public @PlayerControls()
+	{
+		asset = InputActionAsset.FromJson(@"{
     ""name"": ""PlayerControls"",
     ""maps"": [
         {
@@ -125,129 +126,129 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     ],
     ""controlSchemes"": []
 }");
-        // PlayerMovement
-        m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
-        m_PlayerMovement_PlayerRotation = m_PlayerMovement.FindAction("PlayerRotation", throwIfNotFound: true);
-        m_PlayerMovement_PlayerRotationLeft = m_PlayerMovement.FindAction("PlayerRotationLeft", throwIfNotFound: true);
-        m_PlayerMovement_PlayerRotationRight = m_PlayerMovement.FindAction("PlayerRotationRight", throwIfNotFound: true);
-        m_PlayerMovement_PlayerInvertBlockX = m_PlayerMovement.FindAction("PlayerInvertBlockX", throwIfNotFound: true);
-    }
+		// PlayerMovement
+		m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
+		m_PlayerMovement_PlayerRotation = m_PlayerMovement.FindAction("PlayerRotation", throwIfNotFound: true);
+		m_PlayerMovement_PlayerRotationLeft = m_PlayerMovement.FindAction("PlayerRotationLeft", throwIfNotFound: true);
+		m_PlayerMovement_PlayerRotationRight = m_PlayerMovement.FindAction("PlayerRotationRight", throwIfNotFound: true);
+		m_PlayerMovement_PlayerInvertBlockX = m_PlayerMovement.FindAction("PlayerInvertBlockX", throwIfNotFound: true);
+	}
 
-    public void Dispose()
-    {
-        UnityEngine.Object.Destroy(asset);
-    }
+	public void Dispose()
+	{
+		UnityEngine.Object.Destroy(asset);
+	}
 
-    public InputBinding? bindingMask
-    {
-        get => asset.bindingMask;
-        set => asset.bindingMask = value;
-    }
+	public InputBinding? bindingMask
+	{
+		get => asset.bindingMask;
+		set => asset.bindingMask = value;
+	}
 
-    public ReadOnlyArray<InputDevice>? devices
-    {
-        get => asset.devices;
-        set => asset.devices = value;
-    }
+	public ReadOnlyArray<InputDevice>? devices
+	{
+		get => asset.devices;
+		set => asset.devices = value;
+	}
 
-    public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
+	public ReadOnlyArray<InputControlScheme> controlSchemes => asset.controlSchemes;
 
-    public bool Contains(InputAction action)
-    {
-        return asset.Contains(action);
-    }
+	public bool Contains(InputAction action)
+	{
+		return asset.Contains(action);
+	}
 
-    public IEnumerator<InputAction> GetEnumerator()
-    {
-        return asset.GetEnumerator();
-    }
+	public IEnumerator<InputAction> GetEnumerator()
+	{
+		return asset.GetEnumerator();
+	}
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+	IEnumerator IEnumerable.GetEnumerator()
+	{
+		return GetEnumerator();
+	}
 
-    public void Enable()
-    {
-        asset.Enable();
-    }
+	public void Enable()
+	{
+		asset.Enable();
+	}
 
-    public void Disable()
-    {
-        asset.Disable();
-    }
-    public IEnumerable<InputBinding> bindings => asset.bindings;
+	public void Disable()
+	{
+		asset.Disable();
+	}
+	public IEnumerable<InputBinding> bindings => asset.bindings;
 
-    public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
-    {
-        return asset.FindAction(actionNameOrId, throwIfNotFound);
-    }
-    public int FindBinding(InputBinding bindingMask, out InputAction action)
-    {
-        return asset.FindBinding(bindingMask, out action);
-    }
+	public InputAction FindAction(string actionNameOrId, bool throwIfNotFound = false)
+	{
+		return asset.FindAction(actionNameOrId, throwIfNotFound);
+	}
+	public int FindBinding(InputBinding bindingMask, out InputAction action)
+	{
+		return asset.FindBinding(bindingMask, out action);
+	}
 
-    // PlayerMovement
-    private readonly InputActionMap m_PlayerMovement;
-    private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
-    private readonly InputAction m_PlayerMovement_PlayerRotation;
-    private readonly InputAction m_PlayerMovement_PlayerRotationLeft;
-    private readonly InputAction m_PlayerMovement_PlayerRotationRight;
-    private readonly InputAction m_PlayerMovement_PlayerInvertBlockX;
-    public struct PlayerMovementActions
-    {
-        private @PlayerControls m_Wrapper;
-        public PlayerMovementActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @PlayerRotation => m_Wrapper.m_PlayerMovement_PlayerRotation;
-        public InputAction @PlayerRotationLeft => m_Wrapper.m_PlayerMovement_PlayerRotationLeft;
-        public InputAction @PlayerRotationRight => m_Wrapper.m_PlayerMovement_PlayerRotationRight;
-        public InputAction @PlayerInvertBlockX => m_Wrapper.m_PlayerMovement_PlayerInvertBlockX;
-        public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
-        public void Enable() { Get().Enable(); }
-        public void Disable() { Get().Disable(); }
-        public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(PlayerMovementActions set) { return set.Get(); }
-        public void SetCallbacks(IPlayerMovementActions instance)
-        {
-            if (m_Wrapper.m_PlayerMovementActionsCallbackInterface != null)
-            {
-                @PlayerRotation.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotation;
-                @PlayerRotation.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotation;
-                @PlayerRotation.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotation;
-                @PlayerRotationLeft.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationLeft;
-                @PlayerRotationLeft.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationLeft;
-                @PlayerRotationLeft.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationLeft;
-                @PlayerRotationRight.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
-                @PlayerRotationRight.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
-                @PlayerRotationRight.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
-                @PlayerInvertBlockX.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
-                @PlayerInvertBlockX.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
-                @PlayerInvertBlockX.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
-            }
-            m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
-            if (instance != null)
-            {
-                @PlayerRotation.started += instance.OnPlayerRotation;
-                @PlayerRotation.performed += instance.OnPlayerRotation;
-                @PlayerRotation.canceled += instance.OnPlayerRotation;
-                @PlayerRotationLeft.started += instance.OnPlayerRotationLeft;
-                @PlayerRotationLeft.performed += instance.OnPlayerRotationLeft;
-                @PlayerRotationLeft.canceled += instance.OnPlayerRotationLeft;
-                @PlayerRotationRight.started += instance.OnPlayerRotationRight;
-                @PlayerRotationRight.performed += instance.OnPlayerRotationRight;
-                @PlayerRotationRight.canceled += instance.OnPlayerRotationRight;
-                @PlayerInvertBlockX.started += instance.OnPlayerInvertBlockX;
-                @PlayerInvertBlockX.performed += instance.OnPlayerInvertBlockX;
-                @PlayerInvertBlockX.canceled += instance.OnPlayerInvertBlockX;
-            }
-        }
-    }
-    public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
-    public interface IPlayerMovementActions
-    {
-        void OnPlayerRotation(InputAction.CallbackContext context);
-        void OnPlayerRotationLeft(InputAction.CallbackContext context);
-        void OnPlayerRotationRight(InputAction.CallbackContext context);
-        void OnPlayerInvertBlockX(InputAction.CallbackContext context);
-    }
+	// PlayerMovement
+	private readonly InputActionMap m_PlayerMovement;
+	private IPlayerMovementActions m_PlayerMovementActionsCallbackInterface;
+	private readonly InputAction m_PlayerMovement_PlayerRotation;
+	private readonly InputAction m_PlayerMovement_PlayerRotationLeft;
+	private readonly InputAction m_PlayerMovement_PlayerRotationRight;
+	private readonly InputAction m_PlayerMovement_PlayerInvertBlockX;
+	public struct PlayerMovementActions
+	{
+		private @PlayerControls m_Wrapper;
+		public PlayerMovementActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+		public InputAction @PlayerRotation => m_Wrapper.m_PlayerMovement_PlayerRotation;
+		public InputAction @PlayerRotationLeft => m_Wrapper.m_PlayerMovement_PlayerRotationLeft;
+		public InputAction @PlayerRotationRight => m_Wrapper.m_PlayerMovement_PlayerRotationRight;
+		public InputAction @PlayerInvertBlockX => m_Wrapper.m_PlayerMovement_PlayerInvertBlockX;
+		public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
+		public void Enable() { Get().Enable(); }
+		public void Disable() { Get().Disable(); }
+		public bool enabled => Get().enabled;
+		public static implicit operator InputActionMap(PlayerMovementActions set) { return set.Get(); }
+		public void SetCallbacks(IPlayerMovementActions instance)
+		{
+			if (m_Wrapper.m_PlayerMovementActionsCallbackInterface != null)
+			{
+				@PlayerRotation.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotation;
+				@PlayerRotation.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotation;
+				@PlayerRotation.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotation;
+				@PlayerRotationLeft.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationLeft;
+				@PlayerRotationLeft.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationLeft;
+				@PlayerRotationLeft.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationLeft;
+				@PlayerRotationRight.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
+				@PlayerRotationRight.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
+				@PlayerRotationRight.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerRotationRight;
+				@PlayerInvertBlockX.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
+				@PlayerInvertBlockX.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
+				@PlayerInvertBlockX.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
+			}
+			m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
+			if (instance != null)
+			{
+				@PlayerRotation.started += instance.OnPlayerRotation;
+				@PlayerRotation.performed += instance.OnPlayerRotation;
+				@PlayerRotation.canceled += instance.OnPlayerRotation;
+				@PlayerRotationLeft.started += instance.OnPlayerRotationLeft;
+				@PlayerRotationLeft.performed += instance.OnPlayerRotationLeft;
+				@PlayerRotationLeft.canceled += instance.OnPlayerRotationLeft;
+				@PlayerRotationRight.started += instance.OnPlayerRotationRight;
+				@PlayerRotationRight.performed += instance.OnPlayerRotationRight;
+				@PlayerRotationRight.canceled += instance.OnPlayerRotationRight;
+				@PlayerInvertBlockX.started += instance.OnPlayerInvertBlockX;
+				@PlayerInvertBlockX.performed += instance.OnPlayerInvertBlockX;
+				@PlayerInvertBlockX.canceled += instance.OnPlayerInvertBlockX;
+			}
+		}
+	}
+	public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+	public interface IPlayerMovementActions
+	{
+		void OnPlayerRotation(InputAction.CallbackContext context);
+		void OnPlayerRotationLeft(InputAction.CallbackContext context);
+		void OnPlayerRotationRight(InputAction.CallbackContext context);
+		void OnPlayerInvertBlockX(InputAction.CallbackContext context);
+	}
 }
