@@ -55,9 +55,12 @@ public class BlockSpawner : MonoBehaviour
 			blocks.Add(block);
 		}
 
-		parent.GetComponent<BlockParent>().BlockLayout = layout;
-		parent.GetComponent<BlockParent>().Blocks = blocks;
-		parent.GetComponent<BlockParent>().Position = spawnSlot.AsPoint();
+		parent.GetComponent<BlockParent>().state = new BlockState()
+		{
+			BlockLayout = layout,
+			Blocks = blocks,
+			Position = spawnSlot.AsPoint()
+		};
 
 		Geometry.MoveToPoint(spawnSlot, parent);
 

@@ -163,13 +163,14 @@ public class Board : MonoBehaviour
 			return true;
 		}
 
-		BlockParent blockScript = block.GetComponent<BlockParent>();
-		Slot lowerSlot = GridUtils.SnapToNextX(blockScript.Position);
+		BlockState blockState = block.GetComponent<BlockParent>().state;
+		Slot lowerSlot = GridUtils.SnapToNextX(blockState.Position);
 		Slot upperSlot = lowerSlot + new Slot(1, 0);
 
-		foreach (Slot layoutSlot in block.GetComponent<BlockParent>().BlockLayout)
+		foreach (Slot layoutSlot in blockState.BlockLayout)
 		{
-			if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot) || !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
+			if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot)
+				|| !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
 			{
 				SetPlayerBaseColor(Color.red);
 				return false;

@@ -54,6 +54,9 @@ public class GameManager : Singleton<GameManager>
 		{
 			currentBlock = BlockSpawner.SpawnBlock();
 		}
+
+		// MoveCurrentBlock();
+		// Board.CheckForCompleteRows();
 	}
 
 	public void StartGame()
