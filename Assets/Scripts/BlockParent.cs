@@ -15,6 +15,8 @@ public class BlockState
 
 	public Point Position { get; set; }
 
+	// move to settings
+	public const int MAX_ATTACH_DELAY = 6;
 }
 
 public class BlockParent : MonoBehaviour
@@ -22,18 +24,24 @@ public class BlockParent : MonoBehaviour
 	private GameManager GM;
 	public BlockState state;
 
+	private int collisionTimer = 0;
+
 	public void Awake() =>
 		GM = GameManager.Instance;
 
-	public void FixedUpdate()
+	public void Update()
 	{
 		if (CanMove())
 		{
-			UpdatePosition();
+			UpdatePosition(); // this in or outside of if CanMove()?
+			collisionTimer = 0;
+		}
+		else if (collisionTimer < BlockState.MAX_ATTACH_DELAY)
+		{
+			collisionTimer++;
 		}
 		else
 		{
-
 			AttachToBoard();
 			Destroy(gameObject);
 		}
@@ -65,6 +73,8 @@ public class BlockParent : MonoBehaviour
 
 			GM.Board.SetSlot(UpperSlot + slot, block);
 		}
+
+		GM.Board.CheckForCompleteRows();
 	}
 
 	public void InvertX()

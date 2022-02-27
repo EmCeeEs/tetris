@@ -3,7 +3,7 @@ using System;
 
 public interface ISpeedParameters
 {
-	public float baseScaleChange { get; }
+	public float BaseScaleChange { get; }
 };
 
 [CreateAssetMenu(
@@ -19,6 +19,5 @@ public class SpeedParameters : GameParameters, ISpeedParameters
 
 	[SerializeField]
 	private float blockSpeed;
-	public float baseScaleChange { get => blockSpeed; }
-
+	public float BaseScaleChange { get => blockSpeed; }
 }
