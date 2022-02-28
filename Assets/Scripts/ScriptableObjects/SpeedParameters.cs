@@ -1,9 +1,9 @@
 using UnityEngine;
-using System;
 
 public interface ISpeedParameters
 {
 	public float BaseScaleChange { get; }
+	public float SpeedScaleChange { get; }
 };
 
 [CreateAssetMenu(
@@ -18,6 +18,10 @@ public class SpeedParameters : GameParameters, ISpeedParameters
 	[Header("BLOCK SPEED")]
 
 	[SerializeField]
-	private float blockSpeed;
-	public float BaseScaleChange { get => blockSpeed; }
+	private float baseScaleChange;
+	public float BaseScaleChange { get => baseScaleChange; }
+
+	[SerializeField]
+	private float speedScaleChange;
+	public float SpeedScaleChange { get => speedScaleChange; }
 }

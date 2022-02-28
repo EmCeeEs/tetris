@@ -567,7 +567,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1da58a0b57d45e1a7b177f4dcd65dfef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScoreParameters: {fileID: 11400000, guid: 5aaf23ad535cff53e95334e22c7fb772, type: 2}
+  Score: {fileID: 11400000, guid: 5aaf23ad535cff53e95334e22c7fb772, type: 2}
+  Speed: {fileID: 11400000, guid: a3e3a562c8232a4be883df2c60b4ed9e, type: 2}
 --- !u!4 &2104201193
 Transform:
   m_ObjectHideFlags: 0

@@ -15,7 +15,8 @@ public class BlockState
 
 	public Point Position { get; set; }
 
-	// move to settings
+	public int collisionTimer = 0;
+
 	public const int MAX_ATTACH_DELAY = 6;
 }
 
@@ -24,21 +25,19 @@ public class BlockParent : MonoBehaviour
 	private GameManager GM;
 	public BlockState state;
 
-	private int collisionTimer = 0;
-
 	public void Awake() =>
 		GM = GameManager.Instance;
 
-	public void Update()
+	public void FixedUpdate()
 	{
 		if (CanMove())
 		{
-			UpdatePosition(); // this in or outside of if CanMove()?
-			collisionTimer = 0;
+			UpdatePosition();
+			state.collisionTimer = 0;
 		}
-		else if (collisionTimer < BlockState.MAX_ATTACH_DELAY)
+		else if (state.collisionTimer < BlockState.MAX_ATTACH_DELAY)
 		{
-			collisionTimer++;
+			state.collisionTimer++;
 		}
 		else
 		{
@@ -57,9 +56,15 @@ public class BlockParent : MonoBehaviour
 
 	public void UpdatePosition()
 	{
-		state.Position -= new Point(0.04F + 0.01F * GM.Speed, 0);
+		state.Position -= GetPositionChangeAsPoint();
 		Geometry.MoveToPoint(state.Position, gameObject);
 	}
+
+	public Point GetPositionChangeAsPoint()
+		=> new Point(
+			GM.Settings.Speed.BaseScaleChange + GM.Settings.Speed.SpeedScaleChange * GM.Speed,
+			0
+		);
 
 	public void AttachToBoard()
 	{

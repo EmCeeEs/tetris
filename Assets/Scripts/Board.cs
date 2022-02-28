@@ -40,7 +40,7 @@ public class Board : MonoBehaviour
 				RemoveRowsAnimated(completedRows, ANIMATION_DURATION)
 			);
 
-			GM.CurrentScore += GM.ScoreParameters.GetRowPoints(nCompletedRows);
+			GM.CurrentScore += GM.Settings.Score.GetRowPoints(nCompletedRows);
 			GM.Speed += 1;
 		}
 	}
@@ -113,7 +113,7 @@ public class Board : MonoBehaviour
 			slots[slot.X, totalRotation] = block;
 			SetBlockColor(block, ColorManager.colors[slot.X]);
 
-			GM.CurrentScore += GM.ScoreParameters.GetBlockPoints();
+			GM.CurrentScore += GM.Settings.Score.GetBlockPoints();
 		}
 	}
 
@@ -146,19 +146,35 @@ public class Board : MonoBehaviour
 	public void RotateRight()
 	{
 		Slot rotationAsSlot = new Slot(0, 1);
+		Rotate(rotationAsSlot);
+	}
+
+	public void RotateLeft()
+	{
+		Slot rotationAsSlot = new Slot(0, -1);
+		Rotate(rotationAsSlot);
+	}
+
+	public void Rotate(Slot rotationAsSlot)
+	{
+		int rotationAmount = -rotationAsSlot.Y;
 
 		if (CanRotate(GM.currentBlock, rotationAsSlot))
 		{
-			PlayerBase.transform.Rotate(Vector3.up, -Geometry.RotationAngle());
-			rotationState -= 1;
+			PlayerBase.transform.Rotate(Vector3.up, rotationAmount * Geometry.RotationAngle());
+			rotationState += rotationAmount;
 			GM.SoundHandler.CanRotateNoise();
+		}
+		else
+		{
+			StartCoroutine(CannotRotateAnimation());
 		}
 	}
 
 	private bool CanRotate(GameObject block, Slot rotationAsSlot)
 	{
 		// happens if block destroyed but none spawned yet
-		if (!block)
+		if (block == null)
 		{
 			return true;
 		}
@@ -167,29 +183,31 @@ public class Board : MonoBehaviour
 		Slot lowerSlot = GridUtils.SnapToNextX(blockState.Position);
 		Slot upperSlot = lowerSlot + new Slot(1, 0);
 
+		// lower slot
 		foreach (Slot layoutSlot in blockState.BlockLayout)
 		{
 			if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot)
 				|| !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
 			{
-				SetPlayerBaseColor(Color.red);
 				return false;
 			}
 		}
-		SetPlayerBaseColor(Color.white);
 		return true;
 	}
 
-	public void RotateLeft()
-	{
-		Slot rotationAsSlot = new Slot(0, -1);
 
-		if (CanRotate(GM.currentBlock, rotationAsSlot))
+	public IEnumerator CannotRotateAnimation(float durationInSeconds = 0.25F)
+	{
+		SetPlayerBaseColor(Color.red);
+
+		float timer = 0;
+		while (timer < durationInSeconds)
 		{
-			PlayerBase.transform.Rotate(Vector3.up, +Geometry.RotationAngle());
-			rotationState += 1;
-			GM.SoundHandler.CanRotateNoise();
+			timer += Time.deltaTime;
+			yield return null;
 		}
+
+		SetPlayerBaseColor(Color.white);
 	}
 
 	private void SetBlockColor(GameObject block, Color32 color)
