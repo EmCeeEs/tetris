@@ -33,34 +33,37 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (cooldownTimer == 0)
-		{
-			HandleRotation();
-			HandleXInversion();
-		}
-		else
+		if (cooldownTimer != 0)
 		{
 			cooldownTimer--;
+			return;
 		}
+
+		HandleRotation();
+		HandleXInversion();
 	}
 
 	private void HandleXInversion()
 	{
-		bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
+		if (GM.currentBlock == null)
+			return;
 
-		if (GM.UIHandler.Joystick.Vertical > 0.5 || GM.UIHandler.Joystick.Vertical < -0.5)
-		{
-			invertion = true;
-		}
+		bool isInversion = false;
 
-		if (GM.currentBlock)
+		isInversion |= inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
+		isInversion |= GM.UIHandler.Joystick.Vertical > 0.5 || GM.UIHandler.Joystick.Vertical < -0.5;
+
+		if (isInversion)
 		{
 			BlockParent block = GM.currentBlock.GetComponent<BlockParent>();
 			List<Slot> newLayout = LayoutCreator.InvertX(block.state.BlockLayout);
 
-			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + GridUtils.SnapToNextX(block.state.Position)));
+			Point positionMargin = new Point(GM.Settings.Speed.PositionMargin, 0);
+			Slot nextSlot = GridUtils.SnapToNextX(block.state.Position + positionMargin);
 
-			if (canInvert && invertion)
+			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + nextSlot));
+
+			if (canInvert)
 			{
 				block.InvertX();
 

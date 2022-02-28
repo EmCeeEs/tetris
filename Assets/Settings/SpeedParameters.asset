@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: SpeedParameters
   m_EditorClassIdentifier: 
   timeScale: 2
-  playerCooldown: 10
+  playerCooldown: 11
+  attachDelay: 10
   positionChange: 0.01
   positionSpeedChange: 0.005
+  positionMargin: 0.11
