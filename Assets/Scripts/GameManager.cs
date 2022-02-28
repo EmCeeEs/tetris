@@ -42,6 +42,11 @@ public class GameManager : Singleton<GameManager>
 		Settings = FindObjectOfType<Settings>();
 	}
 
+	private void Start()
+	{
+		Time.timeScale = Settings.Speed.TimeScale;
+	}
+
 	private void FixedUpdate()
 	{
 		if (gameState == GameState.PLAYING)

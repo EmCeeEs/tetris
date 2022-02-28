@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
 	private PlayerControls inputActions;
 
 	private int cooldownTimer = 0;
-	private const int MAX_COOLDOWN = 5;
 
 	private void Awake()
 	{
@@ -41,7 +40,7 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
-			cooldownTimer -= 1;
+			cooldownTimer--;
 		}
 	}
 
@@ -65,7 +64,7 @@ public class Player : MonoBehaviour
 			{
 				block.InvertX();
 
-				cooldownTimer = MAX_COOLDOWN;
+				cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 			}
 		}
 	}
@@ -88,12 +87,12 @@ public class Player : MonoBehaviour
 		{
 			GM.Board.RotateRight();
 
-			cooldownTimer = MAX_COOLDOWN;
+			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 		}
 		if (moveLeft)
 		{
 			GM.Board.RotateLeft();
-			cooldownTimer = MAX_COOLDOWN;
+			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 		}
 	}
 }

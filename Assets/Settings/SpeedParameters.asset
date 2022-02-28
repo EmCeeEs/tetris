@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3cf0ff14a6587fc71a227c58afc3a2e8, type: 3}
   m_Name: SpeedParameters
   m_EditorClassIdentifier: 
-  baseScaleChange: 0.04
-  speedScaleChange: 0.01
+  timeScale: 2
+  playerCooldown: 10
+  positionChange: 0.01
+  positionSpeedChange: 0.005

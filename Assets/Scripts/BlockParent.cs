@@ -16,8 +16,6 @@ public class BlockState
 	public Point Position { get; set; }
 
 	public int collisionTimer = 0;
-
-	public const int MAX_ATTACH_DELAY = 6;
 }
 
 public class BlockParent : MonoBehaviour
@@ -35,7 +33,7 @@ public class BlockParent : MonoBehaviour
 			UpdatePosition();
 			state.collisionTimer = 0;
 		}
-		else if (state.collisionTimer < BlockState.MAX_ATTACH_DELAY)
+		else if (state.collisionTimer < GM.Settings.Speed.AttachDelay)
 		{
 			state.collisionTimer++;
 		}
@@ -62,7 +60,7 @@ public class BlockParent : MonoBehaviour
 
 	public Point GetPositionChangeAsPoint()
 		=> new Point(
-			GM.Settings.Speed.BaseScaleChange + GM.Settings.Speed.SpeedScaleChange * GM.Speed,
+			GM.Settings.Speed.PositionChange + GM.Settings.Speed.PositionSpeedChange * GM.Speed,
 			0
 		);
 

@@ -180,19 +180,19 @@ public class Board : MonoBehaviour
 		}
 
 		BlockState blockState = block.GetComponent<BlockParent>().state;
-		Slot lowerSlot = GridUtils.SnapToNextX(blockState.Position);
-		Slot upperSlot = lowerSlot + new Slot(1, 0);
+
+		Point positionMargin = new Point(GM.Settings.Speed.PositionMargin, 0);
+
+		Slot nextSlot = GridUtils.SnapToNextX(blockState.Position + positionMargin);
+		Slot upperSlot = GridUtils.SnapToPreviousX(blockState.Position - positionMargin);
 
 		// lower slot
-		foreach (Slot layoutSlot in blockState.BlockLayout)
-		{
-			if (!IsEmpty(lowerSlot + layoutSlot + rotationAsSlot)
-				|| !IsEmpty(upperSlot + layoutSlot + rotationAsSlot))
-			{
-				return false;
-			}
-		}
-		return true;
+		bool canRotate = true;
+
+		canRotate &= blockState.BlockLayout.All(slot => IsEmpty(nextSlot + slot + rotationAsSlot));
+		canRotate &= blockState.BlockLayout.All(slot => IsEmpty(upperSlot + slot + rotationAsSlot));
+
+		return canRotate;
 	}
 
 
