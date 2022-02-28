@@ -6,76 +6,102 @@ using System.Linq;
 // use type alias
 using Layout = System.Collections.Generic.List<Slot>;
 
+public class BlockState
+{
+	// logic
+	public Layout BlockLayout { get; set; }
+	// representation
+	public List<GameObject> Blocks { get; set; }
+
+	public Point Position { get; set; }
+
+	public int collisionTimer = 0;
+}
+
 public class BlockParent : MonoBehaviour
 {
 	private GameManager GM;
+	public BlockState state;
 
-	public Layout BlockLayout { get; set; }
-	public List<GameObject> Blocks { get; set; }
-
-	public Point Position;
-
-	public void Awake()
-	{
+	public void Awake() =>
 		GM = GameManager.Instance;
-	}
 
 	public void FixedUpdate()
 	{
-		Slot LowerSlot = GridUtils.SnapToNextX(Position);
-		Slot UpperSlot = GridUtils.SnapToPreviousX(Position);
-
-		bool isValidMove = true;
-		foreach (Slot slot in BlockLayout)
+		if (CanMove())
 		{
-			if (!GM.Board.IsEmpty(LowerSlot + slot))
-			{
-				isValidMove = false;
-			}
+			UpdatePosition();
+			state.collisionTimer = 0;
 		}
-
-		if (isValidMove)
+		else if (state.collisionTimer < GM.Settings.Speed.AttachDelay)
 		{
-			Position -= new Point(0.04F + 0.01F * GM.Speed, 0);
-			Geometry.MoveToPoint(Position, gameObject);
+			state.collisionTimer++;
 		}
 		else
 		{
-			Geometry.MoveToPoint(UpperSlot, gameObject);
-			foreach (int i in Enumerable.Range(0, BlockLayout.Count))
-			{
-				GameObject block = Blocks[i];
-				Slot slot = BlockLayout[i];
-
-				GM.Board.SetSlot(UpperSlot + slot, block);
-			}
-			GM.Board.CheckForCompleteRows();
+			AttachToBoard();
 			Destroy(gameObject);
 		}
 	}
 
+	public bool CanMove()
+	{
+		Slot nextSlot = GridUtils.SnapToNextX(state.Position);
+
+		return state.BlockLayout
+			.All(slot => GM.Board.IsEmpty(nextSlot + slot));
+	}
+
+	public void UpdatePosition()
+	{
+		state.Position -= GetPositionChangeAsPoint();
+		Geometry.MoveToPoint(state.Position, gameObject);
+	}
+
+	public Point GetPositionChangeAsPoint()
+		=> new Point(
+			GM.Settings.Speed.PositionChange + GM.Settings.Speed.PositionSpeedChange * GM.Speed,
+			0
+		);
+
+	public void AttachToBoard()
+	{
+		Slot UpperSlot = GridUtils.SnapToPreviousX(state.Position);
+
+		Geometry.MoveToPoint(UpperSlot, gameObject);
+		foreach (int i in Enumerable.Range(0, state.BlockLayout.Count))
+		{
+			GameObject block = state.Blocks[i];
+			Slot slot = state.BlockLayout[i];
+
+			GM.Board.SetSlot(UpperSlot + slot, block);
+		}
+
+		GM.Board.CheckForCompleteRows();
+	}
+
 	public void InvertX()
 	{
-		Layout invertedLayout = LayoutCreator.InvertX(BlockLayout);
+		Layout invertedLayout = LayoutCreator.InvertX(state.BlockLayout);
 
 		ApplyLayout(invertedLayout);
 	}
 
 	public void ApplyLayout(Layout layout)
 	{
-		BlockLayout = layout;
+		state.BlockLayout = layout;
 
-		foreach (int i in Enumerable.Range(0, BlockLayout.Count))
+		foreach (int i in Enumerable.Range(0, state.BlockLayout.Count))
 		{
-			GameObject block = Blocks[i];
-			Slot slot = BlockLayout[i];
+			GameObject block = state.Blocks[i];
+			Slot slot = state.BlockLayout[i];
 			Geometry.MoveToPoint(slot, block);
 		}
 	}
 
 	public void InvertY()
 	{
-		Layout invertedLayout = LayoutCreator.InvertY(BlockLayout);
+		Layout invertedLayout = LayoutCreator.InvertY(state.BlockLayout);
 
 		ApplyLayout(invertedLayout);
 	}

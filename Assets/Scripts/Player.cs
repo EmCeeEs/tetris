@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
 	private PlayerControls inputActions;
 
 	private int cooldownTimer = 0;
-	private const int MAX_COOLDOWN = 5;
 
 	private void Awake()
 	{
@@ -34,38 +33,41 @@ public class Player : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (cooldownTimer == 0)
+		if (cooldownTimer != 0)
 		{
-			HandleRotation();
-			HandleXInversion();
+			cooldownTimer--;
+			return;
 		}
-		else
-		{
-			cooldownTimer -= 1;
-		}
+
+		HandleRotation();
+		HandleXInversion();
 	}
 
 	private void HandleXInversion()
 	{
-		bool invertion = inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
+		if (GM.currentBlock == null)
+			return;
 
-		if (GM.UIHandler.Joystick.Vertical > 0.5 || GM.UIHandler.Joystick.Vertical < -0.5)
-		{
-			invertion = true;
-		}
+		bool isInversion = false;
 
-		if (GM.currentBlock)
+		isInversion |= inputActions.PlayerMovement.PlayerInvertBlockX.phase == InputActionPhase.Performed;
+		isInversion |= GM.UIHandler.Joystick.Vertical > 0.5 || GM.UIHandler.Joystick.Vertical < -0.5;
+
+		if (isInversion)
 		{
 			BlockParent block = GM.currentBlock.GetComponent<BlockParent>();
-			List<Slot> newLayout = LayoutCreator.InvertX(block.BlockLayout);
+			List<Slot> newLayout = LayoutCreator.InvertX(block.state.BlockLayout);
 
-			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + GridUtils.SnapToNextX(block.Position)));
+			Point positionMargin = new Point(GM.Settings.Speed.PositionMargin, 0);
+			Slot nextSlot = GridUtils.SnapToNextX(block.state.Position + positionMargin);
 
-			if (canInvert && invertion)
+			bool canInvert = newLayout.All(slot => GM.Board.IsEmpty(slot + nextSlot));
+
+			if (canInvert)
 			{
 				block.InvertX();
 
-				cooldownTimer = MAX_COOLDOWN;
+				cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 			}
 		}
 	}
@@ -88,12 +90,12 @@ public class Player : MonoBehaviour
 		{
 			GM.Board.RotateRight();
 
-			cooldownTimer = MAX_COOLDOWN;
+			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 		}
 		if (moveLeft)
 		{
 			GM.Board.RotateLeft();
-			cooldownTimer = MAX_COOLDOWN;
+			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 		}
 	}
 }

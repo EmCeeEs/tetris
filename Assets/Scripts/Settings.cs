@@ -2,5 +2,6 @@ using UnityEngine;
 
 public class Settings : MonoBehaviour
 {
-	public ScoreParameters ScoreParameters;
+	public ScoreParameters Score;
+	public SpeedParameters Speed;
 }

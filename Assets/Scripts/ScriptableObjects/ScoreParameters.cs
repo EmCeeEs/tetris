@@ -16,10 +16,13 @@ public class ScoreParameters : GameParameters
 	[Header("ROW")]
 	[SerializeField]
 	private int pointsFor1Row;
+
 	[SerializeField]
 	private int pointsFor2Rows;
+
 	[SerializeField]
 	private int pointsFor3Rows;
+
 	[SerializeField]
 	private int pointsFor4Rows;
 
