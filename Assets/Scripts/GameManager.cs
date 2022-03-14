@@ -11,6 +11,7 @@ public class GameManager : Singleton<GameManager>
 	public SoundHandler SoundHandler;
 	public Player Player;
 
+
 	public enum GameState { MENU, PLAYING, ANIMATION_PAUSE }
 	private GameState gameState = GameState.MENU;
 
@@ -91,7 +92,6 @@ public class GameManager : Singleton<GameManager>
 		Player.gameObject.SetActive(false);
 		gameState = GameState.MENU;
 	}
-
 }
 
 // https://blog.mzikmund.com/2019/01/a-modern-singleton-in-unity/

@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
 	private GameManager GM;
+	private UIHandler ui;
 
 	private PlayerControls inputActions;
 
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
 	private void Awake()
 	{
 		GM = GameManager.Instance;
+		ui = FindObjectOfType<UIHandler>();
 	}
 
 	private void OnEnable()
@@ -109,15 +111,26 @@ public class Player : MonoBehaviour
 
 	private void HandleRotation()
 	{
-		if (moveRight)
+		if (moveRight && !ui.RotationInverted)
 		{
 			GM.Board.RotateRight();
 
 			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 		}
-		if (moveLeft)
+		if (moveRight && ui.RotationInverted)
 		{
 			GM.Board.RotateLeft();
+
+			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
+		}
+		if (moveLeft && !ui.RotationInverted)
+		{
+			GM.Board.RotateLeft();
+			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
+		}
+		if (moveLeft && ui.RotationInverted)
+		{
+			GM.Board.RotateRight();
 			cooldownTimer = GM.Settings.Speed.PlayerCooldown;
 		}
 	}
