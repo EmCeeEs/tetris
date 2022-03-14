@@ -82,7 +82,10 @@ public class Player : MonoBehaviour
 		if (GM.currentBlock == null)
 			return;
 
-		if (dropDown) { Debug.Log("Drop Down"); }
+		if (dropDown)
+		{
+		   Debug.Log("Drop Down");
+		}
 		
 	}
 	private void HandleXInversion()
