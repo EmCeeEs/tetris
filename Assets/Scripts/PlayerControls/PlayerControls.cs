@@ -63,6 +63,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PlayerDropdownBlock"",
+                    ""type"": ""Button"",
+                    ""id"": ""50543d45-2882-4e9e-a1ea-db799c074105"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -120,6 +129,17 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""PlayerInvertBlockX"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7e71a587-9198-46ca-901d-39de051f0c24"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PlayerDropdownBlock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -132,6 +152,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 		m_PlayerMovement_PlayerRotationLeft = m_PlayerMovement.FindAction("PlayerRotationLeft", throwIfNotFound: true);
 		m_PlayerMovement_PlayerRotationRight = m_PlayerMovement.FindAction("PlayerRotationRight", throwIfNotFound: true);
 		m_PlayerMovement_PlayerInvertBlockX = m_PlayerMovement.FindAction("PlayerInvertBlockX", throwIfNotFound: true);
+		m_PlayerMovement_PlayerDropdownBlock = m_PlayerMovement.FindAction("PlayerDropdownBlock", throwIfNotFound: true);
 	}
 
 	public void Dispose()
@@ -195,6 +216,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 	private readonly InputAction m_PlayerMovement_PlayerRotationLeft;
 	private readonly InputAction m_PlayerMovement_PlayerRotationRight;
 	private readonly InputAction m_PlayerMovement_PlayerInvertBlockX;
+	private readonly InputAction m_PlayerMovement_PlayerDropdownBlock;
 	public struct PlayerMovementActions
 	{
 		private @PlayerControls m_Wrapper;
@@ -203,6 +225,7 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 		public InputAction @PlayerRotationLeft => m_Wrapper.m_PlayerMovement_PlayerRotationLeft;
 		public InputAction @PlayerRotationRight => m_Wrapper.m_PlayerMovement_PlayerRotationRight;
 		public InputAction @PlayerInvertBlockX => m_Wrapper.m_PlayerMovement_PlayerInvertBlockX;
+		public InputAction @PlayerDropdownBlock => m_Wrapper.m_PlayerMovement_PlayerDropdownBlock;
 		public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
 		public void Enable() { Get().Enable(); }
 		public void Disable() { Get().Disable(); }
@@ -224,6 +247,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 				@PlayerInvertBlockX.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
 				@PlayerInvertBlockX.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
 				@PlayerInvertBlockX.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerInvertBlockX;
+				@PlayerDropdownBlock.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerDropdownBlock;
+				@PlayerDropdownBlock.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerDropdownBlock;
+				@PlayerDropdownBlock.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnPlayerDropdownBlock;
 			}
 			m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
 			if (instance != null)
@@ -240,6 +266,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 				@PlayerInvertBlockX.started += instance.OnPlayerInvertBlockX;
 				@PlayerInvertBlockX.performed += instance.OnPlayerInvertBlockX;
 				@PlayerInvertBlockX.canceled += instance.OnPlayerInvertBlockX;
+				@PlayerDropdownBlock.started += instance.OnPlayerDropdownBlock;
+				@PlayerDropdownBlock.performed += instance.OnPlayerDropdownBlock;
+				@PlayerDropdownBlock.canceled += instance.OnPlayerDropdownBlock;
 			}
 		}
 	}
@@ -250,5 +279,6 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
 		void OnPlayerRotationLeft(InputAction.CallbackContext context);
 		void OnPlayerRotationRight(InputAction.CallbackContext context);
 		void OnPlayerInvertBlockX(InputAction.CallbackContext context);
+		void OnPlayerDropdownBlock(InputAction.CallbackContext context);
 	}
 }
